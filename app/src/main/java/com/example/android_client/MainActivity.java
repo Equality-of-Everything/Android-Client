@@ -10,7 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.entity.UserLogin;
 import com.example.util.OkHttpUtils;
+import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    
+
 
     /**
      * @param :
@@ -47,10 +49,19 @@ public class MainActivity extends AppCompatActivity {
      */
     private void login(String loginUser, String loginPwd) {
         String url = "";
-        String json = "{username : loginUser, password : loginPwd}";
+        UserLogin userLogin = new UserLogin();
+        userLogin.setUsername(loginUser);
+        userLogin.setPassword(loginPwd);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(userLogin);
+        
 
         try {
             String response = OkHttpUtils.sendJsonPostRequest(url, json);
+            //成功
+
+            //失败
 
         }catch (IOException e) {
             e.printStackTrace();
@@ -82,6 +93,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, EnrollActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * @param :
+     * @return Button
+     * @author Lee
+     * @description TODO
+     * @date 2023/11/29 16:14
+     */
+    public Button getBtnLogin() {
+        return btnLogin;
+    }
+
 
 }
 
