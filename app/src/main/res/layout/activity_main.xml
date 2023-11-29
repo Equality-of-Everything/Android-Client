@@ -11,32 +11,18 @@
     <!-- 登录LOGO 以及 标语 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:orientation="vertical"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="center_vertical">
+        android:gravity="center">
 
         <ImageView
-            android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/main"
-            android:layout_gravity="center" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="行疆"
-            android:layout_gravity="center"
-            android:textSize="20sp"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Login to Frontier to continue"
-            android:textSize="16sp"/>
-
+            android:gravity="center"
+            android:background="@drawable/main" />
     </LinearLayout>
 
 
@@ -45,7 +31,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
@@ -128,7 +113,6 @@
         android:text="@string/Txt_sign_up_jump"
         android:clickable="true"
         android:onClick="jumpEnroll"/>
-
 </LinearLayout>
 
 
