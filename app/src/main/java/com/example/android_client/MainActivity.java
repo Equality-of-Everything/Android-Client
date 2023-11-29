@@ -26,8 +26,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String loginUser = edtLoginUser.getText().toString();
                 String loginPwd = edtLoginPwd.getText().toString();
-                //成功
-                Toast.makeText(MainActivity.this, "欢迎！", Toast.LENGTH_SHORT).show();
+
+                login(loginUser, loginPwd);
             }
         });
 
@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
      * @description 登录功能
      * @date 2023/11/29 10:08
      */
-    private void login() {
+    private void login(String loginUser, String loginPwd) {
+        String url = "";
+        String json = "{username : loginUser, password : loginPwd}";
 
     }
 
@@ -57,17 +59,19 @@ public class MainActivity extends AppCompatActivity {
         edtLoginPwd = findViewById(R.id.edt_login_pwd);
         btnLogin = findViewById(R.id.btn_login);
     }
-/**
- * @param :
- * @return void
- * @author xcc
- * @description 点击text跳转到注册页面
- * @date 2023/11/29 11:13
- */
+
+    /**
+    * @param :
+    * @return void
+    * @author xcc
+    * @description 点击text跳转到注册页面
+    * @date 2023/11/29 11:13
+    */
     public void jumpEnroll(View view) {
         Intent intent = new Intent(this, EnrollActivity.class);
         startActivity(intent);
     }
+
 }
 
 
