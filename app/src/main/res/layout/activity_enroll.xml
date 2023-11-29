@@ -145,6 +145,7 @@
         android:background="@drawable/login_btn_bg"
         android:text="@string/btn_enroll"
         android:textColor="@color/white"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:onClick="enrollOnclick"/>
 
 </LinearLayout>
