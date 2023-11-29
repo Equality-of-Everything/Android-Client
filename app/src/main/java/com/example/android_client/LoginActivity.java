@@ -54,17 +54,7 @@ public class LoginActivity extends AppCompatActivity {
         Gson gson = new Gson();
         String json = gson.toJson(userLogin);
 
-
-        try {
-            String response = OkHttpUtils.sendJsonPostRequest(url, json);
-            //成功
-
-            //失败
-
-        }catch (IOException e) {
-            e.printStackTrace();
-            //处理异常
-        }
+        
     }
 
     /**
