@@ -10,6 +10,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.util.OkHttpUtils;
+
+import java.io.IOException;
+
 
 public class MainActivity extends AppCompatActivity {
     private EditText edtLoginUser, edtLoginPwd;
@@ -32,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
+    
 
     /**
      * @param :
@@ -45,6 +49,13 @@ public class MainActivity extends AppCompatActivity {
         String url = "";
         String json = "{username : loginUser, password : loginPwd}";
 
+        try {
+            String response = OkHttpUtils.sendJsonPostRequest(url, json);
+
+        }catch (IOException e) {
+            e.printStackTrace();
+            //处理异常
+        }
     }
 
     /**
