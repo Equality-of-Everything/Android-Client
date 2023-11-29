@@ -45,7 +45,7 @@ public class EnrollActivity extends AppCompatActivity {
     }
     /**
      * @author dell
-     * @description 验证用户两次输入的密码一致，要求密码长度至少8位，且没有特殊字12符
+     * @description 验证用户两次输入的密码一致，要求密码长度至少8位，且没有特殊字符
      * @date 2023/11/29 15:57
      */
     public boolean isValidPassword(String password) {
@@ -78,8 +78,19 @@ public class EnrollActivity extends AppCompatActivity {
             Toast.makeText(EnrollActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
-        }else {
-            Toast.makeText(EnrollActivity.this, "注册失败，请注意格式", Toast.LENGTH_SHORT).show();
+        }else if (isValidUsername(username)==false) {
+            Toast.makeText(EnrollActivity.this, "用户名只能由字母、数字和下划线组成，且长度至少为1", Toast.LENGTH_SHORT).show();
+        }
+        else if (isValidEmail(email)==false) {
+            Toast.makeText(EnrollActivity.this, "邮箱格式错误", Toast.LENGTH_SHORT).show();
+        }
+        else if (password.equals(confirmPassword)==false) {
+            Toast.makeText(EnrollActivity.this, "两次密码不一致", Toast.LENGTH_SHORT).show();
+        }
+        else if (isValidPassword(password)==false||isValidPassword(confirmPassword)==false) {
+            Toast.makeText(EnrollActivity.this, "密码长度至少8位，且没有特殊字符", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(EnrollActivity.this, "密码验证通过", Toast.LENGTH_SHORT).show();
         }
     }
 
