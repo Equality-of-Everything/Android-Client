@@ -10,13 +10,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:gravity="center">
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:gravity="center_vertical">
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/main" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/main"
+            android:layout_gravity="center" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="行疆"
+            android:layout_gravity="center"
+            android:textSize="20sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Login to Frontier to continue"
+            android:textSize="16sp"/>
     </LinearLayout>
+
     <!--输入用户名-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,10 +59,9 @@
             android:layout_width="220dp"
             android:layout_height="50dp"
             android:hint="@string/edtTxt_enter_name"
-            android:layout_marginLeft="30dp"
-
-            />
+            android:layout_marginLeft="30dp" />
     </LinearLayout>
+
     <!-- 输入邮箱-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,14 +72,12 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/edittext_bg">
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/Txt_email"
             android:textSize="20sp"/>
-
         <EditText
             android:id="@+id/edTxt_enter_email"
             android:autofillHints="emailAddress"
@@ -72,9 +85,9 @@
             android:layout_width="220dp"
             android:layout_height="50dp"
             android:hint="@string/edTxt_enter_email"
-            android:layout_marginLeft="50dp"
-            />
+            android:layout_marginLeft="50dp" />
     </LinearLayout>
+
     <!-- 输入密码-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -99,9 +112,9 @@
             android:layout_width="220dp"
             android:layout_height="50dp"
             android:hint="@string/edTxt_enter_password"
-            android:layout_marginLeft="50dp"
-            />
+            android:layout_marginLeft="50dp" />
     </LinearLayout>
+
     <!-- 再次确认密码-->
     <LinearLayout
         android:layout_width="match_parent"
@@ -127,20 +140,24 @@
             android:layout_width="220dp"
             android:layout_height="50dp"
             android:hint="@string/edTxt_enter_confirm_password"
-            android:layout_marginLeft="10dp"
-            />
+            android:layout_marginLeft="10dp" />
     </LinearLayout>
+
     <!-- 注册按钮-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_marginTop="20dp">
+
         <Button
             android:id="@+id/btn_enroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_enroll" />
-
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/login_btn_bg"
+            android:text="@string/btn_enroll"
+            android:textColor="@color/white" />
     </LinearLayout>
 </LinearLayout>
