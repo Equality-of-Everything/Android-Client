@@ -36,30 +36,29 @@
     <!--输入用户名-->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
-
+        android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg"
+        android:background="@drawable/shadow"
         android:gravity="center"
-        >
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:text="@string/Txt_username"
-            android:textSize="20sp"
-            android:gravity="center">
-        </TextView>
+            android:textSize="20sp"></TextView>
+
         <EditText
             android:id="@+id/edtTxt_enter_name"
-            android:autofillHints="username"
-            android:inputType="text"
             android:layout_width="220dp"
             android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
+            android:autofillHints="username"
             android:hint="@string/edtTxt_enter_name"
-            android:layout_marginLeft="30dp" />
+            android:inputType="text" />
     </LinearLayout>
 
     <!-- 输入邮箱-->
@@ -71,7 +70,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg">
+        android:background="@drawable/shadow">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -97,7 +96,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg">
+        android:background="@drawable/shadow">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -125,7 +124,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg">
+        android:background="@drawable/shadow">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

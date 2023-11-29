@@ -39,38 +39,43 @@
 
     </LinearLayout>
 
-    <!-- 输入账号 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg"
-        android:gravity="center_vertical">
 
-        <TextView
+    <!-- 输入账号 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="账号："
-            android:textSize="20sp"
-            />
-        <EditText
-            android:id="@+id/edt_login_user"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="5dp"
-            android:inputType="text"
-            android:textSize="18sp"
-            android:layout_marginLeft="10dp"
-            />
-    </LinearLayout>
+            android:background="@drawable/shadow"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="账号："
+                android:textSize="20sp"
+                />
+            <EditText
+                android:id="@+id/edt_login_user"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:paddingLeft="5dp"
+                android:inputType="text"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+
+                />
+        </LinearLayout>
+
+
 
     <!-- 输入密码 -->
     <LinearLayout
@@ -80,7 +85,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/edittext_bg"
+        android:background="@drawable/shadow"
         android:gravity="center_vertical">
 
         <TextView

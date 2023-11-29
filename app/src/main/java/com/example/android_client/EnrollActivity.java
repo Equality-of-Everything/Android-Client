@@ -32,6 +32,7 @@ public class EnrollActivity extends AppCompatActivity {
         String pattern = "^[a-zA-Z0-9_]+$";
         return username.matches(pattern);
     }
+
 ///**
 //
 // * @author xcc
@@ -47,5 +48,4 @@ public class EnrollActivity extends AppCompatActivity {
 //        System.out.println("错误！！！！！！！！！！");
 //    }
 //    }
-
 }
