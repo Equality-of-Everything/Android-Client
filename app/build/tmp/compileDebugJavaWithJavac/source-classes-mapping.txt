@@ -1,6 +1,0 @@
-com/example/xui/MyApp.java
- com.example.xui.MyApp
-com/example/xui/BuildConfig.java
- com.example.xui.BuildConfig
-com/example/xui/MainActivity.java
- com.example.xui.MainActivity
