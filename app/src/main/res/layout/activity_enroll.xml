@@ -140,6 +140,7 @@
             android:id="@+id/btn_enroll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_enroll"/>
+            android:text="@string/btn_enroll" />
+
     </LinearLayout>
 </LinearLayout>
