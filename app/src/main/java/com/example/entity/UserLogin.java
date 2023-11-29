@@ -31,6 +31,12 @@ public class UserLogin implements Serializable {
     // 登录错误次数
     private Integer loginErrorCount;
 
+    public UserLogin(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
     public UserLogin() {}
     public UserLogin(Integer userId, String username, String password,
                      String email, String phoneNumber, String nickname,

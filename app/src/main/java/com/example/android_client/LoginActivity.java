@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.entity.UserLogin;
 import com.example.util.OkHttpUtils;
@@ -17,7 +15,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private EditText edtLoginUser, edtLoginPwd;
     private Button btnLogin;
     @Override
