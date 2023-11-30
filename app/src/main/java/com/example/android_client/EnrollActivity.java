@@ -45,8 +45,6 @@ public class EnrollActivity extends AppCompatActivity {
 
         // 用于注册信息发送和密码重复验证
         setOnClickListenerForRegister();
-
-
     }
 
     /**
@@ -139,7 +137,7 @@ public class EnrollActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
                 Request request = new Request.Builder()
-                       .url("http://192.168.43.225/user/register")
+                       .url("http:// 192.168.104.223:8080/user/register")
                        .post(body)
                        .build();
                 client.newCall(request).enqueue(new Callback() {

@@ -4,10 +4,13 @@ import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -47,6 +50,10 @@ public class LoginActivity extends AppCompatActivity {
                 String loginUser = edtLoginUser.getText().toString();
                 String loginPwd = edtLoginPwd.getText().toString();
 
+                if (TextUtils.isEmpty(loginUser) || TextUtils.isEmpty(loginPwd)) {
+                    Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+                }
+
                 login(loginUser, loginPwd);
             }
         });
@@ -54,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         textJumpEnroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jumpEnroll();
+                isJumpEnroll();
             }
         });
 
@@ -85,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.43.225:8080/user/login")
+                        .url("http://192.168.104.223:8080/user/login")
                         .post(body)
                         .build();
 
@@ -105,21 +112,20 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         String responseData = response.body().string();
                         Result result = json.fromJson(responseData, Result.class);
-
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 //失败
                                 if(!result.getFlag()) {
-                                    Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
-
-                                    switch (result.getCode()) {
-                                        case LOGIN_ERROR_NOUSER :
-                                            jumpEnroll();
-                                            break;
-                                        case LOGIN_ERROR_PASSWORD:
-                                            break;
-                                    }
+                                   switch (result.getCode()) {
+                                       case LOGIN_ERROR_NOUSER:
+                                           isJumpEnroll();
+                                           break;
+                                       case LOGIN_ERROR_PASSWORD:
+                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                                           break;
+                                   }
+                                    return;
                                 }
                                 //成功
                                 Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
@@ -155,9 +161,24 @@ public class LoginActivity extends AppCompatActivity {
     * @description 点击text跳转到注册页面
     * @date 2023/11/29 11:13
     */
-    public void jumpEnroll() {
-        Intent intent = new Intent(this, EnrollActivity.class);
-        startActivity(intent);
+    public void isJumpEnroll() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("跳转提醒")
+                .setMessage("用户名不存在，是否跳转注册页面？")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(LoginActivity.this, EnrollActivity.class);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
     }
 
 }
