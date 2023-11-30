@@ -111,8 +111,7 @@
         android:layout_marginLeft="250dp"
         android:layout_marginTop="10dp"
         android:text="@string/Txt_sign_up_jump"
-        android:clickable="true"
-        android:onClick="jumpEnroll"/>
+        android:clickable="true" />
 </LinearLayout>
 
 

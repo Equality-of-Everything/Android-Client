@@ -1,5 +1,8 @@
 package com.example.android_client;
 
+import static com.example.util.Code.LOGIN_ERROR_NOUSER;
+import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -9,10 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.entity.UserLogin;
-import com.example.util.Reslut;
+import com.example.util.Result;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -29,6 +33,7 @@ import okhttp3.Response;
 public class LoginActivity extends AppCompatActivity {
     private EditText edtLoginUser, edtLoginPwd;
     private Button btnLogin;
+    private TextView textJumpEnroll;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -43,6 +48,13 @@ public class LoginActivity extends AppCompatActivity {
                 String loginPwd = edtLoginPwd.getText().toString();
 
                 login(loginUser, loginPwd);
+            }
+        });
+
+        textJumpEnroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                jumpEnroll();
             }
         });
 
@@ -73,7 +85,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.104.223:8080/user/login")
+                        .url("http://192.168.43.225:8080/user/login")
                         .post(body)
                         .build();
 
@@ -92,15 +104,25 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         String responseData = response.body().string();
-                        Reslut reslut = json.fromJson(responseData, Reslut.class);
+                        Result result = json.fromJson(responseData, Result.class);
 
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if(!reslut.getFlag()) {
-                                    Toast.makeText(LoginActivity.this, reslut.getMsg()+"", Toast.LENGTH_SHORT).show();
+                                //失败
+                                if(!result.getFlag()) {
+                                    Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+
+                                    switch (result.getCode()) {
+                                        case LOGIN_ERROR_NOUSER :
+                                            jumpEnroll();
+                                            break;
+                                        case LOGIN_ERROR_PASSWORD:
+                                            break;
+                                    }
                                 }
-                                Toast.makeText(LoginActivity.this, reslut.getMsg()+"", Toast.LENGTH_SHORT).show();
+                                //成功
+                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
                             }
                         });
@@ -123,6 +145,7 @@ public class LoginActivity extends AppCompatActivity {
         edtLoginUser = findViewById(R.id.edt_login_user);
         edtLoginPwd = findViewById(R.id.edt_login_pwd);
         btnLogin = findViewById(R.id.btn_login);
+        textJumpEnroll = findViewById(R.id.Txt_sign_up_jump);
     }
 
     /**
@@ -132,22 +155,10 @@ public class LoginActivity extends AppCompatActivity {
     * @description 点击text跳转到注册页面
     * @date 2023/11/29 11:13
     */
-    public void jumpEnroll(View view) {
+    public void jumpEnroll() {
         Intent intent = new Intent(this, EnrollActivity.class);
         startActivity(intent);
     }
-
-    /**
-     * @param :
-     * @return Button
-     * @author Lee
-     * @description TODO
-     * @date 2023/11/29 16:14
-     */
-    public Button getBtnLogin() {
-        return btnLogin;
-    }
-
 
 }
 

@@ -9,28 +9,31 @@ import java.io.Serializable;
  */
 
 
-public class Reslut<T> implements Serializable {
+public class Result<T> implements Serializable {
     private boolean flag; //编码：true成功，false为失败
     private String msg; //错误信息
     private T data; //数据
+    private int code; //状态码
 
-    public Reslut() {
+    public Result() {
     }
 
     @Override
     public String toString() {
-        return "Reslut{" +
+        return "Result{" +
                 "flag=" + flag +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +
+                ", code=" + code +
                 '}';
     }
 
-    public Reslut(boolean flag, String msg, T data) {
+    public Result(boolean flag, String msg, T data) {
         this.flag = flag;
         this.msg = msg;
         this.data = data;
     }
+
 
     public boolean getFlag() {
         return flag;
@@ -55,4 +58,9 @@ public class Reslut<T> implements Serializable {
     public void setData(T data) {
         this.data = data;
     }
+
+    public int getCode() {
+        return code;
+    }
+
 }

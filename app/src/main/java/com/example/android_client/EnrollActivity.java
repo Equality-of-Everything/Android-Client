@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 import com.example.entity.ErrorInfo;
 import com.example.entity.UserLogin;
-import com.example.util.Reslut;
+import com.example.util.Result;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -139,7 +139,7 @@ public class EnrollActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
                 Request request = new Request.Builder()
-                       .url("http://192.168.104.223:8080/user/register")
+                       .url("http://192.168.43.225/user/register")
                        .post(body)
                        .build();
                 client.newCall(request).enqueue(new Callback() {
@@ -157,7 +157,7 @@ public class EnrollActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call call,@NonNull Response response) throws IOException {
                         String responseData = response.body().string();
-                        Reslut result = json.fromJson(responseData, Reslut.class);
+                        Result result = json.fromJson(responseData, Result.class);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
