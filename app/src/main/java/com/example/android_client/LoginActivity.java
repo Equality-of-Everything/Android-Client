@@ -61,7 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         textJumpEnroll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isJumpEnroll();
+                Intent intent = new Intent(LoginActivity.this, EnrollActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -92,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.104.223:8080/user/login")
+                        .url("http://192.168.43.255:8080/user/login")
                         .post(body)
                         .build();
 

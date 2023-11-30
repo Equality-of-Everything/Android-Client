@@ -137,7 +137,7 @@ public class EnrollActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
                 Request request = new Request.Builder()
-                       .url("http:// 192.168.104.223:8080/user/register")
+                       .url("http:// 192.168.43.255:8080/user/register")
                        .post(body)
                        .build();
                 client.newCall(request).enqueue(new Callback() {
