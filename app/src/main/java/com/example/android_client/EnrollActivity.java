@@ -16,12 +16,10 @@ import android.widget.Toast;
 
 import com.example.entity.ErrorInfo;
 import com.example.entity.UserLogin;
-import com.example.util.OkHttpUtils;
 import com.example.util.Reslut;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
