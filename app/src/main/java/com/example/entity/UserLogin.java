@@ -6,7 +6,7 @@ import java.sql.Date;
 /**
  * @Author : Lee
  * @Date : Created in 2023/11/29 13:40
- * @Decription :
+ * @Decription : 登录对应的实体类
  */
 
 public class UserLogin implements Serializable {
