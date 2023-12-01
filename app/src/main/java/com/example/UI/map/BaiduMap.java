@@ -20,4 +20,6 @@ public class BaiduMap extends Application {
         //初始化地图sdk
         SDKInitializer.initialize(this);
     }
+
+
 }
