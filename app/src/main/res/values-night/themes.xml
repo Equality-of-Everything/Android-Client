@@ -1,14 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Theme.Demo1" parent="Theme.Material3.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorOnPrimary">@color/colorAccent</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/textColorPrimary</item>
-        <item name="colorSecondaryVariant">@color/toolbarIconColor</item>
-        <item name="colorOnSecondary">@color/loginPageBackgroundColor</item>
-        <item name="android:background">@color/textInputOutlineColor</item>
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorOnPrimary">@color/colorAccent</item>-->
+<!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+<!--        <item name="colorSecondary">@color/textColorPrimary</item>-->
+<!--        <item name="colorSecondaryVariant">@color/toolbarIconColor</item>-->
+<!--        <item name="colorOnSecondary">@color/loginPageBackgroundColor</item>-->
+<!--        <item name="android:background">@color/textInputOutlineColor</item>-->
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->

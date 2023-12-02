@@ -7,12 +7,12 @@
 <!--    <color name="teal_700">#FF018786</color>-->
 <!--    <color name="black">#FF000000</color>-->
 <!--    <color name="white">#FFFFFFFF</color>-->
-    <color name="colorPrimary">#E0E0E0</color>
-    <color name="colorPrimaryDark">#FBB8AC</color>
-    <color name="colorAccent">#FEDBD0</color>
-    <color name="textColorPrimary">#442C2E</color>
-    <color name="toolbarIconColor">@color/textColorPrimary</color>
-    <color name="loginPageBackgroundColor">#FFFFFF</color>
-    <color name="viewBackground">#FFFFFF</color>
-    <color name="textInputOutlineColor">#FBB8AC</color>
+<!--    <color name="colorPrimary">#FBB8AC</color>-->
+<!--    <color name="colorPrimaryDark">#FBB8AC</color>-->
+<!--    <color name="colorAccent">#FEDBD0</color>-->
+<!--    <color name="textColorPrimary">#442C2E</color>-->
+<!--    <color name="toolbarIconColor">@color/textColorPrimary</color>-->
+<!--    <color name="loginPageBackgroundColor">#FFFFFF</color>-->
+<!--    <color name="viewBackground">#DCEFDB</color>-->
+<!--    <color name="textInputOutlineColor">#FBB8AC</color>-->
 </resources>
