@@ -2,7 +2,6 @@ package com.example.demo1;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.compose.material3.MaterialTheme;
 import androidx.viewpager.widget.ViewPager;
 
 import android.graphics.Color;
@@ -27,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        DynamicColors.applyToActivitiesIfAvailable(this)
+//        DynamicColors.applyToActivitiesIfAvailable(getApplication());
         initView();
 
 
