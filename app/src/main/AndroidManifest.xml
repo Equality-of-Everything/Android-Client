@@ -23,6 +23,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.example.UI.map.CustomMapTest"
+            android:exported="true" />
+        <activity
             android:name="com.example.UI.map.MapActivity"
             android:exported="true" />
         <activity
@@ -39,7 +42,7 @@
         </activity> <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="2L9S6iNGveQv77bhOIFvTUtE6V848j7L" />
+            android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />
     </application>
 
 </manifest>

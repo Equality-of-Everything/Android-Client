@@ -2,14 +2,18 @@ package com.example.UI.map;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMapOptions;
+import com.baidu.mapapi.map.MapCustomStyleOptions;
 import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
@@ -23,6 +27,10 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.example.android_client.R;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -35,12 +43,24 @@ import java.util.Locale;
 public class MapActivity extends Activity {
     private MapView mv;
     private com.baidu.mapapi.map.BaiduMap baiduMap;
+    private static final String CUSTOM_FILE_NAME_CX = "baidu_map_style.sty";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        mv = findViewById(R.id.map);
+//        mv = findViewById(R.id.map);
+        mv = new MapView(this, new BaiduMapOptions());
+        FrameLayout frameLayout = new FrameLayout(this);
+        frameLayout.addView(mv);
+        setContentView(frameLayout);
+
+        String customStyleFilePath = getCustomStyleFilePath(this, CUSTOM_FILE_NAME_CX);
+        // 设置个性化地图样式文件的路径和加载方式
+        mv.setMapCustomStylePath(customStyleFilePath);
+
+        // 动态设置个性化地图样式是否生效
+        mv.setMapCustomStyleEnable(true);
         baiduMap = mv.getMap();
 
         /**
@@ -79,6 +99,52 @@ public class MapActivity extends Activity {
 
 
 
+    }
+
+
+
+    /**
+     * @param context:
+     * @param customStyleFileName:
+     * @return String
+     * @author zhang
+     * @description 用于获取自定义地图模板sty文件的路径
+     * @date 2023/12/2 11:45
+     */
+    private String getCustomStyleFilePath(Context context, String customStyleFileName) {
+        FileOutputStream outputStream;
+        outputStream = null;
+        InputStream inputStream = null;
+        String parentPath = null;
+        try {
+            inputStream = context.getAssets().open(customStyleFileName);
+            byte[] buffer = new byte[inputStream.available()];
+            inputStream.read(buffer);
+            parentPath = context.getFilesDir().getAbsolutePath();
+            File customStyleFile = new File(parentPath + "/" + customStyleFileName);
+            if (customStyleFile.exists()) {
+                customStyleFile.delete();
+            }
+            customStyleFile.createNewFile();
+
+            outputStream = new FileOutputStream(customStyleFile);
+            outputStream.write(buffer);
+        } catch (Exception e) {
+            Log.e("CustomMapDemo", "Copy custom style file failed", e);
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (Exception e) {
+                Log.e("CustomMapDemo", "Close stream failed", e);
+                return null;
+            }
+        }
+        return parentPath + "/" + customStyleFileName;
     }
 
 
