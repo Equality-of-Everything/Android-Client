@@ -1,135 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".LoginActivity">
+    tools:context="com.example.android_client.MainActivity">
 
-    <!-- 登录LOGO 以及 标语 -->
-    <LinearLayout
+    <androidx.viewpager.widget.ViewPager
+        android:layout_weight="1"
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:layout_marginBottom="70dp"
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@drawable/main" />
-    </LinearLayout>
-
-
-    <!-- 输入账号 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/shadow"
-            android:gravity="center_vertical"
-            >
-
-            <TextView
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="20dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="账号："
-                android:textSize="20sp"
-                />
-            <EditText
-                android:id="@+id/edt_login_user"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:paddingLeft="5dp"
-                android:inputType="text"
-                android:textSize="18sp"
-                android:layout_marginLeft="10dp"
-
-                />
-        </LinearLayout>
+        tools:ignore="MissingConstraints" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:background="?android:attr/windowBackground"
+        app:itemIconTint="?attr/colorPrimary"
+        app:itemTextColor="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintRight_toRightOf="parent"
+        app:menu="@menu/bottom_navigation_menu" />
 
 
 
-    <!-- 输入密码 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shadow"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginBottom="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="密码："
-            android:textSize="20sp"
-            />
-        <EditText
-            android:id="@+id/edt_login_pwd"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:paddingLeft="5dp"
-            android:inputType="numberPassword"
-            android:textSize="18sp"
-            android:layout_marginLeft="10dp"
-            />
-    </LinearLayout>
-
-    <!-- 登录按钮 -->
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:background="@drawable/login_btn_bg"
-        android:text="登录"
-        android:textColor="@color/white"
-        android:textSize="25sp" />
-    <TextView
-        android:id="@+id/Txt_sign_up_jump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/Txt_sign_up_jump"
-        android:clickable="true" />
-</LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+</androidx.constraintlayout.widget.ConstraintLayout>

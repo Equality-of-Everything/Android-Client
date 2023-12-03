@@ -52,6 +52,10 @@ android {
 }
 
 dependencies {
+
+    // Material3框架
+    implementation 'androidx.compose.material3:material3:1.0.0-alpha11'
+
     //百度地图，地图组件，检索组件，工具组件，基础定位组件
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Map:7.5.4'
     implementation 'com.baidu.lbsyun:BaiduMapSDK_Search:7.5.4'

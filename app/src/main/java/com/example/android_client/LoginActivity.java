@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState){
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
 
         init();
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.43.255:8080/user/login")
+                        .url("http://192.168.104.223:8080/user/login")
                         .post(body)
                         .build();
 
@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
+                                jumpToMainPage();
                             }
                         });
                     }
@@ -139,6 +140,18 @@ public class LoginActivity extends AppCompatActivity {
             }
         }).start();
         
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author zhang
+     * @description 登录成功后跳转到主页面
+     * @date 2023/12/3 11:20
+     */
+    private void jumpToMainPage() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(intent);
     }
 
     /**
