@@ -11,10 +11,14 @@ import java.math.BigDecimal;
 public class MapInfo {
 
     private int id;
-    private String placeName; // 地名 - 地点的名称
-    private BigDecimal latitude; // 纬度 - 指定南北位置的地理坐标
-    private BigDecimal longitude; // 经度 - 指定东西位置的地理坐标
-    private int shareInfoId; // Share Info Id - 与图文与视频分享信息表关联的ID
+    // 地名 - 地点的名称(完整地名)
+    private String placeName;
+    // 纬度 - 指定南北位置的地理坐标(小数点后八位)
+    private BigDecimal latitude;
+    // 经度 - 指定东西位置的地理坐标(小数点后八位)
+    private BigDecimal longitude;
+    // Share Info Id - 与图文与视频分享信息表关联的ID
+    private int shareInfoId;
 
     public MapInfo() {}
     public MapInfo(int id, String placeName, BigDecimal latitude,
