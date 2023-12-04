@@ -75,6 +75,10 @@ public class MapFragment extends Fragment {
 //                Toast.makeText(MapActivity.this, "纬度" + latitude + ";" + "经度" + longitude, Toast.LENGTH_SHORT).show();
 
                 getLocationFromLatLng(latitude, longitude);
+                //跳转到Map_VideoActivity
+                Activity activity = getActivity();
+                Intent intent = new Intent(activity, Map_VideoActivity.class);
+                activity.startActivity(intent);
 
             }
 
@@ -167,10 +171,6 @@ public class MapFragment extends Fragment {
 
                 Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
 
-                //跳转到Map_VideoActivity
-                Activity activity = getActivity();
-                Intent intent = new Intent(activity, Map_VideoActivity.class);
-                activity.startActivity(intent);
             }
 
             public void onGetGeoCodeResult(GeoCodeResult result) {
