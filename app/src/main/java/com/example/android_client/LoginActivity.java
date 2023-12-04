@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.entity.UserLogin;
 import com.example.util.Result;
+import com.example.util.TokenManager;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -129,6 +130,8 @@ public class LoginActivity extends AppCompatActivity {
                                     return;
                                 }
                                 //成功
+                                //存Token
+                                TokenManager.saveToken(LoginActivity.this, result.getData().toString());
                                 Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
                                 jumpToMainPage();
