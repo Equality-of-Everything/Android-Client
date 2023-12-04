@@ -1,6 +1,8 @@
 package com.example.UI.map;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -164,6 +166,11 @@ public class MapFragment extends Fragment {
                 System.out.println("City: " + city);
 
                 Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
+
+                //跳转到Map_VideoActivity
+                Activity activity = getActivity();
+                Intent intent = new Intent(activity, Map_VideoActivity.class);
+                activity.startActivity(intent);
             }
 
             public void onGetGeoCodeResult(GeoCodeResult result) {
