@@ -5,10 +5,10 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 
-import com.example.fragment.MapFragment;
-import com.example.fragment.MessageFragment;
-import com.example.fragment.MineFragment;
-import com.example.fragment.ShareFragment;
+import com.example.UI.map.MapFragment;
+import com.example.UI.msg.MessageFragment;
+import com.example.UI.mine.MineFragment;
+import com.example.UI.share.ShareFragment;
 
 import java.util.ArrayList;
 import java.util.List;

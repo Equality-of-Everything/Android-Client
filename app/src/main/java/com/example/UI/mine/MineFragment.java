@@ -1,4 +1,4 @@
-package com.example.fragment;
+package com.example.UI.mine;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
