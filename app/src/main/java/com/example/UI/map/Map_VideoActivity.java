@@ -3,8 +3,8 @@ package com.example.UI.map;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-
 import com.example.android_client.R;
+import com.google.android.exoplayer2.ExoPlayer;
 
 public class Map_VideoActivity extends AppCompatActivity {
 

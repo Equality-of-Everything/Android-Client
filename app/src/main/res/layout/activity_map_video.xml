@@ -6,9 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.UI.map.Map_VideoActivity">
 
-    <androidx.viewpager2.widget.ViewPager2
+
+    <com.google.android.exoplayer2.ui.PlayerView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/map_video"/>
+        android:layout_height="match_parent"/>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
