@@ -34,7 +34,7 @@ public class MapFragment extends Fragment {
 
     private MapView mv;
     private com.baidu.mapapi.map.BaiduMap baiduMap;
-    private static final String CUSTOM_FILE_NAME_CX = "baidu_map_style.sty";
+    private static final String CUSTOM_FILE_NAME_CX = "map_style.sty";
 
     @Nullable
     @Override
@@ -48,9 +48,9 @@ public class MapFragment extends Fragment {
         String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX);
         // 设置个性化地图样式文件的路径和加载方式
         mv.setMapCustomStylePath(customStyleFilePath);
-
         // 动态设置个性化地图样式是否生效
         mv.setMapCustomStyleEnable(true);
+
         baiduMap = mv.getMap();
 
         /**
