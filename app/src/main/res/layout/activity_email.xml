@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_horizontal"
-    tools:context=".EnrollActivity">
+    tools:context=".EmailActivity">
 
     <!-- 图像-->
     <LinearLayout
@@ -35,41 +35,7 @@
             android:textColor="?attr/colorPrimary"
             />
     </LinearLayout>
-
-    <!--输入用户名-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:orientation="horizontal">
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:hint="@string/edtTxt_enter_name"
-            app:boxStrokeColor="?attr/colorPrimary"
-            app:boxStrokeWidth="2dp"
-            app:startIconDrawable="@drawable/username"
-            app:endIconMode="clear_text"
-            app:startIconContentDescription="账号"
-            tools:ignore="ExtraText,MissingConstraints"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtTxt_enter_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints="username"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-    </LinearLayout>
-
-    <!-- 输入邮箱-->
+    <!--输入验证邮箱-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -90,9 +56,8 @@
             app:startIconContentDescription="账号"
             tools:ignore="ExtraText,MissingConstraints"
             >
-
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edTxt_enter_email"
+                android:id="@+id/edTxt_verify_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints="emailAddress"
@@ -100,71 +65,50 @@
                 />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
-
-    <!-- 输入密码-->
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!--输入验证码-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
+        <Button
+            android:id="@+id/Txt_verify_number"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/edtTxt_verify_number"
+            android:text="@string/Txt_verify_number"
+            android:layout_marginTop="10dp"
+            app:rippleColor="@color/m3_text_button_ripple_color_selector"
+            tools:ignore="NotSibling" />
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/edTxt_enter_password"
-            app:counterEnabled="true"
-            app:helperTextEnabled="true"
-            app:helperText="密码大于8位"
+            android:textSize="18sp"
+            android:hint="@string/edTxt_verify_number"
             app:boxStrokeColor="?attr/colorPrimary"
             app:boxStrokeWidth="2dp"
-            app:startIconDrawable="@drawable/password"
-            app:startIconContentDescription="密码"
+            app:startIconDrawable="@drawable/verify"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="账号"
             tools:ignore="ExtraText,MissingConstraints"
-            app:endIconMode="password_toggle"
             >
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edTxt_enter_password"
+                android:id="@+id/edtTxt_verify_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textPassword"
+                android:layout_weight="1"
+                android:autofillHints="verify_number"
                 />
         </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <!-- 再次确认密码-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edTxt_enter_confirm_password"
-            app:boxStrokeColor="?attr/colorPrimary"
-            app:boxStrokeWidth="2dp"
-            app:startIconDrawable="@drawable/login"
-            app:startIconContentDescription="密码"
-            tools:ignore="ExtraText,MissingConstraints"
-            app:endIconMode="password_toggle">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edTxt_enter_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textPassword"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <!-- 注册按钮-->
+    </RelativeLayout>
+    <!--  验证按钮  -->
     <Button
         android:id="@+id/btn_enroll"
         android:layout_width="match_parent"
@@ -173,9 +117,9 @@
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
         android:textSize="25sp"
-        android:text="@string/btn_enroll"
+        android:text="@string/btn_verify"
         app:rippleColor="@color/m3_button_ripple_color_selector"
-        android:onClick="enrollOnclick"
+        android:onClick="emailOnclick"
         />
 
 </LinearLayout>
