@@ -1,55 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnrollActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    tools:context=".EnrollActivity">
 
     <!-- 图像-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:orientation="vertical"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/img">
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@drawable/main" />
+            android:text="行疆"
+            android:fontFamily="@font/xiaozhuan"
+            android:textSize="50dp"
+            android:textColor="?attr/colorPrimaryDark"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/text"
+            android:text="xingjiang"
+            android:textColor="?attr/colorPrimary"
+            />
     </LinearLayout>
 
     <!--输入用户名-->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/shadow"
         android:gravity="center"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/Txt_username"
-            android:textSize="20sp"></TextView>
-
-        <EditText
-            android:id="@+id/edtTxt_enter_name"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="30dp"
-            android:autofillHints="username"
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:hint="@string/edtTxt_enter_name"
-            android:inputType="text" />
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/username"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="账号"
+            tools:ignore="ExtraText,MissingConstraints"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTxt_enter_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="username"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/Txt_username"-->
+<!--            android:textSize="20sp"></TextView>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/edtTxt_enter_name"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:layout_marginLeft="30dp"-->
+<!--            android:autofillHints="username"-->
+<!--            android:hint="@string/edtTxt_enter_name"-->
+<!--            android:inputType="text" />-->
     </LinearLayout>
 
     <!-- 输入邮箱-->
@@ -60,22 +92,43 @@
         android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shadow">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/Txt_email"
-            android:textSize="20sp"/>
-        <EditText
-            android:id="@+id/edTxt_enter_email"
-            android:autofillHints="emailAddress"
-            android:inputType="textEmailAddress"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:hint="@string/edTxt_enter_email"
-            android:layout_marginLeft="50dp" />
+        android:layout_marginBottom="20dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:hint="请输入邮箱"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/email"
+            app:endIconMode="clear_text"
+            app:startIconContentDescription="账号"
+            tools:ignore="ExtraText,MissingConstraints"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edTxt_enter_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints="emailAddress"
+                android:inputType="textEmailAddress"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/Txt_email"-->
+<!--            android:textSize="20sp"/>-->
+<!--        <EditText-->
+<!--            android:id="@+id/edTxt_enter_email"-->
+<!--            android:autofillHints="emailAddress"-->
+<!--            android:inputType="textEmailAddress"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:hint="@string/edTxt_enter_email"-->
+<!--            android:layout_marginLeft="50dp" />-->
     </LinearLayout>
 
     <!-- 输入密码-->
@@ -86,23 +139,44 @@
         android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shadow">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/Txt_password"
-            android:textSize="20sp"
-            android:gravity="center">
-        </TextView>
-        <EditText
-            android:id="@+id/edTxt_enter_password"
-            android:autofillHints="password"
-            android:inputType="textPassword"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:hint="@string/edTxt_enter_password"
-            android:layout_marginLeft="50dp" />
+        android:layout_marginBottom="20dp">
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="请输入密码"
+            app:counterEnabled="true"
+            app:helperTextEnabled="true"
+            app:helperText="密码大于8位"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/password"
+            app:startIconContentDescription="密码"
+            tools:ignore="ExtraText,MissingConstraints"
+            app:endIconMode="password_toggle"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edTxt_enter_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:text="@string/Txt_password"-->
+<!--            android:textSize="20sp"-->
+<!--            android:gravity="center">-->
+<!--        </TextView>-->
+<!--        <EditText-->
+<!--            android:id="@+id/edTxt_enter_password"-->
+<!--            android:autofillHints="password"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:hint="@string/edTxt_enter_password"-->
+<!--            android:layout_marginLeft="50dp" />-->
     </LinearLayout>
 
     <!-- 再次确认密码-->
@@ -111,41 +185,72 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shadow">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/Txt_confirm_password"
-            android:textSize="20sp"
-            android:gravity="center">
-        </TextView>
-        <EditText
-            android:id="@+id/edTxt_enter_confirm_password"
-            android:autofillHints="password"
-            android:inputType="textPassword"
-            android:layout_width="200dp"
-            android:layout_height="50dp"
-            android:hint="@string/edTxt_enter_confirm_password"
-            android:layout_marginLeft="10dp" />
+        android:layout_marginBottom="20dp">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="再次确认密码"
+            app:helperText="密码大于8位"
+            app:counterEnabled="true"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/login"
+            app:startIconContentDescription="密码"
+            tools:ignore="ExtraText,MissingConstraints"
+            app:endIconMode="password_toggle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edTxt_enter_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:text="@string/Txt_confirm_password"-->
+<!--            android:textSize="20sp"-->
+<!--            android:gravity="center">-->
+<!--        </TextView>-->
+<!--        <EditText-->
+<!--            android:id="@+id/edTxt_enter_confirm_password"-->
+<!--            android:autofillHints="password"-->
+<!--            android:inputType="textPassword"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="50dp"-->
+<!--            android:hint="@string/edTxt_enter_confirm_password"-->
+<!--            android:layout_marginLeft="10dp" />-->
     </LinearLayout>
 
     <!-- 注册按钮-->
-
     <Button
         android:id="@+id/btn_enroll"
-        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:background="@drawable/login_btn_bg"
-        android:text="@string/btn_enroll"
-        android:textColor="@color/white"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
         android:textSize="25sp"
-        android:onClick="enrollOnclick"/>
+        android:text="注册"
+        app:rippleColor="@color/m3_button_ripple_color_selector"
+        android:onClick="enrollOnclick"
+        />
+
+<!--    <Button-->
+<!--        android:id="@+id/btn_enroll"-->
+<!--        android:layout_marginTop="30dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginLeft="40dp"-->
+<!--        android:layout_marginRight="40dp"-->
+<!--        android:background="@drawable/login_btn_bg"-->
+<!--        android:text="@string/btn_enroll"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textSize="25sp"-->
+<!--        android:onClick="enrollOnclick"/>-->
 
 </LinearLayout>
