@@ -4,48 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="55403ee6-1571-4305-8b0f-9e20bfc9e851" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/libs/BaiduLBS_Android.aar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libBDSpeechDecoder_V1.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libBaiduMapSDK_base_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libBaiduMapSDK_map_for_navi_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libapp_BaiduNaviApplib.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libbd_etts.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libbd_tts_log.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libc++_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libgnustl_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/liblocSDK8b.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/arm64-v8a/libtiny_magic.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libBDSpeechDecoder_V1.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libBaiduMapSDK_base_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libBaiduMapSDK_map_for_navi_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libapp_BaiduNaviApplib.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libbd_etts.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libbd_tts_log.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libc++_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libgnustl_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/liblocSDK8b.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/armeabi-v7a/libtiny_magic.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/javapoet-1.9.0.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/protobuf_gens-map.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86/libBaiduMapSDK_base_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86/libBaiduMapSDK_map_for_navi_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86/libc++_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86/liblocSDK8b.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86/libtiny_magic.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86_64/libBaiduMapSDK_base_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86_64/libBaiduMapSDK_map_for_navi_v7_5_9.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86_64/libc++_shared.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86_64/liblocSDK8b.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/libs/x86_64/libtiny_magic.so" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/release/app-release.apk" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/release/output-metadata.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/UI/map/.gitkeep" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxhdpi/ic_launcher.webp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/res/mipmap-xxhdpi/ic_launcher_round.webp" beforeDir="false" />
-    </list>
+    <list default="true" id="55403ee6-1571-4305-8b0f-9e20bfc9e851" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -59,11 +18,11 @@
   <component name="ProjectViewState">
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "last_opened_file_path": "D:/Practical_training/demo/Android-Client"
+  }
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
