@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android_client.com.example.UI.MainActivity">
+    tools:context="com.example.android_client.MainActivity">
 
-    <androidx.viewpager.widget.ViewPager
+    <com.example.adapter.CustomViewPager
         android:layout_weight="1"
         android:id="@+id/viewpager"
         android:layout_width="match_parent"

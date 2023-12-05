@@ -7,13 +7,14 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
 
+import com.example.adapter.CustomViewPager;
 import com.example.adapter.FragmentAdapter;
 import com.example.android_client.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ViewPager mViewPager;
+    private CustomViewPager mViewPager;
     private BottomNavigationView navigation;
 
 
@@ -24,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        DynamicColors.applyToActivitiesIfAvailable(getApplication());
         initView();
-
-
 
     }
 
@@ -39,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = findViewById(R.id.viewpager);
         // 建立连接
         mViewPager.setAdapter(fragmentAdapter);
+        mViewPager.setSwipeEnabled(false);//所有的fragment都不能左右滑动切换
 
         setNavigation();
     }
@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
             default:
         }
     }
+
+//    public void setViewPagerPagingEnabled(boolean enabled) {
+//        CustomViewPager viewPager = findViewById(R.id.viewpager);
+//        viewPager.setSwipeEnabled(enabled);
+//    }
 
     /**
      * 重置底部导航栏图标

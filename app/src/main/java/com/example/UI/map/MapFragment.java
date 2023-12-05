@@ -75,6 +75,8 @@ public class MapFragment extends Fragment {
 //                Toast.makeText(MapActivity.this, "纬度" + latitude + ";" + "经度" + longitude, Toast.LENGTH_SHORT).show();
 
                 getLocationFromLatLng(latitude, longitude);
+
+                pauseSeconds();
                 //跳转到Map_VideoActivity
                 Activity activity = getActivity();
                 Intent intent = new Intent(activity, Map_VideoActivity.class);
@@ -201,6 +203,21 @@ public class MapFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mv.onResume();
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 暂停2秒
+     * @date 2023/12/5 18:33
+     */
+    private void pauseSeconds() {
+        try {
+            Thread.sleep(2000); // 3000毫秒即3秒
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
