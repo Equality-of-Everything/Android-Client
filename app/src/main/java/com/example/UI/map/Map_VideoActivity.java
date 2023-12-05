@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.android_client.R;
+import com.example.util.VideoPlayerEventListener;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
@@ -44,8 +45,12 @@ public class Map_VideoActivity extends AppCompatActivity {
 
     private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(this).build();
+        //添加VideoPlayerEventListener实例实现循环播放
+        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player);
+        player.addListener(videoPlayerEventListener);
+
         playerView.setPlayer(player);
-        Uri videoUri = Uri.parse("https://video.699pic.com/videos/05/12/19/a_qWPD4CwqVDej1600051219_10s.mp4");
+        Uri videoUri = Uri.parse("https://fd.aigei.com/src/vdo/mp4/ec/ec9ec17489c6444188c65f3204f09630.mp4?e=1701804180&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:0XjlD4E3HNDaDmH86Y9NMhk3bVU=");
         MediaItem mediaItem = MediaItem.fromUri(videoUri);
         player.setMediaItem(mediaItem);
         player.prepare();
