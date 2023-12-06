@@ -209,12 +209,12 @@ public class MapFragment extends Fragment {
      * @param :
      * @return void
      * @author Lee
-     * @description 暂停2秒
+     * @description 暂停1秒
      * @date 2023/12/5 18:33
      */
     private void pauseSeconds() {
         try {
-            Thread.sleep(2000); // 3000毫秒即3秒
+            Thread.sleep(1000); // 3000毫秒即3秒
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

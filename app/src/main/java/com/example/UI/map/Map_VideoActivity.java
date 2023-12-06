@@ -54,7 +54,9 @@ public class Map_VideoActivity extends AppCompatActivity {
         currentVideoIndex = 0;
         playCurrentVideo();
 
-//        initializePlayer();
+        // 绑定手势监听器
+        bindGestureListener();
+
         playerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,4 +134,16 @@ public class Map_VideoActivity extends AppCompatActivity {
         player.prepare();
         player.play();
     }
+
+    private void bindGestureListener() {
+        GestureDetector gestureDetector = new GestureDetector(this, new GestureListener());
+
+        playerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
+    }
+
 }
