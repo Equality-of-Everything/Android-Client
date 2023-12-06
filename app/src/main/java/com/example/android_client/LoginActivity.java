@@ -36,8 +36,9 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText edtLoginUser, edtLoginPwd;
-    private Button btnLogin;
-    private TextView textJumpEnroll;
+    private Button btnLogin;//点击登录
+    private Button btnJumpEnroll;//跳转注册（没有账号，注册一个）
+    private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -59,16 +60,8 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        textJumpEnroll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, EnrollActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        setListener();
     }
-
 
     /**
      * @param :
@@ -158,20 +151,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * @param :
-     * @return void
-     * @author Lee
-     * @description 初始化登录界面控件
-     * @date 2023/11/29 10:07
-     */
-    public void init() {
-        edtLoginUser = findViewById(R.id.edt_login_user);
-        edtLoginPwd = findViewById(R.id.edt_login_pwd);
-        btnLogin = findViewById(R.id.btn_login);
-        textJumpEnroll = findViewById(R.id.Txt_sign_up_jump);
-    }
-
-    /**
     * @param :
     * @return void
     * @author xcc
@@ -196,6 +175,46 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 初始化登录界面控件
+     * @date 2023/11/29 10:07
+     */
+    public void init() {
+        edtLoginUser = findViewById(R.id.edt_login_user);
+        edtLoginPwd = findViewById(R.id.edt_login_pwd);
+        btnLogin = findViewById(R.id.btn_login);
+        btnJumpEnroll = findViewById(R.id.btn_jump_enrol);
+        btnJumpEmail = findViewById(R.id.btn_jump_email);
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 跳转注册/跳转找回密码
+     * @date 2023/12/6 9:29
+     */
+    private void setListener() {
+        btnJumpEnroll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, EnrollActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnJumpEmail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, EmailActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 }
