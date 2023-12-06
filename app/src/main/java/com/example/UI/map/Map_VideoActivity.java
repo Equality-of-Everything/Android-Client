@@ -46,12 +46,11 @@ public class Map_VideoActivity extends AppCompatActivity {
         // 使用LayoutInflater加载custom_media_controller.xml文件
         LayoutInflater inflater = LayoutInflater.from(this);
         View controllerLayout=inflater.inflate(R.layout.custom_media_controller,null);
-
         gestureDetector = new GestureDetector(this, new GestureListener());
-
         player = new SimpleExoPlayer.Builder(this).build();
+        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player,this);
+        player.addListener(videoPlayerEventListener);
         playerView.setPlayer(player);
-
         currentVideoIndex = 0;
         playCurrentVideo();
 
@@ -71,33 +70,6 @@ public class Map_VideoActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-/**
- * @param :
- * @return void
- * @author xcc
- * @description 初始化视频播放器
- * @date 2023/12/5 18:22
- */
-private void initializePlayer() {
-        player = new SimpleExoPlayer.Builder(this).build();
-        // 创建用于监听滑动手势的View
-        ImageView gestureView = new ImageView(this);
-        // 记录当前视频的索引
-        int currentVideoIndex = 0;
-        // 监听滑动手势
-
-        Uri videoUri1 = Uri.parse("https://fd.aigei.com/src/vdo/mp4/66/666d68d9196940819b05e3f1af1e7435.mp4?e=1701860820&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:LAxwO2dM1FhNiEPEUHvvQwMSt7E=");
-        Uri videoUri2 = Uri.parse("https://fd.aigei.com/src/vdo/mp4/95/95c234e95afb4524bd35d06bbc7f7f60.mp4?e=1701861420&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:fv-Ai-Ow8fsyUKAuaiMOOK7bK0c=");
-        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player,this);
-        player.addListener(videoPlayerEventListener);
-        playerView.setPlayer(player);
-        MediaItem mediaItem1 = MediaItem.fromUri(videoUri1);
-        MediaItem mediaItem2 = MediaItem.fromUri(videoUri2);
-        player.setMediaItem(mediaItem1);
-        player.setMediaItem(mediaItem2);
-        player.prepare();
-        player.play();
     }
 
     @Override

@@ -19,8 +19,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:controller_layout_id="@layout/custom_media_controller">
                 <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="right|bottom"
                     android:layout_marginRight="10dp"
                     android:layout_marginBottom="310dp"
@@ -37,7 +37,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:elevation="10dp"
                     android:src="@drawable/favorite_icon"
-                    app:maxImageSize="40dp"
+                    app:maxImageSize="35dp"
                     app:tint="@android:color/white"
                     app:elevation="0dp"/>
 
@@ -52,7 +52,7 @@
                     android:src="@drawable/msg_icon"
                     android:backgroundTint="@android:color/transparent"
                     app:tint="@android:color/white"
-                    app:maxImageSize="35dp"
+                    app:maxImageSize="30dp"
                     app:elevation="0dp"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -66,7 +66,7 @@
                     android:src="@drawable/share_icon"
                     android:backgroundTint="@android:color/transparent"
                     app:tint="@android:color/white"
-                    app:maxImageSize="45dp"
+                    app:maxImageSize="35dp"
                     app:elevation="0dp"/>
 
                 <ImageView
