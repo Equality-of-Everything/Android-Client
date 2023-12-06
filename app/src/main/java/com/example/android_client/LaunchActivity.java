@@ -29,6 +29,13 @@ public class LaunchActivity extends AppCompatActivity {
         init();
     }
 
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 加载开屏动画
+     * @date 2023/12/6 14:38
+     */
     public void init() {
         //显示本地图片
         Glide.with(this)
