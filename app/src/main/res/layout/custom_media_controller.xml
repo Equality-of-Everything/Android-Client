@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:buffered_color="@android:color/darker_gray"
-            app:played_color="#FFDE81"
-            app:unplayed_color="@android:color/black" />
+            app:played_color="#FFFFFF"
+            app:unplayed_color="#000000" />
 
         <TextView
             android:id="@+id/exo_duration"
