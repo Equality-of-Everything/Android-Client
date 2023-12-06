@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -11,10 +12,7 @@
         android:layout_height="50dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.976"
-        tools:layout_editor_absoluteX="-38dp">
+        android:layout_gravity="bottom">
 
         <TextView
             android:id="@+id/exo_position"
@@ -24,8 +22,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:textColor="@android:color/black"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
+            android:layout_gravity="left" />
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@id/exo_progress"
@@ -33,9 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             app:buffered_color="@android:color/darker_gray"
-            app:layout_constraintLeft_toRightOf="@id/exo_position"
-            app:layout_constraintRight_toLeftOf="@id/exo_duration"
-            app:layout_constraintTop_toTopOf="@id/exo_position"
             app:played_color="#FFDE81"
             app:unplayed_color="@android:color/black" />
 
@@ -47,7 +41,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:textColor="@android:color/black"
-            app:layout_constraintRight_toRightOf="parent" />
+            android:layout_gravity="right" />
     </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

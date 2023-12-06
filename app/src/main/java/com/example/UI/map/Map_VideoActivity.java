@@ -1,9 +1,15 @@
 package com.example.UI.map;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.OnSwipe;
+
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import com.example.android_client.R;
 import com.example.util.VideoPlayerEventListener;
@@ -11,9 +17,7 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
-
 public class Map_VideoActivity extends AppCompatActivity {
-
     private PlayerView playerView;
     private ExoPlayer player;
     @Override
@@ -24,6 +28,9 @@ public class Map_VideoActivity extends AppCompatActivity {
         ImageView playIcon=findViewById(R.id.video_play);
         //将播放器附加到视图
         playerView = findViewById(R.id.map_video);
+        // 使用LayoutInflater加载custom_media_controller.xml文件
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View controllerLayout=inflater.inflate(R.layout.custom_media_controller,null);
         initializePlayer();
         playerView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,18 +48,30 @@ public class Map_VideoActivity extends AppCompatActivity {
             }
         });
     }
-
-
-    private void initializePlayer() {
+/**
+ * @param :
+ * @return void
+ * @author xcc
+ * @description 初始化视频播放器
+ * @date 2023/12/5 18:22
+ */
+private void initializePlayer() {
         player = new SimpleExoPlayer.Builder(this).build();
-        //添加VideoPlayerEventListener实例实现循环播放
-        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player);
-        player.addListener(videoPlayerEventListener);
+        // 创建用于监听滑动手势的View
+        ImageView gestureView = new ImageView(this);
+        // 记录当前视频的索引
+        int currentVideoIndex = 0;
+        // 监听滑动手势
 
+        Uri videoUri1 = Uri.parse("https://fd.aigei.com/src/vdo/mp4/66/666d68d9196940819b05e3f1af1e7435.mp4?e=1701860820&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:LAxwO2dM1FhNiEPEUHvvQwMSt7E=");
+        Uri videoUri2 = Uri.parse("https://fd.aigei.com/src/vdo/mp4/95/95c234e95afb4524bd35d06bbc7f7f60.mp4?e=1701861420&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:fv-Ai-Ow8fsyUKAuaiMOOK7bK0c=");
+        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player,this);
+        player.addListener(videoPlayerEventListener);
         playerView.setPlayer(player);
-        Uri videoUri = Uri.parse("https://fd.aigei.com/src/vdo/mp4/ec/ec9ec17489c6444188c65f3204f09630.mp4?e=1701804180&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:0XjlD4E3HNDaDmH86Y9NMhk3bVU=");
-        MediaItem mediaItem = MediaItem.fromUri(videoUri);
-        player.setMediaItem(mediaItem);
+        MediaItem mediaItem1 = MediaItem.fromUri(videoUri1);
+        MediaItem mediaItem2 = MediaItem.fromUri(videoUri2);
+        player.setMediaItem(mediaItem1);
+        player.setMediaItem(mediaItem2);
         player.prepare();
         player.play();
     }
@@ -69,4 +88,5 @@ public class Map_VideoActivity extends AppCompatActivity {
             player = null;
         }
     }
+
 }
