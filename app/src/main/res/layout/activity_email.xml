@@ -74,6 +74,27 @@
         android:layout_marginBottom="20dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true" >
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:hint="@string/edTxt_verify_number"
+            app:boxStrokeColor="?attr/colorPrimary"
+            app:boxStrokeWidth="2dp"
+            app:startIconDrawable="@drawable/verify"
+            app:startIconContentDescription="账号"
+            tools:ignore="ExtraText,MissingConstraints"
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTxt_verify_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:autofillHints="verify_number" />
+        </com.google.android.material.textfield.TextInputLayout>
+
         <Button
             android:id="@+id/Txt_verify_number"
             style="@style/Widget.Material3.Button.TextButton"
@@ -86,31 +107,10 @@
             android:layout_marginTop="10dp"
             app:rippleColor="@color/m3_text_button_ripple_color_selector"
             tools:ignore="NotSibling" />
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:hint="@string/edTxt_verify_number"
-            app:boxStrokeColor="?attr/colorPrimary"
-            app:boxStrokeWidth="2dp"
-            app:startIconDrawable="@drawable/verify"
-            app:endIconMode="clear_text"
-            app:startIconContentDescription="账号"
-            tools:ignore="ExtraText,MissingConstraints"
-            >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edtTxt_verify_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:autofillHints="verify_number"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
     </RelativeLayout>
     <!--  验证按钮  -->
     <Button
-        android:id="@+id/btn_enroll"
+        android:id="@+id/btn_verify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
