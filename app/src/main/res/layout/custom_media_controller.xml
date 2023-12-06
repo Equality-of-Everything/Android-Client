@@ -4,31 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.976"
-        tools:layout_editor_absoluteX="-38dp">
+        tools:layout_editor_absoluteX="0dp">
 
         <TextView
             android:id="@+id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textColor="@android:color/white"
             app:layout_constraintLeft_toLeftOf="parent" />
 
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
-            android:id="@id/exo_progress"
+            android:id="@+id/exo_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -36,17 +34,16 @@
             app:layout_constraintLeft_toRightOf="@id/exo_position"
             app:layout_constraintRight_toLeftOf="@id/exo_duration"
             app:layout_constraintTop_toTopOf="@id/exo_position"
-            app:played_color="#FFDE81"
-            app:unplayed_color="@android:color/black" />
+            app:played_color="#ffffff"
+            app:unplayed_color="@color/grey" />
 
         <TextView
             android:id="@+id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:textColor="@android:color/black"
+            android:gravity="center"
+            android:textColor="@android:color/white"
             app:layout_constraintRight_toRightOf="parent" />
     </LinearLayout>
 

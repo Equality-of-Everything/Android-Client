@@ -1,4 +1,4 @@
-package com.example.UI.share;
+package com.example.util.share;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

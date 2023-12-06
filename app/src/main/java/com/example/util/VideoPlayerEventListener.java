@@ -1,9 +1,23 @@
 package com.example.util;
 
+import static android.content.ContentValues.TAG;
+
+import android.animation.Animator;
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.entity.ShareInfo;
 import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.PlaybackException;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
+
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author : 你的名字
@@ -13,9 +27,27 @@ import com.google.android.exoplayer2.Player;
 
 public class VideoPlayerEventListener implements Player.Listener {
     private ExoPlayer player;
-    public VideoPlayerEventListener(ExoPlayer player) {
+    private Context context;
+
+    public VideoPlayerEventListener(ExoPlayer player,Context context) {
+
         this.player = player;
+        this.context=context;
     }
+
+/**
+ * @param error:
+ * @return void
+ * @author xcc
+ * @description 视频错误回调
+ * @date 2023/12/6 9:46
+ */
+public void onPlayerError(PlaybackException error) {
+        Player.Listener.super.onPlayerError(error);
+        Log.e(TAG, "Player error: " + error.getMessage());
+        Toast.makeText(context, "Player error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+    }
+
     /**
      * @param playWhenReady:
      * @param playbackState:
