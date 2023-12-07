@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.entity.UserLogin;
 import com.example.util.Result;
 import com.example.util.TokenManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;//点击登录
     private Button btnJumpEnroll;//跳转注册（没有账号，注册一个）
     private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
+    private View contextView;
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -53,7 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginPwd = edtLoginPwd.getText().toString();
 
                 if (TextUtils.isEmpty(loginUser) || TextUtils.isEmpty(loginPwd)) {
-                    Toast.makeText(LoginActivity.this, "用户名或密码不能为空", Toast.LENGTH_SHORT).show();
+                    showSnackBar(contextView, "用户名或密码错误！", "我知道了");
                 }
 
                 login(loginUser, loginPwd);
@@ -98,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView, "登录失败！", "我知道了");
                             }
                         });
                     }
@@ -117,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                                            isJumpEnroll();
                                            break;
                                        case LOGIN_ERROR_PASSWORD:
-                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                                           showSnackBar(contextView, "密码错误！", "我知道了");
                                            break;
                                    }
                                     return;
@@ -125,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView, "登录成功！", "我知道了");
                                 //跳转主界面
                                 jumpToMainPage();
                             }
@@ -190,6 +192,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         btnJumpEnroll = findViewById(R.id.btn_jump_enrol);
         btnJumpEmail = findViewById(R.id.btn_jump_email);
+        contextView = findViewById(R.id.context_view);
     }
 
     /**
@@ -215,6 +218,25 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author tcy
+     * @description 点击text跳转到注册页面
+     * @date 2023/12/7
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
+
     }
 
 }
