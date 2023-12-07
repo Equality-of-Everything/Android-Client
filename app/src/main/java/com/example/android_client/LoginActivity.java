@@ -73,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
      * @date 2023/11/29 10:08
      */
     private void login(String loginUser, String loginPwd) {
-        String url = "";
         UserLogin userLogin = new UserLogin();
         userLogin.setUsername(loginUser);
         userLogin.setPassword(loginPwd);

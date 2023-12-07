@@ -1,4 +1,4 @@
-package com.example.util.share;
+package com.example.UI.share;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.android_client.R;
-
 
 public class ShareFragment extends Fragment {
 
