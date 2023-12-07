@@ -43,7 +43,7 @@ public class Map_VideoActivity extends AppCompatActivity {
         // 获取urls
         String[] urls = getIntent().getStringArrayExtra("urls");
         videoUrls = urls;
-        System.out.println("urls:"+urls);
+        System.out.println("videoUrls:"+videoUrls);
 
         //引用播放图标
         ImageView playIcon=findViewById(R.id.video_play);

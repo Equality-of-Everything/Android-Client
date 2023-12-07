@@ -191,12 +191,12 @@ public class MapFragment extends Fragment {
                 }
                 // 获取到逆地理编码结果
                 address = result.getAddress();  // 获取地理位置的地址信息
-                String city = result.getAddressDetail().city;  // 获取地理位置所属的城市
+                String city = address.substring(0, address.indexOf("市")+1);  // 获取地理位置所属的城市
                 // 在这里可以处理获取到的地理位置信息
                 System.out.println("Address: " + address);
                 System.out.println("City: " + city);
 
-                interactiveServer(city, latitude, longitude);//传递
+                interactiveServer(address.substring(0, address.indexOf("市")+1), latitude, longitude);//传递
                 Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
             }
 
