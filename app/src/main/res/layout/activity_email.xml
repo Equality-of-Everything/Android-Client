@@ -121,5 +121,11 @@
         app:rippleColor="@color/m3_button_ripple_color_selector"
         android:onClick="emailOnclick"
         />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/context_view"
+        android:orientation="horizontal"
+        ></LinearLayout>
 
 </LinearLayout>

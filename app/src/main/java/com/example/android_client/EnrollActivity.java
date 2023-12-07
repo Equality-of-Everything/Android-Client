@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.entity.ErrorInfo;
 import com.example.entity.UserLogin;
 import com.example.util.Result;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class EnrollActivity extends AppCompatActivity {
     private EditText edt_password,edt_password_conf;
     private EditText edt_email;
     private Button btn_register;
+    private View contextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +149,8 @@ public class EnrollActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(EnrollActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,"注册失败","我知道了");
+//                                Toast.makeText(EnrollActivity.this,"注册失败",Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -160,9 +163,11 @@ public class EnrollActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 if (!result.getFlag()) {
-                                    Toast.makeText(EnrollActivity.this,result.getMsg()+"",Toast.LENGTH_SHORT).show();
+                                    showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                    Toast.makeText(EnrollActivity.this,result.getMsg()+"",Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(EnrollActivity.this, result.getMsg() + "", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                Toast.makeText(EnrollActivity.this, result.getMsg() + "", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(EnrollActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -180,6 +185,7 @@ public class EnrollActivity extends AppCompatActivity {
         edt_password = findViewById(R.id.edTxt_enter_password);
         edt_email = findViewById(R.id.edTxt_enter_email);
         btn_register = findViewById(R.id.btn_enroll);
+        contextView = findViewById(R.id.context_view);
     }
 
     /**
@@ -216,6 +222,25 @@ public class EnrollActivity extends AppCompatActivity {
         // 密码长度至少8位，且没有特殊字符
         String pattern = "^[a-zA-Z0-9]{8,}$";
         return password.matches(pattern);
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author tcy
+     * @description showSnackBar方法
+     * @date 2023/12/7
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
+
     }
 
 /**

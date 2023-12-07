@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.util.Result;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
@@ -26,6 +28,7 @@ public class ResetActivity extends AppCompatActivity {
     private TextInputEditText password;
     private TextInputEditText confPassword;
     private Button submit;
+    private View contextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +58,7 @@ public class ResetActivity extends AppCompatActivity {
         password = findViewById(R.id.edTxt_reset_password);
         confPassword = findViewById(R.id.edTxt_reset_confirm_password);
         submit = findViewById(R.id.btn_reset);
+        contextView = findViewById(R.id.context_view);
     }
 
     /*
@@ -69,10 +73,12 @@ public class ResetActivity extends AppCompatActivity {
         String passwordStr = password.getText().toString();
         String confPasswordStr = confPassword.getText().toString();
         if (TextUtils.isEmpty(passwordStr) || TextUtils.isEmpty(confPasswordStr)) {
-            Toast.makeText(this, "请输入完整信息后再确认", Toast.LENGTH_SHORT).show();
+            showSnackBar(contextView,"请输入完整信息后确认","我知道了");
+//            Toast.makeText(this, "请输入完整信息后再确认", Toast.LENGTH_SHORT).show();
             return;
         } else if (!passwordStr.equals(confPasswordStr)) {
-            Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
+            showSnackBar(contextView,"两次输入的密码不一致","我知道了");
+//            Toast.makeText(this, "两次输入的密码不一致", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -98,7 +104,7 @@ public class ResetActivity extends AppCompatActivity {
                         .build();
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.104.223:8080/user/resetPassword")
+                        .url("http://10.7.88.235:8080/user/resetPassword")
                         .post(body)
                         .build();
                 client.newCall(request).enqueue(new Callback() {
@@ -107,7 +113,8 @@ public class ResetActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(ResetActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,"服务器错误，请稍后重试","我知道了");
+//                                Toast.makeText(ResetActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -120,10 +127,12 @@ public class ResetActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 if (!result.getFlag()) {
-                                    Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                    Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(ResetActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -132,5 +141,23 @@ public class ResetActivity extends AppCompatActivity {
                 });
             }
         }).start();
+    }
+    /**
+     * @param :
+     * @return void
+     * @author tcy
+     * @description showSnackBar方法
+     * @date 2023/12/7
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
+
     }
 }

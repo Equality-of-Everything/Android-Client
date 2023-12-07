@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.util.Result;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 
@@ -31,6 +32,7 @@ public class EmailActivity extends AppCompatActivity {
     private TextInputEditText code;
     private Button txtNum;
     private Button btnVerify;
+    private View contextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,7 +123,7 @@ public class EmailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
-                String url = "http://192.168.104.223:8080/mail/sendCode?mail=" + mailStr;
+                String url = "http://10.7.88.235:8080/mail/sendCode?mail=" + mailStr;
                 Request request = new Request.Builder()
                         .url(url)
                         .get()
@@ -132,7 +134,8 @@ public class EmailActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(EmailActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,"服务器错误，请稍后再试","我知道了");
+//                                Toast.makeText(EmailActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -145,9 +148,11 @@ public class EmailActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 if (!result.getFlag()) {
-                                    Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                    Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                                 }
-                                Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -169,20 +174,24 @@ public class EmailActivity extends AppCompatActivity {
         switch (btnId) {
             case R.id.btn_verify:
                 if (TextUtils.isEmpty(email.getText()+"") || TextUtils.isEmpty(code.getText()+"")) {
-                    Toast.makeText(this, "请输入完整信息后再要求验证", Toast.LENGTH_SHORT).show();
+                    showSnackBar(contextView,"请输入完整信息后再要求验证","我知道了");
+//                    Toast.makeText(this, "请输入完整信息后再要求验证", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!isValidEmail(email.getText()+"")) {
-                    Toast.makeText(this, "邮箱格式不正确，请输入正确邮箱", Toast.LENGTH_SHORT).show();
+                    showSnackBar(contextView,"邮箱格式不正确，请输入正确邮箱","我知道了");
+//                    Toast.makeText(this, "邮箱格式不正确，请输入正确邮箱", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 verifyMailCode(email.getText().toString().trim(), code.getText().toString().trim());
                 break;
             case R.id.Txt_verify_number:
                 if ( TextUtils.isEmpty(email.getText()+"") ) {
-                    Toast.makeText(this, "请输入邮箱", Toast.LENGTH_SHORT).show();
+                    showSnackBar(contextView,"请输入邮箱","我知道了");
+//                    Toast.makeText(this, "请输入邮箱", Toast.LENGTH_SHORT).show();
                     return;
                 } else if (!isValidEmail(email.getText()+"")) {
-                    Toast.makeText(this, "邮箱格式不正确，请输入正确邮箱", Toast.LENGTH_SHORT).show();
+                    showSnackBar(contextView,"邮箱格式不正确，请输入正确邮箱","我知道了");
+//                    Toast.makeText(this, "邮箱格式不正确，请输入正确邮箱", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 CountDownTimer countDownTimerButton = getCountDownTimerButton();
@@ -209,7 +218,7 @@ public class EmailActivity extends AppCompatActivity {
                .add("code", code)
                .build();
         Request request = new Request.Builder()
-               .url("http://192.168.104.223:8080/mail/checkCode")
+               .url("http://10.7.88.235:8080//mail/checkCode")
                .post(formBody)
                .build();
         client.newCall(request).enqueue(new Callback() {
@@ -218,7 +227,8 @@ public class EmailActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(EmailActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
+                        showSnackBar(contextView,"服务器错误，请稍后重试","我知道了");
+//                        Toast.makeText(EmailActivity.this, "服务器错误，请稍后重试", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -231,10 +241,12 @@ public class EmailActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (!result.getFlag()) {
-                            Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            showSnackBar(contextView,result.getMsg(),"我知道了");
+//                            Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                        showSnackBar(contextView,result.getMsg(),"我知道了");
+//                        Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EmailActivity.this, ResetActivity.class);
                         intent.putExtra("mail", mail + "");
                         startActivity(intent);
@@ -249,6 +261,7 @@ public class EmailActivity extends AppCompatActivity {
         code = findViewById(R.id.edtTxt_verify_number);
         btnVerify = findViewById(R.id.btn_verify);
         txtNum = findViewById(R.id.Txt_verify_number);
+        contextView = findViewById(R.id.context_view);
     }
 
     /**
@@ -259,4 +272,23 @@ public class EmailActivity extends AppCompatActivity {
     public boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
+    /**
+     * @param :
+     * @return void
+     * @author tcy
+     * @description showSnackBar方法
+     * @date 2023/12/7
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
+
+    }
+
 }
