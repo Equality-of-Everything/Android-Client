@@ -3,10 +3,13 @@ package com.example.UI.map;
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +50,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.Call;
@@ -191,7 +196,7 @@ public class MapFragment extends Fragment {
                 System.out.println("Address: " + address);
                 System.out.println("City: " + city);
 
-                interactiveServer(address, latitude, longitude);//传递
+                interactiveServer(city, latitude, longitude);//传递
                 Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
             }
 
@@ -236,7 +241,7 @@ public class MapFragment extends Fragment {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://10.7.88.235/:8080/map/video")
+                        .url("http://10.7.88.235:8080/map/video")
                         .post(body)
                         .build();
                 client.newCall(request).enqueue(new Callback() {
@@ -255,12 +260,31 @@ public class MapFragment extends Fragment {
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         String shareInfo = response.body().string().trim();
-                        TypeToken<List<ShareInfo>> type = new TypeToken<List<ShareInfo>>(){};
-                        Result data = gson.fromJson(shareInfo, type.getType());
+                        Result result = gson.fromJson(shareInfo, Result.class);
 
+                        if (!result.getFlag()) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
+
+                        String data =  gson.toJson(result.getData());
+                        System.out.println("data:"+data);
+                        TypeToken<List<ShareInfo>> shareInfoTypeToken = new TypeToken<List<ShareInfo>>() {
+                        };
+                        List<ShareInfo> shareInfos = gson.fromJson(data, shareInfoTypeToken.getType());
                         //解析数据
+                        List<String> urls = new ArrayList<>();
+                        for (ShareInfo shareInfo1 : shareInfos) {
+                            urls.add(shareInfo1.getVideoUrl());
+                        }
+                        Log.e("urls", urls.toString());
 
-                        JumpToVedio();
+                        JumpToVedio(urls.toArray(new String[urls.size()]));
                     }
                 });
             }
@@ -274,13 +298,13 @@ public class MapFragment extends Fragment {
      * @description 跳转至视频播放页面
      * @date 2023/12/7 9:43
      */
-    private void JumpToVedio() {
+    private void JumpToVedio(String[] urls) {
         pauseSeconds();
         //跳转到Map_VideoActivity
         Activity activity = getActivity();
         Intent intent = new Intent(activity, Map_VideoActivity.class);
         // 在 Intent 中携带需要传递的数据
-        intent.putExtra("key", "value");
+        intent.putExtra("urls", urls);
         activity.startActivity(intent);
     }
 

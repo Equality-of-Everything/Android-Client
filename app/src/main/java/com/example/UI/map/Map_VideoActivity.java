@@ -39,6 +39,12 @@ public class Map_VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_video);
+
+        // 获取urls
+        String[] urls = getIntent().getStringArrayExtra("urls");
+        videoUrls = urls;
+        System.out.println("urls:"+urls);
+
         //引用播放图标
         ImageView playIcon=findViewById(R.id.video_play);
         //将播放器附加到视图

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.104.223:8080/user/login")
+                        .url("http://10.7.88.235:8080/user/login")
                         .post(body)
                         .build();
 
@@ -99,7 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showSnackBar(contextView, "登录失败！", "我知道了");
+                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                                            isJumpEnroll();
                                            break;
                                        case LOGIN_ERROR_PASSWORD:
-                                           showSnackBar(contextView, "密码错误！", "我知道了");
+                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
                                            break;
                                    }
                                     return;
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                showSnackBar(contextView, "登录成功！", "我知道了");
+                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
                                 jumpToMainPage();
                             }
