@@ -121,7 +121,8 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,"登录失败！","我知道了");
+//                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -140,7 +141,8 @@ public class LoginActivity extends AppCompatActivity {
                                            isJumpEnroll();
                                            break;
                                        case LOGIN_ERROR_PASSWORD:
-                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
+                                           showSnackBar(contextView,"密码错误！","我知道了");
+//                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
                                            break;
                                    }
                                     return;
@@ -148,7 +150,8 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,result.getMsg()+"","我知道了");
+//                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
                                 jumpToMainPage();
                             }
