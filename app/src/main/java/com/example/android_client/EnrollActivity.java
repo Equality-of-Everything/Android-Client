@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 import com.example.entity.ErrorInfo;
 import com.example.entity.UserLogin;
 import com.example.util.Result;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
@@ -37,6 +39,8 @@ public class EnrollActivity extends AppCompatActivity {
     private EditText edt_email;
     private Button btn_register;
     private View contextView;
+    private View dialogView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +64,7 @@ public class EnrollActivity extends AppCompatActivity {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder adBuilder = new AlertDialog.Builder(EnrollActivity.this);
+                MaterialAlertDialogBuilder adBuilder = new MaterialAlertDialogBuilder(EnrollActivity.this);
                 String username = edt_username.getText()+"";
                 String password = edt_password.getText()+"";
                 String password_conf = edt_password_conf.getText()+"";
@@ -76,8 +80,14 @@ public class EnrollActivity extends AppCompatActivity {
                     if (entry.getKey()) {
                         ErrorInfo errorInfo = entry.getValue();
                         adBuilder.setTitle(errorInfo.getTitle())
-                                .setMessage(errorInfo.getMsg())
-                                .show();
+                                .setMessage(errorInfo.getMsg());
+                        adBuilder.setPositiveButton("我知道了", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+// Respond to positive button press
+                            }
+                        });
+                        adBuilder.show();
                         return;
                     }
                 }
@@ -99,9 +109,12 @@ public class EnrollActivity extends AppCompatActivity {
      * @description 用于存放各种错误信息的处理对应方式，如用户名是否存在，密码是否符合规范等
      * @date 2023/11/29 20:09
      */
-    private void getErrorInfoByRegister(String username, String password, String password_conf, String email, Map<Boolean, ErrorInfo> validationRules) {
+    private void getErrorInfoByRegister(String username, String password, String password_conf, String email,
+                                        Map<Boolean, ErrorInfo> validationRules) {
+
         validationRules.put(!password.equals(password_conf),
                 new ErrorInfo("注册提示", "两次输入的密码不一致,请再次确认"));
+
 
         validationRules.put(!isValidPassword(password),
                 new ErrorInfo("错误提醒", "密码长度至少8位，请确认您输入的密码符合规范"));
@@ -186,6 +199,7 @@ public class EnrollActivity extends AppCompatActivity {
         edt_email = findViewById(R.id.edTxt_enter_email);
         btn_register = findViewById(R.id.btn_enroll);
         contextView = findViewById(R.id.context_view);
+        dialogView = findViewById(R.id.dialog_view);
     }
 
     /**
