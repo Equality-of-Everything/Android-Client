@@ -274,7 +274,7 @@ public class MapFragment extends Fragment {
                                         case Code.TOKEN_INVALID:
                                             Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                            startActivity(intent);
+                                            getActivity().startActivity(intent);
                                             break;
                                         default:
                                             Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();

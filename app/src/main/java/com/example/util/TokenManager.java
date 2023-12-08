@@ -3,6 +3,8 @@ package com.example.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.Date;
+
 /**
  * @Author : Lee
  * @Date : Created in 2023/12/4 16:02
@@ -53,6 +55,7 @@ public class TokenManager {
     public static boolean isTokenExpired(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
         long expireTime = sharedPreferences.getLong("expireTime", 0);
+        System.out.println("expireTime:"+new Date(expireTime));
         return System.currentTimeMillis() > expireTime;
     }
 
