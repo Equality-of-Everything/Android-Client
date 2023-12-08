@@ -51,7 +51,8 @@
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"></activity> <!-- 配置ak信息 -->
+            android:exported="true"/>
+        <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />

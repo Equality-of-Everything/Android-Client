@@ -31,7 +31,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.example.android_client.EnrollActivity;
 import com.example.android_client.LoginActivity;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.example.entity.MapInfo;
 import com.example.entity.ShareInfo;
@@ -273,8 +275,10 @@ public class MapFragment extends Fragment {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
                                             Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                            getActivity().startActivity(intent);
+                                            Log.e("FragmentDebug", "Preparing to start LoginActivity");
+                                            Intent intent = new Intent(getContext(), LoginActivity.class);
+                                            startActivity(intent);
+                                            Log.e("FragmentDebug", "LoginActivity intent sent");
                                             break;
                                         default:
                                             Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();

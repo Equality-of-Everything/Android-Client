@@ -51,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         init();
 
+        Log.e("isTokenExpired", TokenManager.isTokenExpired(this)+"");
+
         if (isLogin()&&!TokenManager.isTokenExpired(this)) {
             jumpToMainPage();
         }
