@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+
     <application
         android:name="com.example.application.MyApplication"
         android:allowBackup="true"
@@ -54,7 +55,7 @@
         </activity> <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="2L9S6iNGveQv77bhOIFvTUtE6V848j7L" />
+            android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />
     </application>
 
 </manifest>

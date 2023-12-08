@@ -2,6 +2,8 @@ package com.example.android_client;
 
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
+import static com.example.util.TokenManager.getToken;
+import static com.example.util.TokenManager.isTokenExpired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -48,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         init();
+
+        Log.e("isTokenExpried", isTokenExpired(this) + "");
+
+        if (isLogin()&& isTokenExpired(this)) {
+            jumpToMainPage();
+        }
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +64,8 @@ public class LoginActivity extends AppCompatActivity {
                 String loginPwd = edtLoginPwd.getText().toString();
 
                 if (TextUtils.isEmpty(loginUser) || TextUtils.isEmpty(loginPwd)) {
-                    showSnackBar(contextView, "用户名或密码错误！", "我知道了");
+                    showSnackBar(contextView, "用户名或密码为空！", "我知道了");
+                    return;
                 }
 
                 login(loginUser, loginPwd);
@@ -63,6 +73,18 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         setListener();
+    }
+
+    /*
+     * @param :
+      * @return boolean
+     * @author zhang
+     * @description 用于判断用户是否已经登录
+     * @date 2023/12/8 11:00
+     */
+    private boolean isLogin() {
+        String token = TokenManager.getToken(this);
+        return token != null;
     }
 
     /**

@@ -36,6 +36,7 @@ import com.example.android_client.R;
 import com.example.entity.MapInfo;
 import com.example.entity.ShareInfo;
 import com.example.entity.UserLogin;
+import com.example.util.Code;
 import com.example.util.Result;
 import com.example.util.TokenManager;
 import com.google.gson.Gson;
@@ -243,6 +244,7 @@ public class MapFragment extends Fragment {
                 Request request = new Request.Builder()
                         .url("http://10.7.88.235:8080/map/video")
                         .post(body)
+                        .header("Authorization", TokenManager.getToken(getContext()))
                         .build();
                 client.newCall(request).enqueue(new Callback() {
                     @Override
@@ -267,6 +269,16 @@ public class MapFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    switch (result.getCode()) {
+                                        case Code.TOKEN_NOT_EXIST:
+                                        case Code.TOKEN_INVALID:
+                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                            startActivity(intent);
+                                            break;
+                                        default:
+                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                             return;
