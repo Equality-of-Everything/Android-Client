@@ -2,6 +2,8 @@ package com.example.android_client;
 
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
+import static com.example.util.TokenManager.getToken;
+import static com.example.util.TokenManager.isTokenExpired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -48,6 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         init();
+
+        Log.e("isTokenExpried", isTokenExpired(this) + "");
+
+        if (isLogin()&& isTokenExpired(this)) {
+            jumpToMainPage();
+        }
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
                 String loginPwd = edtLoginPwd.getText().toString();
 
                 if (TextUtils.isEmpty(loginUser) || TextUtils.isEmpty(loginPwd)) {
-                    showSnackBar(contextView, "用户名或密码不能为空", "我知道了");
+                    showSnackBar(contextView, "用户名或密码为空！", "我知道了");
                     return;
                 }
 
@@ -66,6 +75,18 @@ public class LoginActivity extends AppCompatActivity {
         setListener();
     }
 
+    /*
+     * @param :
+      * @return boolean
+     * @author zhang
+     * @description 用于判断用户是否已经登录
+     * @date 2023/12/8 11:00
+     */
+    private boolean isLogin() {
+        String token = TokenManager.getToken(this);
+        return token != null;
+    }
+
     /**
      * @param :
      * @return void
@@ -74,7 +95,6 @@ public class LoginActivity extends AppCompatActivity {
      * @date 2023/11/29 10:08
      */
     private void login(String loginUser, String loginPwd) {
-        String url = "";
         UserLogin userLogin = new UserLogin();
         userLogin.setUsername(loginUser);
         userLogin.setPassword(loginPwd);
@@ -90,7 +110,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://192.168.104.223:8080/user/login")
+                        .url("http://10.7.88.235:8080/user/login")
                         .post(body)
                         .build();
 
@@ -101,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showSnackBar(contextView, "登录失败！", "我知道了");
+                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -120,7 +140,7 @@ public class LoginActivity extends AppCompatActivity {
                                            isJumpEnroll();
                                            break;
                                        case LOGIN_ERROR_PASSWORD:
-                                           showSnackBar(contextView, "密码错误！", "我知道了");
+                                           Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
                                            break;
                                    }
                                     return;
@@ -128,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                showSnackBar(contextView, "登录成功！", "我知道了");
+                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 //跳转主界面
                                 jumpToMainPage();
                             }
@@ -225,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param :
      * @return void
      * @author tcy
-     * @description showSnackBar方法
+     * @description 点击text跳转到注册页面
      * @date 2023/12/7
      */
     public void showSnackBar(View view,String txt,String btnTxt){

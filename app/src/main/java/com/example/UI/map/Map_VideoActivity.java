@@ -39,6 +39,12 @@ public class Map_VideoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_video);
+
+        // 获取urls
+        String[] urls = getIntent().getStringArrayExtra("urls");
+        videoUrls = urls;
+        System.out.println("videoUrls:"+videoUrls);
+
         //引用播放图标
         ImageView playIcon=findViewById(R.id.video_play);
         //将播放器附加到视图
@@ -93,9 +99,10 @@ public class Map_VideoActivity extends AppCompatActivity {
     }
 
     private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-
+        ImageView playIcon=findViewById(R.id.video_play);
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+
             if (Math.abs(velocityX) > Math.abs(velocityY)) {
                 // 横向滑动，忽略
                 return false;
@@ -103,12 +110,14 @@ public class Map_VideoActivity extends AppCompatActivity {
                 // 纵向滑动
                 if (velocityY < 0) {
                     // 上滑，播放下一个视频
+                    playIcon.setVisibility(View.GONE);
                     currentVideoIndex++;
                     if (currentVideoIndex >= videoUrls.length) {
                         currentVideoIndex = 0;
                     }
                     playCurrentVideo();
                 } else {
+                    playIcon.setVisibility(View.GONE);
                     // 下滑，播放上一个视频
                     currentVideoIndex--;
                     if (currentVideoIndex < 0) {
@@ -145,5 +154,4 @@ public class Map_VideoActivity extends AppCompatActivity {
             }
         });
     }
-
 }
