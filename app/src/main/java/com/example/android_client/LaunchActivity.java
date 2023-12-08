@@ -40,7 +40,7 @@ public class LaunchActivity extends AppCompatActivity {
         //显示本地图片
         Glide.with(this)
                 .asGif()
-                .load(R.drawable.ic_launch)//显示raw目录中的图片
+                .load(R.drawable.launch)//显示raw目录中的图片
                 .listener(new RequestListener<GifDrawable>() {
                     @Override
                     public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<GifDrawable> target, boolean isFirstResource) {
@@ -61,7 +61,7 @@ public class LaunchActivity extends AppCompatActivity {
                         return false;
                     }
                 })
-                .centerCrop()
+//                .centerCrop()
                 .into(imageView);
     }
 }
