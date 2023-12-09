@@ -1,157 +1,95 @@
 package com.example.UI.map;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.OnSwipe;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
-import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.SeekBar;
-import android.widget.TextView;
-
+import com.example.adapter.VideoAdapter;
 import com.example.android_client.R;
-import com.example.util.VideoPlayerEventListener;
-import com.google.android.exoplayer2.ExoPlayer;
-import com.google.android.exoplayer2.MediaItem;
-import com.google.android.exoplayer2.SimpleExoPlayer;
-import com.google.android.exoplayer2.source.MediaSource;
-import com.google.android.exoplayer2.source.ProgressiveMediaSource;
-import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.Util;
-
 public class Map_VideoActivity extends AppCompatActivity {
-    private GestureDetector gestureDetector;
-    private PlayerView playerView;
-    private ExoPlayer player;
-    private int currentVideoIndex;
-    private String[] videoUrls = {
-            "https://fd.aigei.com/src/vdo/mp4/eb/eb0e11470b624784ae463adc31729023.mp4?e=1701882300&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:1c8ywdNjffq4-lpTqU6rgvqxh1E=",
-            "https://fd.aigei.com/src/vdo/mp4/47/47de612bc3d841bf923db4d5ffb2b1e0.mp4?e=1701882300&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:45czvwAA4pQch9Q287yL7rP4_08=",
-            "https://fd.aigei.com/src/vdo/mp4/df/df61d584e74f4e5fa73bc6d1cc67f11b.mp4?e=1701882300&token=P7S2Xpzfz11vAkASLTkfHN7Fw-oOZBecqeJaxypL:7Qfbm0dN0uwIJ048hVmZC6MZ0lA="
-    };
+    private RecyclerView recyclerView;
+    private VideoAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_video);
 
+        String[] videoUrls = {
+                "https://sns-video-al.xhscdn.com/stream/110/259/01e56ee29bdc6bee010370038c392f5e82_259.mp4",
+                "https://sns-video-al.xhscdn.com/stream/110/259/01e55482b5c53132010370038bd21ed732_259.mp4",
+                "https://sns-video-bd.xhscdn.com/stream/110/259/01e550946db51284010377038bc2c498a5_259.mp4",
+                "https://sns-video-bd.xhscdn.com/stream/110/259/01e53b3440ab6ad9010370038b6f4458c0_259.mp4",
+                "https://sns-video-bd.xhscdn.com/stream/110/259/01e54b8c7fc5288c010370038baf2109be_259.mp4"
+        };
         // 获取urls
-        String[] urls = getIntent().getStringArrayExtra("urls");
-        videoUrls = urls;
-        System.out.println("videoUrls:"+videoUrls);
+        //String[] urls = getIntent().getStringArrayExtra("urls");
+        //videoUrls = urls;
+        //System.out.println("videoUrls:"+videoUrls);
 
-        //引用播放图标
-        ImageView playIcon=findViewById(R.id.video_play);
-        //将播放器附加到视图
-        playerView = findViewById(R.id.map_video);
-        // 使用LayoutInflater加载custom_media_controller.xml文件
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View controllerLayout=inflater.inflate(R.layout.custom_media_controller,null);
-        gestureDetector = new GestureDetector(this, new GestureListener());
-        player = new SimpleExoPlayer.Builder(this).build();
-        VideoPlayerEventListener videoPlayerEventListener=new VideoPlayerEventListener(player,this);
-        player.addListener(videoPlayerEventListener);
-        playerView.setPlayer(player);
-        currentVideoIndex = 0;
-        playCurrentVideo();
 
-        // 绑定手势监听器
-        bindGestureListener();
+        //初始化 RecyclerView 和 VideoAdapter
+        recyclerView = findViewById(R.id.recyclerView);
+        recyclerView.setNestedScrollingEnabled(false);
 
-        playerView.setOnClickListener(new View.OnClickListener() {
+        SnapHelper snapHelper = new PagerSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(layoutManager);
+
+        adapter = new VideoAdapter(videoUrls,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onClick(View v) {
-                // 检查当前播放器的状态
-                if (player.getPlayWhenReady()) {
-                    // 当前正在播放，暂停播放
-                    player.setPlayWhenReady(false);
-                    playIcon.setVisibility(View.VISIBLE);
-                } else {
-                    // 当前暂停中，开始播放
-                    player.setPlayWhenReady(true);
-                    playIcon.setVisibility(View.GONE);
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    int position = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                    if (adapter != null) {
+                        adapter.setCurrentPlayingPosition(position);
+                        adapter.setPlayWhenReady(true); // 开始播放
+                    }
+                }else {
+                    // 滚动中暂停播放
+                    adapter.setPlayWhenReady(false);
                 }
             }
         });
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.setPlayWhenReady(false);
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.setPlayWhenReady(false);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 暂停播放器
+        adapter.setPlayWhenReady(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 恢复播放器
+        adapter.setPlayWhenReady(true);
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        releasePlayer();
-    }
-
-    private void releasePlayer() {
-        if (player != null) {
-            player.release();
-            player = null;
-        }
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event);
-    }
-
-    private class GestureListener extends GestureDetector.SimpleOnGestureListener {
-        ImageView playIcon=findViewById(R.id.video_play);
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            if (Math.abs(velocityX) > Math.abs(velocityY)) {
-                // 横向滑动，忽略
-                return false;
-            } else {
-                // 纵向滑动
-                if (velocityY < 0) {
-                    // 上滑，播放下一个视频
-                    playIcon.setVisibility(View.GONE);
-                    currentVideoIndex++;
-                    if (currentVideoIndex >= videoUrls.length) {
-                        currentVideoIndex = 0;
-                    }
-                    playCurrentVideo();
-                } else {
-                    playIcon.setVisibility(View.GONE);
-                    // 下滑，播放上一个视频
-                    currentVideoIndex--;
-                    if (currentVideoIndex < 0) {
-                        currentVideoIndex = videoUrls.length - 1;
-                    }
-                    playCurrentVideo();
-                }
-                return true;
-            }
-        }
-    }
-
-    private void playCurrentVideo() {
-        Uri uri = Uri.parse(videoUrls[currentVideoIndex]);
-
-        DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(this,
-                Util.getUserAgent(this, "YourApp"));
-
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(uri));
-
-        player.setMediaSource(mediaSource);
-        player.prepare();
-        player.play();
-    }
-
-    private void bindGestureListener() {
-        GestureDetector gestureDetector = new GestureDetector(this, new GestureListener());
-
-        playerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+        adapter.releasePlayer();
     }
 }
