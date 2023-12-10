@@ -26,4 +26,12 @@
     <string name="title_share">Share</string>
     <string name="title_mine">Mine</string>
     <string name="showtime">00:00/00:00</string>
+
+    <string name="map_style_night">Starry Night</string>
+    <string name="map_style_normal">Normal</string>
+    <string name="map_style_green">Wizard of Oz</string>
+
+
+
+
 </resources>

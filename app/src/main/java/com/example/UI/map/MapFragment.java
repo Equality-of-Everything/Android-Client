@@ -31,7 +31,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.example.android_client.EnrollActivity;
 import com.example.android_client.LoginActivity;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.example.entity.MapInfo;
 import com.example.entity.ShareInfo;
@@ -42,6 +44,13 @@ import com.example.util.TokenManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+import com.nightonke.boommenu.BoomButtons.HamButton;
+import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+import com.nightonke.boommenu.BoomMenuButton;
+import com.nightonke.boommenu.ButtonEnum;
+import com.nightonke.boommenu.Piece.PiecePlaceEnum;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -66,19 +75,32 @@ import okhttp3.Response;
 
 
 public class MapFragment extends Fragment {
-
-
     private MapView mv;
     private com.baidu.mapapi.map.BaiduMap baiduMap;
-    private static final String CUSTOM_FILE_NAME_CX = "map_style.sty";
+    private static final String CUSTOM_FILE_NAME_CX_NORMAL = "map_style.sty";
+    private static final String CUSTOM_FILE_NAME_CX_NIGHT = "map_style_blue.sty";
+    private static final String CUSTOM_FILE_NAME_CX_GREEN = "map_style_green.sty";
+
+    private BoomMenuButton button;
 
     private View contextView;
 
+
+    @SuppressLint("ResourceAsColor")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View mapView = inflater.inflate(R.layout.fragment_map, container, false);
+
+        // 对爆炸菜单进行初始化
+
+        button = mapView.findViewById(R.id.bmb);
+        button.setButtonEnum(ButtonEnum.TextInsideCircle);
+        button.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+        button.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
+        button.setHighlightedColor(R.color.m3_button_ripple_color_selector);
+        button.setDraggable(true);
 
         mv = new MapView(getContext(), new BaiduMapOptions());
 
@@ -91,6 +113,9 @@ public class MapFragment extends Fragment {
         mv.setMapCustomStyleEnable(true);
 
         baiduMap = mv.getMap();
+
+        // 初始化爆炸菜单构建器
+        setBuilderForBomMenu(mv);
 
         /**
          * @param savedInstanceState:
@@ -126,9 +151,76 @@ public class MapFragment extends Fragment {
         });
 
 
-
         return mapView;
     }
+
+    /**
+     * @param :
+     * @return void
+     * @author zhang
+     * @description 初始化爆炸菜单的菜单项
+     * @date 2023/12/9 17:55
+     */
+    private void setBuilderForBomMenu(MapView mv) {
+        TextInsideCircleButton.Builder builder0 = new TextInsideCircleButton.Builder()
+                .normalImageRes(R.mipmap.cat)
+                .normalTextRes(R.string.map_style_night)
+                .pieceColor(R.color.black)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NIGHT);
+                        // 设置个性化地图样式文件的路径和加载方式
+                        mv.setMapCustomStylePath(customStyleFilePath);
+                        // 动态设置个性化地图样式是否生效
+                        mv.setMapCustomStyleEnable(true);
+
+                        baiduMap = mv.getMap();
+                    }
+                });
+        button.addBuilder(builder0);
+
+        TextInsideCircleButton.Builder builder1 = new TextInsideCircleButton.Builder()
+                .normalImageRes(R.mipmap.dolphin)
+                .normalTextRes(R.string.map_style_green)
+                .pieceColor(R.color.black)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_GREEN);
+                        // 设置个性化地图样式文件的路径和加载方式
+                        mv.setMapCustomStylePath(customStyleFilePath);
+                        // 动态设置个性化地图样式是否生效
+                        mv.setMapCustomStyleEnable(true);
+
+                        baiduMap = mv.getMap();
+                    }
+                });
+        button.addBuilder(builder1);
+
+        TextInsideCircleButton.Builder builder2 = new TextInsideCircleButton.Builder()
+                .normalImageRes(R.mipmap.bat)
+                .normalTextRes(R.string.map_style_normal)
+                .pieceColor(R.color.black)
+                .listener(new OnBMClickListener() {
+                    @Override
+                    public void onBoomButtonClick(int index) {
+                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NORMAL);
+                        // 设置个性化地图样式文件的路径和加载方式
+                        mv.setMapCustomStylePath(customStyleFilePath);
+                        // 动态设置个性化地图样式是否生效
+                        mv.setMapCustomStyleEnable(true);
+
+                        baiduMap = mv.getMap();
+                    }
+                });
+        button.addBuilder(builder2);
+
+
+
+    }
+
+
 
     /**
      * @param context:

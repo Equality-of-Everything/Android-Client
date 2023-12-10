@@ -1,88 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.UI.map.Map_VideoActivity"
-    android:gravity="center"
-    android:background="@color/black">
+    tools:context="com.example.UI.map.Map_VideoActivity">
 
-        <com.google.android.exoplayer2.ui.PlayerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/map_video"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:controller_layout_id="@layout/custom_media_controller">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="right|bottom"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="310dp"
-                    android:background="@drawable/avatar"
-                    android:elevation="10dp" />
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/favorite_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|bottom"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="230dp"
-                    android:backgroundTint="@android:color/transparent"
-                    android:elevation="10dp"
-                    android:src="@drawable/favorite_icon"
-                    app:maxImageSize="35dp"
-                    app:tint="@android:color/white"
-                    app:elevation="0dp"/>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/msg_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|bottom"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="150dp"
-                    android:elevation="10dp"
-                    android:src="@drawable/msg_icon"
-                    android:backgroundTint="@android:color/transparent"
-                    app:tint="@android:color/white"
-                    app:maxImageSize="30dp"
-                    app:elevation="0dp"/>
-
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/share_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right|bottom"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginBottom="70dp"
-                    android:elevation="10dp"
-                    android:src="@drawable/share_icon"
-                    android:backgroundTint="@android:color/transparent"
-                    app:tint="@android:color/white"
-                    app:maxImageSize="35dp"
-                    app:elevation="0dp"/>
-
-                <ImageView
-                    android:id="@+id/video_play"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:layout_gravity="center"
-                    android:visibility="gone"
-                    android:alpha="0.4"
-                    android:elevation="10dp"
-                    android:src="@drawable/play" />
-        </com.google.android.exoplayer2.ui.PlayerView>
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/recyclerView"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical"
+        android:id="@+id/recyclerView"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"  />
 
-</LinearLayout>
+</RelativeLayout>
