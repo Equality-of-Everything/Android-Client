@@ -39,6 +39,7 @@ import com.example.entity.UserLogin;
 import com.example.util.Code;
 import com.example.util.Result;
 import com.example.util.TokenManager;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -71,6 +72,8 @@ public class MapFragment extends Fragment {
     private com.baidu.mapapi.map.BaiduMap baiduMap;
     private static final String CUSTOM_FILE_NAME_CX = "map_style.sty";
 
+    private View contextView;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class MapFragment extends Fragment {
         mv = new MapView(getContext(), new BaiduMapOptions());
 
         mv = (MapView) mapView.findViewById(R.id.map);
+        contextView = mapView.findViewById(R.id.context_view);
         String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX);
         // 设置个性化地图样式文件的路径和加载方式
         mv.setMapCustomStylePath(customStyleFilePath);
@@ -198,7 +202,8 @@ public class MapFragment extends Fragment {
                 System.out.println("City: " + city);
 
                 interactiveServer(address.substring(0, address.indexOf("市")+1), latitude, longitude);//传递
-                Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
+                showSnackBar(contextView,"address" + address + ";" + "city" + city,"我知道了");
+//                Toast.makeText(getContext(), "address" + address + ";" + "city" + city, Toast.LENGTH_SHORT).show();
             }
 
             public void onGetGeoCodeResult(GeoCodeResult result) {
@@ -254,7 +259,8 @@ public class MapFragment extends Fragment {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
+                                showSnackBar(contextView,"请求失败","我知道了");
+//                                Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -272,12 +278,14 @@ public class MapFragment extends Fragment {
                                     switch (result.getCode()) {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
-                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getActivity(), LoginActivity.class);
                                             startActivity(intent);
                                             break;
                                         default:
-                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            showSnackBar(contextView,result.getMsg(),"我知道了");
+//                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -352,6 +360,17 @@ public class MapFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
+
     }
 
 }

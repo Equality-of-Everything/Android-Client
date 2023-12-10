@@ -17,7 +17,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:background="@drawable/img"
+            android:background="@drawable/background1"
             tools:ignore="MissingConstraints">
 
             <TextView
