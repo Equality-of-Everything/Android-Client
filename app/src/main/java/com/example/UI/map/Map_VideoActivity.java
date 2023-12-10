@@ -27,10 +27,10 @@ public class Map_VideoActivity extends AppCompatActivity {
                 "https://sns-video-bd.xhscdn.com/stream/110/259/01e53b3440ab6ad9010370038b6f4458c0_259.mp4",
                 "https://sns-video-bd.xhscdn.com/stream/110/259/01e54b8c7fc5288c010370038baf2109be_259.mp4"
         };
-        // 获取urls
-        //String[] urls = getIntent().getStringArrayExtra("urls");
-        //videoUrls = urls;
-        //System.out.println("videoUrls:"+videoUrls);
+        //获取urls
+        String[] urls = getIntent().getStringArrayExtra("urls");
+        videoUrls = urls;
+        System.out.println("videoUrls:"+videoUrls);
 
 
         //初始化 RecyclerView 和 VideoAdapter

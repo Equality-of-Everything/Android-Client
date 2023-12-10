@@ -43,7 +43,9 @@ import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.audio.AudioAttributes;
 import com.google.android.exoplayer2.audio.AuxEffectInfo;
 import com.google.android.exoplayer2.decoder.DecoderCounters;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
 import com.google.android.exoplayer2.source.ShuffleOrder;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.text.CueGroup;
@@ -51,14 +53,27 @@ import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelectionParameters;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Clock;
 import com.google.android.exoplayer2.util.Effect;
 import com.google.android.exoplayer2.util.PriorityTaskManager;
 import com.google.android.exoplayer2.util.Size;
+import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
 
+
+
+
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -75,10 +90,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private int currentPlayingPosition = -1;
     private ExoPlayer player;
 
+
     public VideoAdapter(String[] videoUrls, Context context) {
         this.videoUrls = videoUrls;
         this.context = context;
-        // 设置缓冲区大小
+
+
+        //设置缓冲区大小
         LoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
                         5000,
@@ -87,9 +105,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                         2000
                 )
                 .build();
+
         player = new SimpleExoPlayer.Builder(context)
                 .setLoadControl(loadControl)
                 .build();
+
+
         // 设置循环播放模式
         player.setRepeatMode(Player.REPEAT_MODE_ALL);
         // 添加日志
@@ -136,13 +157,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
             @Override
             public void onClick(View v) {
-                    if (player.isPlaying()) {
-                        player.pause();
-                        holder.playicon.setVisibility(View.VISIBLE);// 显示另一个组件
-                    } else {
-                        player.play();
-                        holder.playicon.setVisibility(View.GONE);// 隐藏另一个组件
-                    }
+                if (player.isPlaying()) {
+                    player.pause();
+                    holder.playicon.setVisibility(View.VISIBLE);// 显示另一个组件
+                } else {
+                    player.play();
+                    holder.playicon.setVisibility(View.GONE);// 隐藏另一个组件
+                }
             }
         });
     }
