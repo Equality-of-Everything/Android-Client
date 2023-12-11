@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name="com.example.application.MyApplication"
         android:allowBackup="true"
@@ -24,7 +23,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
+        <activity
+            android:name="com.example.UI.map.Map_VRActivity"
+            android:exported="true" />
         <activity
             android:name=".LaunchActivity"
             android:exported="true">
@@ -51,8 +52,7 @@
             android:exported="true" />
         <activity
             android:name=".LoginActivity"
-            android:exported="true"/>
-        <!-- 配置ak信息 -->
+            android:exported="true" /> <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />
