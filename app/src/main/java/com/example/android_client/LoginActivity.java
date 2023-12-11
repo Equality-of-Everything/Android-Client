@@ -25,6 +25,9 @@ import com.example.util.Result;
 import com.example.util.TokenManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 import java.io.IOException;
 
@@ -48,6 +51,11 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        EMOptions options = new EMOptions();
+        options.setAppKey("1133231211160621#android-client");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
 
         init();
 
@@ -152,6 +160,10 @@ public class LoginActivity extends AppCompatActivity {
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
                                 showSnackBar(contextView,result.getMsg()+"","我知道了");
 //                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+
+                                //登录环信账号
+                                loginUser(loginUser, loginPwd);
+
                                 //跳转主界面
                                 jumpToMainPage();
                             }
@@ -162,6 +174,45 @@ public class LoginActivity extends AppCompatActivity {
             }
         }).start();
         
+    }
+
+    // 用户登录
+    public void loginUser(String username, String password) {
+        // 调用环信 SDK 提供的登录方法
+        EMClient.getInstance().login(username, password, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                // 登录成功
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 在登录成功后，可以在界面上显示登录成功的提示信息
+                        Toast.makeText(LoginActivity.this, "成功", Toast.LENGTH_SHORT).show();
+                        // 初始化环信 SDK
+                        EMClient.getInstance().groupManager().loadAllGroups();
+                        EMClient.getInstance().chatManager().loadAllConversations();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(int code, String error) {
+                // 登录失败
+                Log.e("LoginActivity", "登录失败，错误码：" + code + "，错误信息：" + error);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 在界面上显示登录失败的提示信息
+                        Toast.makeText(LoginActivity.this, "失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+                // 登录过程中的进度回调，可以不处理
+            }
+        });
     }
 
     /**

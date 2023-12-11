@@ -21,13 +21,15 @@ import com.example.util.Result;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import okhttp3.*;
-
 
 /**
  * 注册页面
@@ -45,6 +47,11 @@ public class EnrollActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enroll);
+
+        EMOptions options = new EMOptions();
+        options.setAppKey("1133231211160621#android-client");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
 
         // 获取控件
         getViews();
@@ -152,7 +159,7 @@ public class EnrollActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
                 Request request = new Request.Builder()
-                       .url("http:// 192.168.43.255:8080/user/register")
+                       .url("http://10.7.88.235:8080/user/register")
                        .post(body)
                        .build();
                 client.newCall(request).enqueue(new Callback() {
@@ -181,6 +188,10 @@ public class EnrollActivity extends AppCompatActivity {
                                 }
                                 showSnackBar(contextView,result.getMsg(),"我知道了");
 //                                Toast.makeText(EnrollActivity.this, result.getMsg() + "", Toast.LENGTH_SHORT).show();
+
+                                //注册一个环信账号（以支持即时通讯的一系列服务）
+                                registerUser(username, password);
+
                                 Intent intent = new Intent(EnrollActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -188,6 +199,42 @@ public class EnrollActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        }).start();
+    }
+
+    /**
+     * @param username:
+     * @param password:
+     * @return void
+     * @author Lee
+     * @description 注册一个环信账号（以支持即时通讯一系列的服务）
+     * @date 2023/12/11 17:16
+     */
+    public void registerUser(String username, String password) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 调用环信 SDK 提供的注册方法
+                    EMClient.getInstance().createAccount(username, password);
+                    // 注册成功
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 在注册成功后，可以在界面上显示注册成功的提示信息
+                        }
+                    });
+                } catch (HyphenateException e) {
+                    // 注册失败
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 在界面上显示注册失败的提示信息
+                        }
+                    });
+                }
             }
         }).start();
     }
