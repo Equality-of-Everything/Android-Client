@@ -5,294 +5,561 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:gravity="center_horizontal">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:src="@drawable/mine_background"/>
-
-        <LinearLayout
+    android:gravity="center_horizontal"
+    android:background="@drawable/mine_background">
+        <FrameLayout
+            android:id="@+id/standard_bottom_sheet"
+            style="@style/Widget.Material3.BottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center_horizontal">
-    <!-- 顶部简介-->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="20dp"
-        style="?attr/materialCardViewElevatedStyle"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:orientation="vertical">
+            app:behavior_hideable="false"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <!-- 头像    -->
-                <ImageButton
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:src="@drawable/head" />
+                android:layout_height="match_parent"
+                app:backgroundTint="@color/white">
                 <LinearLayout
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:orientation="vertical">
-                       <!-- 昵称-->
-                     <TextView
-                         android:layout_marginLeft="15dp"
-                         android:layout_marginTop="30dp"
-                         android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal"
+                    app:backgroundTint="@color/white">
+                    <!-- 顶部简介-->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="边云笙"
-                        android:textSize="25sp"/>
-                    <!-- 账号uid-->
-                    <TextView
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        style="?attr/materialCardViewElevatedStyle"
+                        >
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:orientation="vertical">
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                                <!-- 头像    -->
+                                <ImageButton
+                                    android:layout_width="120dp"
+                                    android:layout_height="120dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="10dp"
+                                    android:src="@drawable/head" />
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical">
+                                    <!-- 昵称-->
+                                    <TextView
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="30dp"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="边云笙"
+                                        android:textSize="25sp"/>
+                                    <!-- 账号uid-->
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="15dp"
+                                        android:layout_marginTop="15dp"
+                                        android:text="uid:12345678"
+                                        android:textColor="?attr/colorPrimary"/>
+                                </LinearLayout>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp">
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="标签:"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Basic"
+                                    android:background="@color/pink_500"/>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                                <!--    我的好友-->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="20dp"
+                        style="?attr/materialCardViewElevatedStyle"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                >
+                                <ImageView
+                                    android:id="@+id/iv_friends"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/friends"/>
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="10dp"
+                                    android:src="@drawable/next"
+                                    android:layout_marginTop="13dp"
+                                    />
+                                <!-- 点击按钮 -->
+                                <Button
+                                    android:id="@+id/btn_friends"
+                                    style="@style/Widget.Material3.Button.TextButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="16dp"
+                                    android:text="我的好友"
+                                    android:textColor="@color/black"
+                                    tools:ignore="MissingConstraints"
+                                    android:layout_toRightOf="@+id/iv_friends"
+                                    />
+                                <com.google.android.material.divider.MaterialDivider
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:dividerInsetStart="10dp"
+                                    app:dividerInsetEnd="10dp"
+                                    android:layout_alignBottom="@id/btn_friends"
+                                    />
+                            </RelativeLayout>
+                            <!--    我的分享-->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp">
+                                <ImageView
+                                    android:id="@+id/iv_my_share"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/share"
+                                    android:layout_marginLeft="5dp"/>
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/next"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="13dp"
+                                    />
+                                <!-- 点击按钮 -->
+                                <Button
+                                    android:id="@+id/btn_my_share"
+                                    style="@style/Widget.Material3.Button.TextButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="16dp"
+                                    android:text="我的分享"
+                                    android:textColor="@color/black"
+                                    tools:ignore="MissingConstraints"
+                                    android:layout_toRightOf="@+id/iv_my_share"
+                                    />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <!--    问题-->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="30dp"
+                        android:layout_marginRight="20dp"
+                        style="?attr/materialCardViewElevatedStyle"
+                        >
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp"
+                                >
+                                <ImageView
+                                    android:id="@+id/iv_problem"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:src="@drawable/problem"/>
+
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_marginRight="10dp"
+                                    android:src="@drawable/next"
+                                    android:layout_marginTop="13dp"
+                                    />
+                                <!-- 点击按钮 -->
+                                <Button
+                                    android:id="@+id/btn_problem"
+                                    style="@style/Widget.Material3.Button.TextButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="16dp"
+                                    android:text="问题"
+                                    android:textColor="@color/black"
+                                    tools:ignore="MissingConstraints"
+                                    android:layout_toRightOf="@+id/iv_problem"
+                                    />
+                                <com.google.android.material.divider.MaterialDivider
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:dividerInsetStart="10dp"
+                                    app:dividerInsetEnd="10dp"
+                                    android:layout_alignBottom="@id/btn_problem"
+                                    />
+                            </RelativeLayout>
+                            <!--    我的分享-->
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="40dp">
+                                <ImageView
+                                    android:id="@+id/iv_help"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/help"
+                                    android:layout_marginLeft="5dp"/>
+                                <ImageView
+                                    android:layout_width="20dp"
+                                    android:layout_height="20dp"
+                                    android:layout_alignParentRight="true"
+                                    android:src="@drawable/next"
+                                    android:layout_marginRight="10dp"
+                                    android:layout_marginTop="13dp"
+                                    />
+                                <!-- 点击按钮 -->
+                                <Button
+                                    android:id="@+id/btn_help"
+                                    style="@style/Widget.Material3.Button.TextButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="left"
+                                    android:textSize="16dp"
+                                    android:text="帮助"
+                                    android:textColor="@color/black"
+                                    tools:ignore="MissingConstraints"
+                                    android:layout_toRightOf="@+id/iv_help"
+                                    />
+                            </RelativeLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                    <!--退出登录-->
+                    <Button
+                        style="?attr/materialButtonOutlinedStyle"
+                        android:id="@+id/btn_logout"
+                        android:gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="15dp"
-                        android:text="uid:12345678"
-                        android:textColor="?attr/colorPrimary"/>
+                        android:layout_marginTop="30dp"
+                        android:text="退出登录"
+                        android:textSize="20sp"
+                        app:rippleColor="@color/m3_button_ripple_color_selector"
+                        app:icon="@drawable/logout"
+                        />
+
                 </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="标签:"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Basic"
-                    android:background="@color/pink_500"/>
-<!--                <Button-->
+
+        </FrameLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:orientation="vertical"-->
+<!--            android:gravity="center_horizontal">-->
+<!--            &lt;!&ndash; 顶部简介&ndash;&gt;-->
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginTop="100dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                style="?attr/materialCardViewElevatedStyle"-->
+<!--                >-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="200dp"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content">-->
+<!--                        &lt;!&ndash; 头像    &ndash;&gt;-->
+<!--                        <ImageButton-->
+<!--                            android:layout_width="120dp"-->
+<!--                            android:layout_height="120dp"-->
+<!--                            android:layout_marginLeft="10dp"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            android:src="@drawable/head" />-->
+<!--                        <LinearLayout-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:orientation="vertical">-->
+<!--                            &lt;!&ndash; 昵称&ndash;&gt;-->
+<!--                            <TextView-->
+<!--                                android:layout_marginLeft="15dp"-->
+<!--                                android:layout_marginTop="30dp"-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:text="边云笙"-->
+<!--                                android:textSize="25sp"/>-->
+<!--                            &lt;!&ndash; 账号uid&ndash;&gt;-->
+<!--                            <TextView-->
+<!--                                android:layout_width="wrap_content"-->
+<!--                                android:layout_height="wrap_content"-->
+<!--                                android:layout_marginLeft="15dp"-->
+<!--                                android:layout_marginTop="15dp"-->
+<!--                                android:text="uid:12345678"-->
+<!--                                android:textColor="?attr/colorPrimary"/>-->
+<!--                        </LinearLayout>-->
+<!--                    </LinearLayout>-->
+<!--                    <LinearLayout-->
+<!--                        android:layout_width="wrap_content"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginLeft="20dp">-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="标签:"/>-->
+<!--                        <TextView-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:text="Basic"-->
+<!--                            android:background="@color/pink_500"/>-->
+<!--                        &lt;!&ndash;                <Button&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    android:layout_width="wrap_content"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    android:text="Basic"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    android:textSize="15sp"&ndash;&gt;-->
+<!--                        &lt;!&ndash;                    />&ndash;&gt;-->
+<!--                    </LinearLayout>-->
+<!--                </LinearLayout>-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
+
+<!--            &lt;!&ndash;    我的好友&ndash;&gt;-->
+<!--            <com.google.android.material.card.MaterialCardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                style="?attr/materialCardViewElevatedStyle"-->
+<!--                >-->
+<!--                <LinearLayout-->
 <!--                    android:layout_width="wrap_content"-->
 <!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Basic"-->
-<!--                    android:textSize="15sp"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <RelativeLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp"-->
+<!--                        >-->
+<!--                        <ImageView-->
+<!--                            android:id="@+id/iv_friends"-->
+<!--                            android:layout_width="40dp"-->
+<!--                            android:layout_height="40dp"-->
+<!--                            android:src="@drawable/friends"/>-->
+
+<!--                        <ImageView-->
+<!--                            android:layout_width="20dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:layout_alignParentRight="true"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:src="@drawable/next"-->
+<!--                            android:layout_marginTop="13dp"-->
+<!--                            />-->
+<!--                        &lt;!&ndash; 点击按钮 &ndash;&gt;-->
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_friends"-->
+<!--                            style="@style/Widget.Material3.Button.TextButton"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="left"-->
+<!--                            android:textSize="16dp"-->
+<!--                            android:text="我的好友"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            tools:ignore="MissingConstraints"-->
+<!--                            android:layout_toRightOf="@+id/iv_friends"-->
+<!--                            />-->
+<!--                        &lt;!&ndash;        <com.google.android.material.divider.MaterialDivider&ndash;&gt;-->
+<!--                        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            app:dividerInsetStart="10dp"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            app:dividerInsetEnd="10dp"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            />&ndash;&gt;-->
+<!--                        <com.google.android.material.divider.MaterialDivider-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            app:dividerInsetStart="10dp"-->
+<!--                            app:dividerInsetEnd="10dp"-->
+<!--                            android:layout_alignBottom="@id/btn_friends"-->
+<!--                            />-->
+<!--                    </RelativeLayout>-->
+<!--                    &lt;!&ndash;    我的分享&ndash;&gt;-->
+<!--                    <RelativeLayout-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="40dp">-->
+<!--                        <ImageView-->
+<!--                            android:id="@+id/iv_my_share"-->
+<!--                            android:layout_marginTop="10dp"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:src="@drawable/share"-->
+<!--                            android:layout_marginLeft="5dp"/>-->
+
+<!--                        <ImageView-->
+<!--                            android:layout_width="20dp"-->
+<!--                            android:layout_height="20dp"-->
+<!--                            android:layout_alignParentRight="true"-->
+<!--                            android:src="@drawable/next"-->
+<!--                            android:layout_marginRight="10dp"-->
+<!--                            android:layout_marginTop="13dp"-->
+<!--                            />-->
+<!--                        &lt;!&ndash; 点击按钮 &ndash;&gt;-->
+<!--                        <Button-->
+<!--                            android:id="@+id/btn_my_share"-->
+<!--                            style="@style/Widget.Material3.Button.TextButton"-->
+<!--                            android:layout_width="match_parent"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:gravity="left"-->
+<!--                            android:textSize="16dp"-->
+<!--                            android:text="我的分享"-->
+<!--                            android:textColor="@color/black"-->
+<!--                            tools:ignore="MissingConstraints"-->
+<!--                            android:layout_toRightOf="@+id/iv_my_share"-->
+<!--                            />-->
+<!--                        &lt;!&ndash;        <com.google.android.material.divider.MaterialDivider&ndash;&gt;-->
+<!--                        &lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            android:layout_height="wrap_content"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            app:dividerInsetStart="10dp"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            app:dividerInsetEnd="10dp"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            android:layout_alignBottom="@id/btn_my_share"&ndash;&gt;-->
+<!--                        &lt;!&ndash;            />&ndash;&gt;-->
+<!--                    </RelativeLayout>-->
+<!--                </LinearLayout>-->
+<!--            </com.google.android.material.card.MaterialCardView>-->
+
+<!--            &lt;!&ndash;    问题&ndash;&gt;-->
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20dp"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:layout_marginRight="20dp"-->
+<!--                >-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_problem"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:src="@drawable/friends"/>-->
+
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:src="@drawable/next"-->
+<!--                    android:layout_marginTop="13dp"-->
 <!--                    />-->
-            </LinearLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+<!--                &lt;!&ndash; 点击按钮 &ndash;&gt;-->
+<!--                <Button-->
+<!--                    android:id="@+id/btn_problem"-->
+<!--                    style="@style/Widget.Material3.Button.TextButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="left"-->
+<!--                    android:textSize="16dp"-->
+<!--                    android:text="问题"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    tools:ignore="MissingConstraints"-->
+<!--                    android:layout_toRightOf="@+id/iv_problem"-->
+<!--                    />-->
+<!--                <com.google.android.material.divider.MaterialDivider-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:dividerInsetStart="10dp"-->
+<!--                    app:dividerInsetEnd="10dp"-->
+<!--                    />-->
+<!--                <com.google.android.material.divider.MaterialDivider-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:dividerInsetStart="10dp"-->
+<!--                    app:dividerInsetEnd="10dp"-->
+<!--                    android:layout_alignBottom="@id/btn_problem"-->
+<!--                    />-->
+<!--            </RelativeLayout>-->
+<!--            &lt;!&ndash;    帮助&ndash;&gt;-->
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginLeft="20dp"-->
 
-<!--    我的好友-->
-    <com.google.android.material.card.MaterialCardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        style="?attr/materialCardViewElevatedStyle"
-        >
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-           >
-            <ImageView
-                android:id="@+id/iv_friends"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/friends"/>
+<!--                android:layout_marginRight="20dp"-->
+<!--                >-->
+<!--                <ImageView-->
+<!--                    android:id="@+id/iv_help"-->
+<!--                    android:layout_width="40dp"-->
+<!--                    android:layout_height="40dp"-->
+<!--                    android:src="@drawable/friends"/>-->
 
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/next"
-                android:layout_marginTop="13dp"
-                />
-            <!-- 点击按钮 -->
-            <Button
-                android:id="@+id/btn_friends"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="16dp"
-                android:text="我的好友"
-                android:textColor="@color/black"
-                tools:ignore="MissingConstraints"
-                android:layout_toRightOf="@+id/iv_friends"
-                />
-<!--        <com.google.android.material.divider.MaterialDivider-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:dividerInsetStart="10dp"-->
-<!--            app:dividerInsetEnd="10dp"-->
-<!--            />-->
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="10dp"
-            app:dividerInsetEnd="10dp"
-            android:layout_alignBottom="@id/btn_friends"
-            />
-        </RelativeLayout>
-<!--    我的分享-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp">
-            <ImageView
-                android:id="@+id/iv_my_share"
-                android:layout_marginTop="10dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/share"
-                android:layout_marginLeft="5dp"/>
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/next"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="13dp"
-                />
-            <!-- 点击按钮 -->
-            <Button
-                android:id="@+id/btn_my_share"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="16dp"
-                android:text="我的分享"
-                android:textColor="@color/black"
-                tools:ignore="MissingConstraints"
-                android:layout_toRightOf="@+id/iv_my_share"
-                />
-<!--        <com.google.android.material.divider.MaterialDivider-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            app:dividerInsetStart="10dp"-->
-<!--            app:dividerInsetEnd="10dp"-->
-<!--            android:layout_alignBottom="@id/btn_my_share"-->
-<!--            />-->
-        </RelativeLayout>
-        </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
-
-<!--    问题-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            >
-            <ImageView
-                android:id="@+id/iv_problem"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/friends"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/next"
-                android:layout_marginTop="13dp"
-                />
-            <!-- 点击按钮 -->
-            <Button
-                android:id="@+id/btn_problem"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="16dp"
-                android:text="问题"
-                android:textColor="@color/black"
-                tools:ignore="MissingConstraints"
-                android:layout_toRightOf="@+id/iv_problem"
-                />
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="10dp"
-            app:dividerInsetEnd="10dp"
-            />
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="10dp"
-            app:dividerInsetEnd="10dp"
-            android:layout_alignBottom="@id/btn_problem"
-            />
-        </RelativeLayout>
-<!--    帮助-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-
-            android:layout_marginRight="20dp"
-        >
-            <ImageView
-                android:id="@+id/iv_help"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:src="@drawable/friends"/>
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/next"
-                android:layout_marginTop="13dp"
-                />
-        <!-- 点击按钮 -->
-            <Button
-                android:id="@+id/btn_help"
-                style="@style/Widget.Material3.Button.TextButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:textSize="16dp"
-                android:text="帮助"
-                android:textColor="@color/black"
-                tools:ignore="MissingConstraints"
-                android:layout_toRightOf="@+id/iv_help"
-                />
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:dividerInsetStart="10dp"
-            app:dividerInsetEnd="10dp"
-            android:layout_alignBottom="@id/btn_help"
-            />
-        </RelativeLayout>
-            <!--退出登录-->
-            <Button
-                style="?attr/materialButtonOutlinedStyle"
-                android:id="@+id/outlinedButton"
-                android:gravity="center_horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="退出登录"
-                android:textSize="20sp"
-                app:rippleColor="@color/m3_button_ripple_color_selector"
-                app:icon="@drawable/logout"
-                />
-        </LinearLayout>
-    </RelativeLayout>
+<!--                <ImageView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:src="@drawable/next"-->
+<!--                    android:layout_marginTop="13dp"-->
+<!--                    />-->
+<!--                &lt;!&ndash; 点击按钮 &ndash;&gt;-->
+<!--                <Button-->
+<!--                    android:id="@+id/btn_help"-->
+<!--                    style="@style/Widget.Material3.Button.TextButton"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:gravity="left"-->
+<!--                    android:textSize="16dp"-->
+<!--                    android:text="帮助"-->
+<!--                    android:textColor="@color/black"-->
+<!--                    tools:ignore="MissingConstraints"-->
+<!--                    android:layout_toRightOf="@+id/iv_help"-->
+<!--                    />-->
+<!--                <com.google.android.material.divider.MaterialDivider-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:dividerInsetStart="10dp"-->
+<!--                    app:dividerInsetEnd="10dp"-->
+<!--                    android:layout_alignBottom="@id/btn_help"-->
+<!--                    />-->
+<!--            </RelativeLayout>-->
+<!--            &lt;!&ndash;退出登录&ndash;&gt;-->
+<!--            <Button-->
+<!--                style="?attr/materialButtonOutlinedStyle"-->
+<!--                android:id="@+id/outlinedButton"-->
+<!--                android:gravity="center_horizontal"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginTop="20dp"-->
+<!--                android:text="退出登录"-->
+<!--                android:textSize="20sp"-->
+<!--                app:rippleColor="@color/m3_button_ripple_color_selector"-->
+<!--                app:icon="@drawable/logout"-->
+<!--                />-->
+<!--        </LinearLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

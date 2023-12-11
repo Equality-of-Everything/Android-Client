@@ -106,7 +106,7 @@ public class MapFragment extends Fragment {
 
         mv = (MapView) mapView.findViewById(R.id.map);
         contextView = mapView.findViewById(R.id.context_view);
-        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX);
+        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NORMAL);
         // 设置个性化地图样式文件的路径和加载方式
         mv.setMapCustomStylePath(customStyleFilePath);
         // 动态设置个性化地图样式是否生效
