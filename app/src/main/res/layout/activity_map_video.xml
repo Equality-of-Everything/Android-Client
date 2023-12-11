@@ -13,6 +13,26 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:id="@+id/recyclerView"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"  />
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"  >
 
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"/>
+                <ImageView
+                    android:id="@+id/btn_jump_vr"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginRight="10dp"
+                    android:onClick="VROnclick"
+                    android:src="@drawable/vr" />
+        </LinearLayout>
 </RelativeLayout>

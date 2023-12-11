@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.android_client.MainActivity;
@@ -56,7 +57,7 @@ public class Map_VRActivity extends AppCompatActivity {
             public void onClick() {
                 //点击事件
                 super.onClick();
-                Toast.makeText(Map_VRActivity.this, "点击了全景", Toast.LENGTH_SHORT).show();
+
             }
 
             @SuppressLint("ShowToast")

@@ -128,6 +128,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 Log.d("VideoAdapter", "Player state changed. playWhenReady: " + playWhenReady + " state: " + playbackState);
             }
         });
+
     }
 
     @NonNull
@@ -151,18 +152,29 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             player.prepare();
             currentPlayingPosition = position;
         }
-        holder.playicon.setVisibility(View.VISIBLE); // 显示暂停图标
         //点击暂停事件
         holder.playerView.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 if (player.isPlaying()) {
                     player.pause();
-                    holder.playicon.setVisibility(View.VISIBLE);// 显示另一个组件
+                    holder.playicon.setVisibility(View.VISIBLE);
                 } else {
                     player.play();
-                    holder.playicon.setVisibility(View.GONE);// 隐藏另一个组件
+                    holder.playicon.setVisibility(View.GONE);
+                }
+            }
+        });
+        // 设置视频播放状态监听器
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onPlaybackStateChanged(int state) {
+                if (state == Player.STATE_READY && player.getPlayWhenReady()) {
+                    // 视频正在播放，隐藏按钮
+                    holder.playicon.setVisibility(View.GONE);
+                } else {
+                    // 视频暂停或停止，显示按钮
+                    holder.playicon.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -172,21 +184,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         super.onViewRecycled(holder);
         holder.playerView.setPlayer(null);
     }
-
     @Override
     public void onViewDetachedFromWindow(@NonNull VideoViewHolder holder) {
         super.onViewDetachedFromWindow(holder);
         holder.playerView.setPlayer(null);
         player.setPlayWhenReady(false);
     }
-
     @Override
     public void onViewAttachedToWindow(@NonNull VideoViewHolder holder) {
         super.onViewAttachedToWindow(holder);
         holder.playerView.setPlayer(player);
         if (holder.getAdapterPosition() == currentPlayingPosition) {
             player.setPlayWhenReady(true);
-            holder.playicon.setVisibility(View.GONE); // 隐藏另一个组件
         } else {
             player.setPlayWhenReady(false);
         }
@@ -203,6 +212,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         notifyDataSetChanged();
     }
     public void setPlayWhenReady(boolean playWhenReady) {
+
         if (player != null) {
             player.setPlayWhenReady(playWhenReady);
         }
@@ -211,16 +221,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         player.release();
     }
 
-
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         public PlayerView playerView;
         View playicon;
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
-            playerView=itemView.findViewById(R.id.map_video);
+            playerView = itemView.findViewById(R.id.map_video);
             playicon = itemView.findViewById(R.id.video_play);
-
         }
-
     }
 }

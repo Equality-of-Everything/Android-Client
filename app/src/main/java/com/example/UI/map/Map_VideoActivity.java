@@ -6,14 +6,21 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
+
 import com.example.adapter.VideoAdapter;
+import com.example.android_client.LoginActivity;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
+
+import java.util.zip.Inflater;
+
 public class Map_VideoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VideoAdapter adapter;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +35,8 @@ public class Map_VideoActivity extends AppCompatActivity {
                 "https://sns-video-bd.xhscdn.com/stream/110/259/01e54b8c7fc5288c010370038baf2109be_259.mp4"
         };
         //获取urls
-        String[] urls = getIntent().getStringArrayExtra("urls");
-        videoUrls = urls;
+        //String[] urls = getIntent().getStringArrayExtra("urls");
+        //videoUrls = urls;
         System.out.println("videoUrls:"+videoUrls);
 
 
@@ -42,7 +49,6 @@ public class Map_VideoActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-
         adapter = new VideoAdapter(videoUrls,this);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -91,5 +97,9 @@ public class Map_VideoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         adapter.releasePlayer();
+    }
+    public void VROnclick(View view) {
+        Intent intent = new Intent(Map_VideoActivity.this, Map_VRActivity.class);
+        startActivity(intent);
     }
 }
