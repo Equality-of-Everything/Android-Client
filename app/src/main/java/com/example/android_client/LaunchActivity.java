@@ -15,6 +15,8 @@ import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 public class LaunchActivity extends AppCompatActivity {
     private ImageView imageView;
@@ -23,6 +25,12 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launch);
+
+        //环信
+        EMOptions options = new EMOptions();
+        options.setAppKey("1133231211160621#android-client");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
 
         imageView = findViewById(R.id.iv_img);
 

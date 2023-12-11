@@ -48,11 +48,6 @@ public class EnrollActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enroll);
 
-        EMOptions options = new EMOptions();
-        options.setAppKey("1133231211160621#android-client");
-        // 其他 EMOptions 配置。
-        EMClient.getInstance().init(this, options);
-
         // 获取控件
         getViews();
 

@@ -52,11 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        EMOptions options = new EMOptions();
-        options.setAppKey("1133231211160621#android-client");
-        // 其他 EMOptions 配置。
-        EMClient.getInstance().init(this, options);
-
         init();
 
         Log.e("isTokenExpired", TokenManager.isTokenExpired(this)+"");
@@ -176,7 +171,14 @@ public class LoginActivity extends AppCompatActivity {
         
     }
 
-    // 用户登录
+    /**
+     * @param username:
+     * @param password:
+     * @return void
+     * @author Lee
+     * @description 登录成功的同时登录进环信
+     * @date 2023/12/11 17:54
+     */
     public void loginUser(String username, String password) {
         // 调用环信 SDK 提供的登录方法
         EMClient.getInstance().login(username, password, new EMCallBack() {
