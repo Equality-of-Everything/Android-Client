@@ -18,7 +18,7 @@
         android:layout_marginRight="20dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:background="@drawable/img">
+        android:background="@drawable/background">
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,7 +43,8 @@
         android:gravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp">
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

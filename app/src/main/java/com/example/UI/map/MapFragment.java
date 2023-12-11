@@ -366,7 +366,8 @@ public class MapFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    showSnackBar(contextView,result.getMsg(),"我知道了");
                                     switch (result.getCode()) {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
