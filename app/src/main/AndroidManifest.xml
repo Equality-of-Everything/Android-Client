@@ -48,6 +48,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.example.UI.mine.FriendsActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.UI.msg.IMActivity"
             android:exported="true" />
         <activity
