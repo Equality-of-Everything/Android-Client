@@ -55,7 +55,9 @@ android {
 dependencies {
 
     //环信（即时通讯）
-    implementation 'io.hyphenate:hyphenate-chat:4.1.3'
+    implementation 'io.hyphenate:hyphenate-chat:4.2.1'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    //implementation 'io.hyphenate:hyphenate-chat:3.8.3'
 
     // 爆炸菜单
     implementation 'com.nightonke:boommenu:2.1.1'
@@ -77,6 +79,7 @@ dependencies {
 
     // 用于客户端和服务器端交互
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
