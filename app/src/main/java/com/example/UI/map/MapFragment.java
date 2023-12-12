@@ -366,14 +366,20 @@ public class MapFragment extends Fragment {
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+
 //                                    Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
                                     showSnackBar(contextView,result.getMsg(),"我知道了");
                                     switch (result.getCode()) {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
-//                                            showSnackBar(contextView,result.getMsg(),"我知道了");
+                                            //                                            showSnackBar(contextView,result.getMsg(),"我知道了");
                                             Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                            startActivity(intent);
+                                            break;
+                                        case Code.TOKEN_OTHER_LOGIN:
+                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            TokenManager.deleteExpiredTokenFromSharedPreferences(getContext());
                                             startActivity(intent);
                                             break;
                                         default:

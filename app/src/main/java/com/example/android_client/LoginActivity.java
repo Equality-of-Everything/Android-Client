@@ -189,7 +189,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // 在登录成功后，可以在界面上显示登录成功的提示信息
-                        Toast.makeText(LoginActivity.this, "成功", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "成功", Toast.LENGTH_SHORT).show();
+                        showSnackBar(contextView,"环信登录成功！","我知道了");
                         // 初始化环信 SDK
                         EMClient.getInstance().groupManager().loadAllGroups();
                         EMClient.getInstance().chatManager().loadAllConversations();
@@ -205,7 +206,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // 在界面上显示登录失败的提示信息
-                        Toast.makeText(LoginActivity.this, "失败", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(LoginActivity.this, "失败", Toast.LENGTH_SHORT).show();
+                        showSnackBar(contextView,"环信登录失败！","我知道了");
                     }
                 });
             }
