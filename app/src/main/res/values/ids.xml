@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="edt_login_user" type="id" />
+    <item name="favorite_icon" type="id" />
+    <item name="msg_icon" type="id" />
+    <item name="share_icon" type="id" />
 </resources>

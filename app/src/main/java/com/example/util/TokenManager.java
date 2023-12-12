@@ -59,4 +59,18 @@ public class TokenManager {
         return System.currentTimeMillis() > expireTime;
     }
 
+    /*
+     * @param context:
+      * @return void
+     * @author zhang
+     * @description 用于删除Token
+     * @date 2023/12/11 22:00
+     */
+    public static void deleteExpiredTokenFromSharedPreferences(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove("token");
+        editor.apply();
+    }
+
 }

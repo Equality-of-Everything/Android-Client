@@ -131,8 +131,8 @@ public class ResetActivity extends AppCompatActivity {
 //                                    Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                                     return;
                                 }
-                                showSnackBar(contextView,result.getMsg(),"我知道了");
-//                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                showSnackBar(contextView,result.getMsg(),"我知道了");
+                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(ResetActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
