@@ -33,8 +33,10 @@ public class Map_VRActivity extends AppCompatActivity {
         vrpview.setFullscreenButtonEnabled(false);
         //隐藏信息按钮
         vrpview.setInfoButtonEnabled(false);
+        //
         String uri = "vr.jpg";
         vrpview.loadImageFromByteArray(makeimageToByte(uri), options);
+
         vrpview.setEventListener(new VrPanoramaEventListener(){
             @SuppressLint("ShowToast")
             @Override

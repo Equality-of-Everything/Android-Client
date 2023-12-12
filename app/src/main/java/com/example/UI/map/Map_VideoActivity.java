@@ -90,6 +90,14 @@ public class Map_VideoActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // 获取当前可见的ViewHolder
+        int firstVisiblePosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        VideoAdapter.VideoViewHolder viewHolder = (VideoAdapter.VideoViewHolder) recyclerView.findViewHolderForAdapterPosition(firstVisiblePosition);
+
+        // 隐藏按钮
+        if (viewHolder != null) {
+            viewHolder.setPlayIconVisibility(View.GONE);
+        }
         // 恢复播放器
         adapter.setPlayWhenReady(true);
     }

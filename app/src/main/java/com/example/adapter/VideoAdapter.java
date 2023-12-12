@@ -90,6 +90,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private int currentPlayingPosition = -1;
     private ExoPlayer player;
 
+    public int getCurrentPlayingPosition() {
+        return currentPlayingPosition;
+    }
+
 
     public VideoAdapter(String[] videoUrls, Context context) {
         this.videoUrls = videoUrls;
@@ -228,6 +232,9 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             super(itemView);
             playerView = itemView.findViewById(R.id.map_video);
             playicon = itemView.findViewById(R.id.video_play);
+        }
+        public void setPlayIconVisibility(int visibility) {
+            playicon.setVisibility(visibility);
         }
     }
 }
