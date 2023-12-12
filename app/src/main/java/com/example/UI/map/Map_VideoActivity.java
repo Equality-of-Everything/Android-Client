@@ -28,11 +28,11 @@ public class Map_VideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_video);
 
         String[] videoUrls = {
-                "https://sns-video-al.xhscdn.com/stream/110/259/01e56ee29bdc6bee010370038c392f5e82_259.mp4",
-                "https://sns-video-al.xhscdn.com/stream/110/259/01e55482b5c53132010370038bd21ed732_259.mp4",
-                "https://sns-video-bd.xhscdn.com/stream/110/259/01e550946db51284010377038bc2c498a5_259.mp4",
-                "https://sns-video-bd.xhscdn.com/stream/110/259/01e53b3440ab6ad9010370038b6f4458c0_259.mp4",
-                "https://sns-video-bd.xhscdn.com/stream/110/259/01e54b8c7fc5288c010370038baf2109be_259.mp4"
+                "https://sns-video-hw.xhscdn.net/stream/110/259/01e52e7fdf10a938010370038b3da44153_259.mp4",
+                "https://sns-video-hw.xhscdn.net/stream/110/259/01e5002c950b5279010370038a88aeabe0_259.mp4",
+                "https://sns-video-hw.xhscdn.net/stream/110/259/01e46f7034bb07080103710388534f75c5_259.mp4",
+                "https://sns-video-hw.xhscdn.net/stream/110/259/01e5096bc81243b6010377038aaccf5cf2_259.mp4",
+                "https://sns-video-hw.xhscdn.net/stream/110/259/01e52d1dd707d8d3010377038b383db786_259.mp4"
         };
         //获取urls
         //String[] urls = getIntent().getStringArrayExtra("urls");
