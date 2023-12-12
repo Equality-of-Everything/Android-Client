@@ -2,18 +2,20 @@ package com.example.android_client;
 
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
-import static com.example.util.TokenManager.getToken;
-import static com.example.util.TokenManager.isTokenExpired;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,7 +29,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMOptions;
 
 import java.io.IOException;
 
@@ -124,7 +125,8 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showSnackBar(contextView,"登录失败！","我知道了");
+                                showToast(LoginActivity.this,"登录失败");
+//                                showSnackBar(contextView,"登录失败！","我知道了");
 //                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -154,7 +156,8 @@ public class LoginActivity extends AppCompatActivity {
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
 //                                showSnackBar(contextView,result.getMsg()+"","我知道了");
-                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+                                showToast(LoginActivity.this,result.getMsg()+"");
 
                                 //登录环信账号
                                 loginUser(loginUser, loginPwd);
@@ -303,7 +306,7 @@ public class LoginActivity extends AppCompatActivity {
      * @param :
      * @return void
      * @author tcy
-     * @description 点击text跳转到注册页面
+     * @description showSnackBar
      * @date 2023/12/7
      */
     public void showSnackBar(View view,String txt,String btnTxt){
@@ -315,6 +318,25 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         snackbar.show();
+    }
+
+    public void showToast(Context context, String string){
+        Toast toast = new Toast(context);
+        Display display = getWindowManager().getDefaultDisplay();
+        int height = display.getHeight();
+        //设置Toast显示位置，居中，向X,Y轴偏移量均为0
+        toast.setGravity(Gravity.CENTER,0,height/3);
+        //获取自定义视图
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_toast,null);
+        TextView tvMessage = (TextView) view.findViewById(R.id.ErrorTips);
+        //设置文本
+        tvMessage.setText(string);
+        //设置视图
+        toast.setView(view);
+        //设置显示时长
+        toast.setDuration(Toast.LENGTH_SHORT);
+        //显示
+        toast.show();
 
     }
 

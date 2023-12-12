@@ -11,9 +11,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -92,6 +96,7 @@ public class MapFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View mapView = inflater.inflate(R.layout.fragment_map, container, false);
+
 
         // 对爆炸菜单进行初始化
 
@@ -374,11 +379,13 @@ public class MapFragment extends Fragment {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
                                             //                                            showSnackBar(contextView,result.getMsg(),"我知道了");
-                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            showToast(getActivity(),result.getMsg());
                                             startActivity(intent);
                                             break;
                                         case Code.TOKEN_OTHER_LOGIN:
-                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            showToast(getActivity(),result.getMsg());
                                             TokenManager.deleteExpiredTokenFromSharedPreferences(getContext());
                                             startActivity(intent);
                                             break;
@@ -470,6 +477,31 @@ public class MapFragment extends Fragment {
         });
         snackbar.show();
 
+    }
+    public void showToast(Context context, String string){
+        Toast toast = new Toast(context);
+        Display display = getWindowManager().getDefaultDisplay();
+        int height = display.getHeight();
+        //设置Toast显示位置，居中，向X,Y轴偏移量均为0
+        toast.setGravity(Gravity.CENTER,0,height/3);
+        //获取自定义视图
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_toast,null);
+        TextView tvMessage = (TextView) view.findViewById(R.id.ErrorTips);
+        //设置文本
+        tvMessage.setText(string);
+        //设置视图
+        toast.setView(view);
+        //设置显示时长
+        toast.setDuration(Toast.LENGTH_SHORT);
+        //显示
+        toast.show();
+
+    }
+
+    private WindowManager getWindowManager() {
+        Context context = requireContext();
+        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        return windowManager;
     }
 
 }

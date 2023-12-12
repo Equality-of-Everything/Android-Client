@@ -3,11 +3,16 @@ package com.example.android_client;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.util.Result;
@@ -132,7 +137,8 @@ public class ResetActivity extends AppCompatActivity {
                                     return;
                                 }
 //                                showSnackBar(contextView,result.getMsg(),"我知道了");
-                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(ResetActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                showToast(ResetActivity.this,result.getMsg());
                                 Intent intent = new Intent(ResetActivity.this, LoginActivity.class);
                                 startActivity(intent);
                             }
@@ -158,6 +164,25 @@ public class ResetActivity extends AppCompatActivity {
             }
         });
         snackbar.show();
+
+    }
+    public void showToast(Context context, String string){
+        Toast toast = new Toast(context);
+        Display display = getWindowManager().getDefaultDisplay();
+        int height = display.getHeight();
+        //设置Toast显示位置，居中，向X,Y轴偏移量均为0
+        toast.setGravity(Gravity.CENTER,0,height/3);
+        //获取自定义视图
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_toast,null);
+        TextView tvMessage = (TextView) view.findViewById(R.id.ErrorTips);
+        //设置文本
+        tvMessage.setText(string);
+        //设置视图
+        toast.setView(view);
+        //设置显示时长
+        toast.setDuration(Toast.LENGTH_SHORT);
+        //显示
+        toast.show();
 
     }
 }
