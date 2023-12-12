@@ -181,8 +181,8 @@ public class EnrollActivity extends AppCompatActivity {
                                     showSnackBar(contextView,result.getMsg(),"我知道了");
 //                                    Toast.makeText(EnrollActivity.this,result.getMsg()+"",Toast.LENGTH_SHORT).show();
                                 }
-                                showSnackBar(contextView,result.getMsg(),"我知道了");
-//                                Toast.makeText(EnrollActivity.this, result.getMsg() + "", Toast.LENGTH_SHORT).show();
+//                                showSnackBar(contextView,result.getMsg(),"我知道了");
+                                Toast.makeText(EnrollActivity.this, result.getMsg() + "", Toast.LENGTH_SHORT).show();
 
                                 //注册一个环信账号（以支持即时通讯的一系列服务）
                                 registerUser(username, password);

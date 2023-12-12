@@ -153,8 +153,8 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                showSnackBar(contextView,result.getMsg()+"","我知道了");
-//                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
+//                                showSnackBar(contextView,result.getMsg()+"","我知道了");
+                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
 
                                 //登录环信账号
                                 loginUser(loginUser, loginPwd);

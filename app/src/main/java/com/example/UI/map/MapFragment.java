@@ -371,8 +371,8 @@ public class MapFragment extends Fragment {
                                     switch (result.getCode()) {
                                         case Code.TOKEN_NOT_EXIST:
                                         case Code.TOKEN_INVALID:
-                                            showSnackBar(contextView,result.getMsg(),"我知道了");
-//                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
+//                                            showSnackBar(contextView,result.getMsg(),"我知道了");
+                                            Toast.makeText(getActivity(), result.getMsg(), Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(getActivity(), LoginActivity.class);
                                             startActivity(intent);
                                             break;

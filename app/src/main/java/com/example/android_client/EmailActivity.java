@@ -245,8 +245,8 @@ public class EmailActivity extends AppCompatActivity {
 //                            Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                             return;
                         }
-                        showSnackBar(contextView,result.getMsg(),"我知道了");
-//                        Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
+//                        showSnackBar(contextView,result.getMsg(),"我知道了");
+                        Toast.makeText(EmailActivity.this, result.getMsg(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(EmailActivity.this, ResetActivity.class);
                         intent.putExtra("mail", mail + "");
                         startActivity(intent);
