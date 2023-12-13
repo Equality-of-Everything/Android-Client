@@ -78,6 +78,7 @@ dependencies {
     // 用于对象json处理
     implementation 'com.google.code.gson:gson:2.8.9'
 
+
     // 用于客户端和服务器端交互
     implementation 'com.squareup.okhttp3:okhttp:4.10.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
@@ -99,9 +100,13 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-datasource:2.19.1'
     //vr依赖
     implementation 'com.google.vr:sdk-panowidget:1.30.0';
-
+//    //camera
+    def camerax_version = "1.2.0"
+    implementation "androidx.camera:camera-core:${camerax_version}"
+    implementation "androidx.camera:camera-camera2:${camerax_version}"
+    implementation "androidx.camera:camera-lifecycle:${camerax_version}"
+    implementation "androidx.camera:camera-view:${camerax_version}"
 }
-
 
 
 
