@@ -72,6 +72,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
             ivFriendAvatar = itemView.findViewById(R.id.iv_friend_avatar);
             tvFriendName = itemView.findViewById(R.id.tv_friend_name);
         }
+
     }
 
 }
