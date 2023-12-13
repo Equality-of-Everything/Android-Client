@@ -90,12 +90,16 @@ public class MainActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(1);
                 item.setIcon(R.drawable.message);
                 break;
-            case R.id.navigation_share:
+            case R.id.navigation_camera:
                 mViewPager.setCurrentItem(2);
+                item.setIcon(R.drawable.camera);
+                break;
+            case R.id.navigation_share:
+                mViewPager.setCurrentItem(3);
                 item.setIcon(R.drawable.share);
                 break;
             case R.id.navigation_mine:
-                mViewPager.setCurrentItem(3);
+                mViewPager.setCurrentItem(4);
                 item.setIcon(R.drawable.mine);
                 break;
             default:

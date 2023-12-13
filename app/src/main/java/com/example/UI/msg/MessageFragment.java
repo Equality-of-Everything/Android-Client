@@ -36,10 +36,10 @@ public class MessageFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_conversation);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // 获取所有会话
+//         获取所有会话
         List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
 
-        // 初始化Adapter并设置给RecyclerView
+//         初始化Adapter并设置给RecyclerView
         adapter = new ConversationAdapter(conversations);
         recyclerView.setAdapter(adapter);
 

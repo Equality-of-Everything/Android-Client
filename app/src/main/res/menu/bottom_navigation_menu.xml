@@ -17,6 +17,13 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/navigation_camera"
+        android:icon="@drawable/camera"
+        android:title="Camera"
+        app:showAsAction="always" />
+
+
+    <item
         android:id="@+id/navigation_share"
         android:icon="@drawable/share"
         android:title="@string/title_share"

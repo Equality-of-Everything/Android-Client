@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 
+import com.example.UI.camera.CameraFragment;
 import com.example.UI.map.MapFragment;
 import com.example.UI.msg.MessageFragment;
 import com.example.UI.mine.MineFragment;
@@ -22,6 +23,7 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         // 加载初始化Fragment
         mFragments.add(new MapFragment());
         mFragments.add(new MessageFragment());
+        mFragments.add(new CameraFragment());
         mFragments.add(new ShareFragment());
         mFragments.add(new MineFragment());
     }
@@ -35,14 +37,15 @@ public class FragmentAdapter extends FragmentPagerAdapter {
                 break;
             case 1:
                 fragment = mFragments.get(1);
-
                 break;
             case 2:
                 fragment = mFragments.get(2);
-
                 break;
             case 3:
                 fragment = mFragments.get(3);
+                break;
+            case 4:
+                fragment = mFragments.get(4);
                 break;
             default:
         }
