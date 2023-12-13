@@ -28,6 +28,9 @@ public class IndividualActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         conversationId = intent.getStringExtra("friendId");
+        if (conversationId!= null) {
+            tvUserName.setText(conversationId);
+        }
     }
 
     private void setListener() {
