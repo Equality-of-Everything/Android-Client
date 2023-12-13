@@ -66,6 +66,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -405,13 +406,16 @@ public class MapFragment extends Fragment {
                         };
                         List<ShareInfo> shareInfos = gson.fromJson(data, shareInfoTypeToken.getType());
                         //解析数据
-                        List<String> urls = new ArrayList<>();
+                        List<String> videoUrls = new ArrayList<>();
+                        List<String> vrUrls = new ArrayList<>();
                         for (ShareInfo shareInfo1 : shareInfos) {
-                            urls.add(shareInfo1.getVideoUrl());
+                            videoUrls.add(shareInfo1.getVideoUrl());
+                            vrUrls.add(shareInfo1.getVrImageUrl());
                         }
-                        Log.e("urls", urls.toString());
+                        Log.e("videoUrls", videoUrls.toString());
+                        Log.e("vrUrls", vrUrls.toString());
 
-                        JumpToVedio(urls.toArray(new String[urls.size()]));
+                        JumpToVedio(videoUrls.toArray(new String[videoUrls.size()]),vrUrls.toArray(new String[vrUrls.size()]));
                     }
                 });
             }
@@ -425,13 +429,14 @@ public class MapFragment extends Fragment {
      * @description 跳转至视频播放页面
      * @date 2023/12/7 9:43
      */
-    private void JumpToVedio(String[] urls) {
+    private void JumpToVedio(String[] videoUrls,String[] vrUrls) {
         pauseSeconds();
         //跳转到Map_VideoActivity
         Activity activity = getActivity();
         Intent intent = new Intent(activity, Map_VideoActivity.class);
         // 在 Intent 中携带需要传递的数据
-        intent.putExtra("urls", urls);
+        intent.putExtra("videoUrls", videoUrls);
+        intent.putExtra("vrUrls", vrUrls);
         activity.startActivity(intent);
     }
 

@@ -65,7 +65,8 @@ public class Map_VRActivity extends AppCompatActivity {
             public void onLoadSuccess() {
                 //加载成功
                 super.onLoadSuccess();
-                Toast.makeText(Map_VRActivity.this, "加载完成", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Map_VRActivity.this, "加载完成", Toast.LENGTH_SHORT).show();
+                showToast(Map_VRActivity.this, "加载完成");
             }
 
             @SuppressLint("ShowToast")
@@ -73,7 +74,9 @@ public class Map_VRActivity extends AppCompatActivity {
             public void onLoadError(String errorMessage) {
                 //加载失败
                 super.onLoadError(errorMessage);
-                Toast.makeText(Map_VRActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Map_VRActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+                showToast(Map_VRActivity.this, "加载失败");
+
             }
 
             @SuppressLint("ShowToast")
@@ -89,7 +92,8 @@ public class Map_VRActivity extends AppCompatActivity {
             public void onDisplayModeChanged(int newDisplayMode) {
                 //切换模式
                 super.onDisplayModeChanged(newDisplayMode);
-                Toast.makeText(Map_VRActivity.this, "改变显示模式", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(Map_VRActivity.this, "改变显示模式", Toast.LENGTH_SHORT).show();
+                showToast(Map_VRActivity.this, "改变显示模式");
             }
         });
     }
@@ -170,5 +174,33 @@ public class Map_VRActivity extends AppCompatActivity {
             System.gc();
         }
         super.onDestroy();
+    }
+
+    /**
+     * @param context:
+     * @param string:
+     * @return void
+     * @author zhang
+     * @description 用于自定义Toast
+     * @date 2023/12/13 15:13
+     */
+    public void showToast(Context context, String string){
+        Toast toast = new Toast(context);
+        Display display = getWindowManager().getDefaultDisplay();
+        int height = display.getHeight();
+        //设置Toast显示位置，居中，向X,Y轴偏移量均为0
+        toast.setGravity(Gravity.CENTER,0,height/3);
+        //获取自定义视图
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_toast,null);
+        TextView tvMessage = (TextView) view.findViewById(R.id.ErrorTips);
+        //设置文本
+        tvMessage.setText(string);
+        //设置视图
+        toast.setView(view);
+        //设置显示时长
+        toast.setDuration(Toast.LENGTH_SHORT);
+        //显示
+        toast.show();
+
     }
 }
