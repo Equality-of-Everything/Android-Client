@@ -19,7 +19,7 @@ import java.util.Locale;
 /**
  * @Author : Lee
  * @Date : Created in 2023/12/13 13:59
- * @Decription :
+ * @Decription : 聊天界面的Adapter
  */
 
 public class ChatAdapter extends ArrayAdapter<EMMessage> {
