@@ -1,5 +1,7 @@
 package com.example.android_client;
 
+import static com.example.android_client.LoginActivity.ip;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -109,7 +111,7 @@ public class ResetActivity extends AppCompatActivity {
                         .build();
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://10.7.88.235:8080/user/resetPassword")
+                        .url("http://"+ip+":8080/user/resetPassword")
                         .post(body)
                         .build();
                 client.newCall(request).enqueue(new Callback() {

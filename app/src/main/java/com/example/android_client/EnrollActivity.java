@@ -1,5 +1,7 @@
 package com.example.android_client;
 
+import static com.example.android_client.LoginActivity.ip;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -159,7 +161,7 @@ public class EnrollActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
                 Request request = new Request.Builder()
-                       .url("http://10.7.88.235:8080/user/register")
+                       .url("http://"+ip+":8080/user/register")
                        .post(body)
                        .build();
                 client.newCall(request).enqueue(new Callback() {

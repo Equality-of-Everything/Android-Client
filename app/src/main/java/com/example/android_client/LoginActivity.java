@@ -47,6 +47,8 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnJumpEnroll;//跳转注册（没有账号，注册一个）
     private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
     private View contextView;
+
+    public static String ip = "10.7.88.107";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -114,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://10.7.88.235:8080/user/login")
+                        .url("http://"+ip+":8080/user/login")
                         .post(body)
                         .build();
 

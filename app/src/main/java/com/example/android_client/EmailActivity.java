@@ -1,5 +1,7 @@
 package com.example.android_client;
 
+import static com.example.android_client.LoginActivity.ip;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -127,7 +129,7 @@ public class EmailActivity extends AppCompatActivity {
             @Override
             public void run() {
                 OkHttpClient client = new OkHttpClient();//创建OkHttpClient对象
-                String url = "http://10.7.88.235:8080/mail/sendCode?mail=" + mailStr;
+                String url = "http://"+ip+":8080/mail/sendCode?mail=" + mailStr;
                 Request request = new Request.Builder()
                         .url(url)
                         .get()
@@ -222,7 +224,7 @@ public class EmailActivity extends AppCompatActivity {
                .add("code", code)
                .build();
         Request request = new Request.Builder()
-               .url("http://10.7.88.235:8080//mail/checkCode")
+               .url("http://"+ip+":8080//mail/checkCode")
                .post(formBody)
                .build();
         client.newCall(request).enqueue(new Callback() {
