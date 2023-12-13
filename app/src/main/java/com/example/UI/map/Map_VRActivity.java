@@ -3,11 +3,19 @@ package com.example.UI.map;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
@@ -16,6 +24,8 @@ import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Map_VRActivity extends AppCompatActivity {
     //vr控件
@@ -34,8 +44,20 @@ public class Map_VRActivity extends AppCompatActivity {
         //隐藏信息按钮
         vrpview.setInfoButtonEnabled(false);
         //
-        String uri = "vr.jpg";
-        vrpview.loadImageFromByteArray(makeimageToByte(uri), options);
+        String imageUrl =  getIntent().getStringExtra("imageUrl");
+
+        Glide.with(this)
+                .asBitmap()
+                .load(imageUrl)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        vrpview.loadImageFromByteArray(byteArray, options);
+                    }
+                });
 
         vrpview.setEventListener(new VrPanoramaEventListener(){
             @SuppressLint("ShowToast")

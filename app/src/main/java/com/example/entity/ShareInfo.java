@@ -36,12 +36,25 @@ public class ShareInfo {
     private int likeUserId;
     // Upload Time - 上传时间
     private Date uploadTime;
+    private String vrImageUrl;
 
-    public ShareInfo() {}
-    public ShareInfo(int id, int userInfoId, int mapInfoId,
-                     String ip, String videoUrl, int imageLibraryId,
-                     String text, String type, int likeCount, int commentId,
-                     int tagId, int likeUserId, Date uploadTime) {
+    public String getVrImageUrl() {
+        return vrImageUrl;
+    }
+
+    public void setVrImageUrl(String vrImageUrl) {
+        this.vrImageUrl = vrImageUrl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public ShareInfo(int id, int userInfoId, int mapInfoId, String ip, String videoUrl, int imageLibraryId, String text, String type, int likeCount, int commentId, int tagId, int likeUserId, Date uploadTime, String vrImageUrl) {
         this.id = id;
         this.userInfoId = userInfoId;
         this.mapInfoId = mapInfoId;
@@ -55,8 +68,10 @@ public class ShareInfo {
         this.tagId = tagId;
         this.likeUserId = likeUserId;
         this.uploadTime = uploadTime;
+        this.vrImageUrl = vrImageUrl;
     }
 
+    public ShareInfo() {}
     public int getUserInfoId() {
         return userInfoId;
     }

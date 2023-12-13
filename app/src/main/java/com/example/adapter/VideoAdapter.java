@@ -2,6 +2,7 @@ package com.example.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.SurfaceTexture;
 import android.media.AudioDeviceInfo;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.UI.map.Map_VRActivity;
 import com.example.android_client.R;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DeviceInfo;
@@ -89,17 +91,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     // 当前正在播放的视频位置
     private int currentPlayingPosition = -1;
     private ExoPlayer player;
-
+    private String[] imageUrls;
+    private View imageVr;
     public int getCurrentPlayingPosition() {
         return currentPlayingPosition;
     }
 
 
-    public VideoAdapter(String[] videoUrls, Context context) {
+    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr) {
         this.videoUrls = videoUrls;
         this.context = context;
-
-
+        this.imageUrls = imageUrls;
+        this.imageVr = imageVr;
         //设置缓冲区大小
         LoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
@@ -182,6 +185,18 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 }
             }
         });
+        //判断正在播放的视频的vr图像是否为空
+        if (imageUrls[position] != null) {
+            imageVr.setVisibility(View.VISIBLE); // 显示图像组件
+            imageVr.setOnClickListener(v -> {
+                // 点击事件跳转到vractivity，并传递图像URL
+                Intent intent = new Intent(context, Map_VRActivity.class);
+                intent.putExtra("imageUrl", imageUrls[position]);
+                context.startActivity(intent);
+            });
+        } else {
+            imageVr.setVisibility(View.GONE); // 隐藏图像组件
+        }
     }
     @Override
     public void onViewRecycled(@NonNull VideoViewHolder holder) {
@@ -216,7 +231,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         notifyDataSetChanged();
     }
     public void setPlayWhenReady(boolean playWhenReady) {
-
         if (player != null) {
             player.setPlayWhenReady(playWhenReady);
         }

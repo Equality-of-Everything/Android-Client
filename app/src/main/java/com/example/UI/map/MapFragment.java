@@ -1,5 +1,6 @@
 package com.example.UI.map;
 
+import static com.example.android_client.LoginActivity.ip;
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 
@@ -344,7 +345,7 @@ public class MapFragment extends Fragment {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                        .url("http://10.7.88.235:8080/map/video")
+                        .url("http://"+ip+":8080/map/video")
                         .post(body)
                         .header("Authorization", TokenManager.getToken(getContext()))
                         .build();
