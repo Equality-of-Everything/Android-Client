@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.google.vr.sdk.widgets.pano.VrPanoramaEventListener;
@@ -16,17 +19,17 @@ import com.google.vr.sdk.widgets.pano.VrPanoramaView;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 
 public class Map_VRActivity extends AppCompatActivity {
     //vr控件
     private VrPanoramaView vrpview;
-    //byte格式
-    private Bitmap bitmap = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_vractivity);
-        vrpview =(VrPanoramaView) findViewById(R.id.my_vr_view);
+        vrpview = findViewById(R.id.my_vr_view);
         VrPanoramaView.Options options = new VrPanoramaView.Options();
         options.inputType = VrPanoramaView.Options.TYPE_MONO;
         //隐藏全屏模式
@@ -34,8 +37,20 @@ public class Map_VRActivity extends AppCompatActivity {
         //隐藏信息按钮
         vrpview.setInfoButtonEnabled(false);
         //
-        String uri = "vr.jpg";
-        vrpview.loadImageFromByteArray(makeimageToByte(uri), options);
+        String imageUrl =  getIntent().getStringExtra("imageUrl");
+
+        Glide.with(this)
+                .asBitmap()
+                .load(imageUrl)
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        resource.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        vrpview.loadImageFromByteArray(byteArray, options);
+                    }
+                });
 
         vrpview.setEventListener(new VrPanoramaEventListener(){
             @SuppressLint("ShowToast")
@@ -72,35 +87,7 @@ public class Map_VRActivity extends AppCompatActivity {
         });
     }
 
-    private byte[] makeimageToByte(String path) {
-        byte[] data = null;
-        InputStream input = null;
-        ByteArrayOutputStream output = null;
-        try {
-            input = getAssets().open(path);
-            output = new ByteArrayOutputStream();
-            byte[] buf = new byte[1024];
-            int numBytesRead;
-            while ((numBytesRead = input.read(buf)) != -1) {
-                output.write(buf, 0, numBytesRead);
-            }
-            data = output.toByteArray();
-        } catch (IOException ex1) {
-            ex1.printStackTrace();
-        } finally {
-            try {
-                if (input != null) {
-                    input.close();
-                }
-                if (output != null) {
-                    output.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return data;
-    }
+
     /**
      * @param :
      * @return void
@@ -143,10 +130,6 @@ public class Map_VRActivity extends AppCompatActivity {
     protected void onDestroy() {
 
         vrpview.shutdown();
-        if (bitmap != null && !bitmap.isRecycled()){
-            bitmap.recycle();
-            System.gc();
-        }
         super.onDestroy();
     }
 }

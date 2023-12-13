@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.adapter.VideoAdapter;
 import com.example.android_client.LoginActivity;
@@ -21,7 +22,7 @@ import java.util.zip.Inflater;
 public class Map_VideoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VideoAdapter adapter;
-
+    private View imageVr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,14 @@ public class Map_VideoActivity extends AppCompatActivity {
                 "https://sns-video-hw.xhscdn.net/stream/110/259/01e5096bc81243b6010377038aaccf5cf2_259.mp4",
                 "https://sns-video-hw.xhscdn.net/stream/110/259/01e52d1dd707d8d3010377038b383db786_259.mp4"
         };
+        String[] imageUrls={
+                "https://img.zcool.cn/community/014d9e5ae19da2a801214a61308a99.JPG@2o.jpg",
+                null,
+                "https://img.zcool.cn/community/01429859a3e6c2a801211d25e8611e.jpg@2o.jpg",
+                "https://img.zcool.cn/community/01241455683b7e0000012b206b751a.jpg@3000w_1l_2o_100sh.jpg",
+                null,
+                null
+        };
         //获取urls
         //String[] urls = getIntent().getStringArrayExtra("urls");
         //videoUrls = urls;
@@ -43,13 +52,16 @@ public class Map_VideoActivity extends AppCompatActivity {
         //初始化 RecyclerView 和 VideoAdapter
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
+        imageVr = findViewById(R.id.btn_jump_vr);
+
+
 
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new VideoAdapter(videoUrls,this);
+        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
