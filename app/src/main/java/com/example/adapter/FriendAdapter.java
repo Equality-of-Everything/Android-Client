@@ -1,5 +1,7 @@
 package com.example.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.UI.mine.IndividualActivity;
 import com.example.android_client.R;
 import com.hyphenate.chat.EMContact;
 
@@ -23,9 +26,11 @@ import java.util.List;
 public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendViewHolder>{
 
     private List<EMContact> friendList;
+    private Context context;
 
-    public FriendAdapter(List<EMContact> friendList) {
+    public FriendAdapter(List<EMContact> friendList, Context context) {
         this.friendList = friendList;
+        this.context = context;
     }
 
     @NonNull
@@ -40,6 +45,16 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     public void onBindViewHolder(@NonNull FriendAdapter.FriendViewHolder holder, int position) {
         EMContact friend = friendList.get(position);
         holder.tvFriendName.setText(friend.getUsername());
+
+        //为item设置点击事件
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, IndividualActivity.class);
+                intent.putExtra("friendId", friend.getUsername());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

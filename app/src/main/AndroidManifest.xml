@@ -48,10 +48,13 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.example.UI.mine.IndividualActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.UI.mine.FriendsActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.UI.msg.IMActivity"
+            android:name="com.example.UI.msg.ChatActivity"
             android:exported="true" />
         <activity
             android:name="com.example.UI.map.Map_VRActivity"
@@ -85,7 +88,7 @@
             android:exported="true" /> <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />
+            android:value="DoDtmLqaoLG2RTse8cKR92cQwGPkQWI9" />
         <!-- 声明 SDK 所需的 service 的核心功能-->
         <service
             android:name="com.hyphenate.chat.EMChatService"

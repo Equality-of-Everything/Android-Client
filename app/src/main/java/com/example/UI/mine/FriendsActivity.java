@@ -33,7 +33,7 @@ public class FriendsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rv_friends);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        friendAdapter = new FriendAdapter(contacts);
+        friendAdapter = new FriendAdapter(contacts, this);
         recyclerView.setAdapter(friendAdapter);
 
         // 手动触发数据加载和显示
