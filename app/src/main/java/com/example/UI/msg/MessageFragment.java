@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.adapter.ConversationAdapter;
+import com.example.adapter.MsgAdapter;
 import com.example.android_client.R;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -22,7 +22,7 @@ import java.util.List;
 public class MessageFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private ConversationAdapter adapter;
+    private MsgAdapter adapter;
 
     public MessageFragment() {
         // Required empty public constructor
@@ -40,11 +40,15 @@ public class MessageFragment extends Fragment {
         List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
 
 //         初始化Adapter并设置给RecyclerView
-        adapter = new ConversationAdapter(conversations);
+        adapter = new MsgAdapter(conversations);
         recyclerView.setAdapter(adapter);
 
         return view;
     }
 
+    private void refreshConversations() {
+        List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
+        adapter.updateConversations(conversations);
+    }
 
 }
