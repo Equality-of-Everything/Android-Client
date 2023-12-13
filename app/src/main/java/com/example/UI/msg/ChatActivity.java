@@ -78,7 +78,6 @@ public class ChatActivity extends AppCompatActivity {
         EMClient.getInstance().chatManager().importMessages(messagesList);
         // 正在使用 `EMConversation` 类时：先获取会话，再更新 SDK 本地数据库会话中的消息
         EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
-        conversation.markAllMessagesAsRead(); // 标记所有消息为已读
     }
 
 
