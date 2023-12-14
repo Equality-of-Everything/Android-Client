@@ -4,17 +4,22 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 
+import android.util.Rational;
 import android.util.Size;
 import android.view.LayoutInflater;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.Camera;
+import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
+import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -23,6 +28,8 @@ import androidx.lifecycle.LifecycleOwner;
 
 import com.example.android_client.R;
 import com.google.common.util.concurrent.ListenableFuture;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * @Auther : xcc
@@ -33,6 +40,10 @@ public class CameraFragment extends Fragment {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private PreviewView cameraView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
+    private Camera camera;
+    private CameraControl cameraControl;
+    private ScaleGestureDetector scaleGestureDetector;
+    private float maxZoomRatio;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -40,6 +51,8 @@ public class CameraFragment extends Fragment {
         cameraView = CameraView.findViewById(R.id.camera_view);
         //获取 CameraProvider
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
+        //手势操作
+        scaleGestureDetector = new ScaleGestureDetector(requireContext(), new ScaleListener());
         //检查 CameraProvider 可用性
         cameraProviderFuture.addListener(() -> {
             try {
@@ -108,28 +121,69 @@ public class CameraFragment extends Fragment {
         // 在Fragment中获取屏幕尺寸和窗口管理器
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-        Size screenSize = new Size(displayMetrics.widthPixels, displayMetrics.heightPixels);
-//        //自定义
-//        int screenWidth = displayMetrics.widthPixels;
-//        int screenHeight = displayMetrics.heightPixels;
-//        // 设置自定义预览宽高比（例如：16:9）
-//        float aspectRatio = 4.0f / 3.0f;
-//        // 计算预览大小以匹配指定的宽高比
-//        int previewWidth = (int) Math.floor(screenWidth * aspectRatio);
-//        int previewHeight = (int) Math.floor(screenHeight * aspectRatio);
-// 设置预览的宽高比和分辨率
+        int width = displayMetrics.widthPixels;
+        int height = displayMetrics.heightPixels;
+        Size screenSize = new Size(width, height);
+
         Preview.Builder previewBuilder = new Preview.Builder()
-                .setTargetResolution(screenSize)
+                .setTargetResolution(new Size(height, height))
                 .setTargetRotation(cameraView.getDisplay().getRotation());
 
-        Preview preview = previewBuilder.build();
+        Preview preview = previewBuilder
+                .build();
 
         CameraSelector cameraSelector = new CameraSelector.Builder()
                 .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                 .build();
-
         preview.setSurfaceProvider(cameraView.getSurfaceProvider());
-
+            //获取相机的控制器
         Camera camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview);
+        cameraControl = camera.getCameraControl();
+        // 获取最大缩放比例
+        maxZoomRatio = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
+        cameraView.setOnTouchListener((view, event) -> {
+            scaleGestureDetector.onTouchEvent(event);
+            return true;
+        });
+    }
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            float scaleFactor = detector.getScaleFactor();
+            ZoomState zoomState = camera.getCameraInfo().getZoomState().getValue();
+            float currentZoomRatio = zoomState.getZoomRatio();
+            float maxZoomRatio = zoomState.getMaxZoomRatio();
+            float newZoomRatio = currentZoomRatio * scaleFactor;
+            // 限制缩放比例在有效范围内
+            newZoomRatio = Math.max(1.0f, Math.min(newZoomRatio, maxZoomRatio));
+            cameraControl.setZoomRatio(newZoomRatio);
+            return true;
+        }
+    }
+
+    public void onPause() {
+        super.onPause();
+        cameraProviderFuture.addListener(() -> {
+            try {
+                cameraProviderFuture.get().unbindAll();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }, ContextCompat.getMainExecutor(requireContext()));
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        cameraProviderFuture.addListener(() -> {
+            try {
+                cameraProviderFuture.get().unbindAll();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }, ContextCompat.getMainExecutor(requireContext()));
     }
 }
