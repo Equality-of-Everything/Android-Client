@@ -15,6 +15,7 @@ public class TokenManager {
 
     private static final String TOKEN_PREFS = "TokenPrefs";
     private static final String TOKEN_KEY = "token";
+    private static final String USER_NAME = "username";
 
     /**
      * @param context:
@@ -71,6 +72,33 @@ public class TokenManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove("token");
         editor.apply();
+    }
+
+    /**
+     * @param context:
+     * @param username:
+     * @return void
+     * @author Lee
+     * @description 登录成功，存一下用户名
+     * @date 2023/12/14 8:45
+     */
+    public static void saveUserName(Context context, String username) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(USER_NAME, username);
+        editor.apply();
+    }
+
+    /**
+     * @param context:
+     * @return String
+     * @author Lee
+     * @description 取用户名
+     * @date 2023/12/14 8:49
+     */
+    public static String getUserName(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
+        return sharedPreferences.getString(USER_NAME, null);
     }
 
 }
