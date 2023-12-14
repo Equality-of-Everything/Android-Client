@@ -88,11 +88,14 @@ public class ChatActivity extends AppCompatActivity {
             public void onMessageReceived(List<EMMessage> messages) {
                 //更新UI
                 runOnUiThread(() -> {
-                    // 收到新消息时，直接将其添加到消息列表中
+                    // 清空原有的消息列表
+                    messagesList.clear();
+                    // 将收到的所有消息添加到消息列表中
                     messagesList.addAll(messages);
+                    // 刷新适配器
                     msgAdapter.notifyDataSetChanged();
                     // 滚动到最后一条消息
-//                    msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1);
+//                    msgListView.smoothScrollToPosition(messagesList.size() - 1);
                 });
             }
         };
