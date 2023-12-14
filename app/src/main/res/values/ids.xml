@@ -4,4 +4,5 @@
     <item name="favorite_icon" type="id" />
     <item name="msg_icon" type="id" />
     <item name="share_icon" type="id" />
+    <item name="iv_share_avatar" type="id" />
 </resources>

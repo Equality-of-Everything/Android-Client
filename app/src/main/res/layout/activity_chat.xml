@@ -10,7 +10,8 @@
         android:id="@+id/msg_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/input_layout"/>
+        android:layout_above="@+id/input_layout"
+        android:divider="@null"/>
 
     <LinearLayout
         android:id="@+id/input_layout"
