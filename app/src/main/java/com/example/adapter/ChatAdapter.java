@@ -36,15 +36,19 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
         EMMessage message = mMsg.get(position);
-        if (view == null) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            // 根据消息的发送方来决定使用哪种布局
-            if (message.direct() == EMMessage.Direct.SEND) {
-                view = inflater.inflate(R.layout.item_chat_send, parent, false); // 发送方消息的布局
-            } else {
-                view = inflater.inflate(R.layout.item_chat_receive, parent, false); // 接收方消息的布局
-            }
+        // 根据消息的发送方来决定使用哪种布局
+        if (message.direct() == EMMessage.Direct.SEND) {
+            view = inflater.inflate(R.layout.item_chat_send, parent, false); // 发送方消息的布局
+        } else {
+            view = inflater.inflate(R.layout.item_chat_receive, parent, false); // 接收方消息的布局
+        }
+
+        // 获取最近一条消息的时间
+        long lastMsgTime = 0;
+        if (position > 0) {
+            lastMsgTime = mMsg.get(position - 1).getMsgTime();
         }
 
         // 设置消息内容
@@ -60,9 +64,9 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         messageTime.setText(sdf.format(time));
 
-        // 检查消息时间与当前时间的间隔
+// 检查消息时间与当前时间的间隔
         long currentTime = System.currentTimeMillis();
-        if (currentTime - message.getMsgTime() > 3 * 60 * 1000) { // 3分钟的毫秒数
+        if (currentTime - message.getMsgTime() > 3 * 60 * 1000 && (currentTime - lastMsgTime > 3 * 60 * 1000 || position == 0)) {
             messageTime.setVisibility(View.VISIBLE);
         } else {
             messageTime.setVisibility(View.GONE);
