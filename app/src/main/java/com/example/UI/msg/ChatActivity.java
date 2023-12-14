@@ -92,7 +92,7 @@ public class ChatActivity extends AppCompatActivity {
                     messagesList.addAll(messages);
                     msgAdapter.notifyDataSetChanged();
                     // 滚动到最后一条消息
-                    msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1);
+//                    msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1);
                 });
             }
         };

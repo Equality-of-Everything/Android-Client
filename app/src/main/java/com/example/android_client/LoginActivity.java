@@ -48,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
     private View contextView;
 
-    public static String ip = "10.7.88.107";
+    public static String ip = "39.105.24.22";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
