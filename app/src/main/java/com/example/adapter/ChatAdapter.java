@@ -57,9 +57,16 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         // 设置消息时间
         TextView messageTime = view.findViewById(R.id.msg_time);
         Date time = new Date(message.getMsgTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
         messageTime.setText(sdf.format(time));
 
+        // 检查消息时间与当前时间的间隔
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - message.getMsgTime() > 3 * 60 * 1000) { // 3分钟的毫秒数
+            messageTime.setVisibility(View.VISIBLE);
+        } else {
+            messageTime.setVisibility(View.GONE);
+        }
 
         return view;
     }

@@ -113,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
                             Toast.makeText(ChatActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
                             messagesList.add(message);
                             msgAdapter.notifyDataSetChanged();
-                            msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1); // 滚动到最后一条消息
+//                            msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1); // 滚动到最后一条消息
                         });
                     }
 
