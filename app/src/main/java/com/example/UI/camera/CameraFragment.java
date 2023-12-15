@@ -173,7 +173,6 @@ public class CameraFragment extends Fragment {
             // 获取最大缩放比例
             maxZoomRatio = camera.getCameraInfo().getZoomState().getValue().getMaxZoomRatio();
             cameraView.setOnTouchListener((view, event) -> {
-
                 scaleGestureDetector.onTouchEvent(event);
                 return true;
             });
@@ -285,6 +284,12 @@ public class CameraFragment extends Fragment {
         return null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initializeCamera();
+    }
+
     // 处理相机资源的生命周期方法
     @Override
     public void onPause() {
@@ -303,6 +308,8 @@ public class CameraFragment extends Fragment {
             }, ContextCompat.getMainExecutor(getContext()));
         }
     }
-
-
+    public void onDestroy() {
+        super.onDestroy();
+        releaseCamera();
+    }
 }
