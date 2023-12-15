@@ -45,12 +45,6 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
             view = inflater.inflate(R.layout.item_chat_receive, parent, false); // 接收方消息的布局
         }
 
-        // 获取最近一条消息的时间
-        long lastMsgTime = 0;
-        if (position > 0) {
-            lastMsgTime = mMsg.get(position - 1).getMsgTime();
-        }
-
         // 设置消息内容
         TextView messageText = view.findViewById(R.id.msg_text);
         if (message.getType() == EMMessage.Type.TXT) {
@@ -60,13 +54,10 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
 
         // 设置消息时间
         TextView messageTime = view.findViewById(R.id.msg_time);
-        Date time = new Date(message.getMsgTime());
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        messageTime.setText(sdf.format(time));
-
-// 检查消息时间与当前时间的间隔
-        long currentTime = System.currentTimeMillis();
-        if (currentTime - message.getMsgTime() > 3 * 60 * 1000 && (currentTime - lastMsgTime > 3 * 60 * 1000 || position == 0)) {
+        if (shouldDisplayTime(position)) {
+            Date time = new Date(message.getMsgTime());
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            messageTime.setText(sdf.format(time));
             messageTime.setVisibility(View.VISIBLE);
         } else {
             messageTime.setVisibility(View.GONE);
@@ -74,4 +65,19 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
 
         return view;
     }
+
+    private boolean shouldDisplayTime(int position) {
+        if (position == 0) {
+            return true; // 第一条消息总是显示时间
+        } else {
+            EMMessage currentMsg = mMsg.get(position);
+            EMMessage lastMsg = mMsg.get(position - 1);
+            long interval = currentMsg.getMsgTime() - lastMsg.getMsgTime();
+            if (interval > 3 * 60 * 1000) {
+                return true; // 间隔大于3分钟，显示时间
+            }
+        }
+        return false; // 其他情况不显示时间
+    }
+
 }
