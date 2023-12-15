@@ -1,37 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="com.example.UI.msg.ChatActivity">
-
-    <ListView
-        android:id="@+id/msg_list"
+<!--   顶部导航栏-->
+    <LinearLayout
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/input_layout"
-        android:divider="@null"/>
+        android:layout_height="wrap_content"
+        android:background="?attr/colorOnPrimary"
+        android:orientation="vertical">
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorOnPrimary">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize"
+                app:titleCentered="true"
+                app:title="哈哈哈"
+                app:menu="@menu/top_app_bar"
+                app:navigationIcon="@drawable/back" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+<!--        <com.google.android.material.divider.MaterialDivider-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:dividerInsetStart="16dp"-->
+<!--            app:dividerInsetEnd="16dp"/>-->
+    </LinearLayout>
+
+<!--    &lt;!&ndash; Note: A RecyclerView can also be used &ndash;&gt;-->
+<!--    <androidx.core.widget.NestedScrollView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+<!--        &lt;!&ndash; Scrollable content &ndash;&gt;-->
+
+<!--    </androidx.core.widget.NestedScrollView>-->
+    <LinearLayout
+        android:id="@+id/comment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topAppBar"
+        tools:ignore="NotSibling"
+        android:layout_above="@+id/input_layout">
+
+        <ListView
+            android:id="@+id/msg_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:divider="@null" />
+    </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/input_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorOnPrimary"
+        >
+<!--        <com.google.android.material.divider.MaterialDivider-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:dividerInsetStart="16dp"-->
+<!--            app:dividerInsetEnd="16dp"/>-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content">-->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:boxStrokeWidth="2dp"
+                app:startIconContentDescription="账号"
+                tools:ignore="ExtraText,MissingConstraints"
+                >
 
-        <EditText
-            android:id="@+id/input_msg"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="请输入"/>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="verify_number" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btn_send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="发送"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/btn_send"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/edtTxt_verify_number"
+                android:text="发送"
+                android:textColor="@color/white"
+                android:backgroundTint="?attr/colorPrimary"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:rippleColor="@color/m3_text_button_ripple_color_selector"
+                tools:ignore="NotSibling" />
 
+        </LinearLayout>
+<!--    </LinearLayout>-->
 </RelativeLayout>
+
+
+<!--        <EditText-->
+<!--            android:id="@+id/input_msg"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:hint="请输入"/>-->
+<!--            <Button-->
+<!--                style="?attr/materialIconButtonStyle"-->
+<!--                android:id="@+id/iconButton"-->
+<!--                app:icon="@drawable/person_add"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+
+<!--                />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_send"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="发送"/>-->
+<!--    </LinearLayout>-->
+

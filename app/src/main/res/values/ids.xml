@@ -5,4 +5,7 @@
     <item name="msg_icon" type="id" />
     <item name="share_icon" type="id" />
     <item name="iv_share_avatar" type="id" />
+    <item name="topAppBar" type="id" />
+    <item name="input_msg" type="id" />
+    <item name="btn_send" type="id" />
 </resources>
