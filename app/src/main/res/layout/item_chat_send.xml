@@ -4,20 +4,13 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:clickable="false">
-
-    <ImageView
-        android:id="@+id/msg_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/friend_item"
-        android:layout_margin="8dp"
-        android:layout_alignParentEnd="true" />
         <LinearLayout
             android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_toLeftOf="@id/msg_avatar">
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            >
 
             <TextView
                 android:id="@+id/msg_text"
@@ -27,15 +20,23 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/bg_send"
                 android:textColor="?attr/colorPrimary"
-                android:text="Hello, how are you?" />
+                android:text="Hello, how are you?"
+                android:layout_toLeftOf="@id/msg_avatar"/>
+            <ImageView
+                android:id="@+id/msg_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/friend_item"
+                android:layout_margin="8dp"
+                />
 
-            <TextView
-                android:id="@+id/msg_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="4dp"
-                android:textColor="@android:color/darker_gray"
-                android:text="12:30 PM" />
+<!--            <TextView-->
+<!--                android:id="@+id/msg_time"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:padding="4dp"-->
+<!--                android:textColor="@android:color/darker_gray"-->
+<!--                android:text="12:30 PM" />-->
         </LinearLayout>
 
 
