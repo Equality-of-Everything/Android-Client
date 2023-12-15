@@ -14,8 +14,10 @@ import com.example.adapter.ChatAdapter;
 import com.example.android_client.R;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMMessage;
 
 import java.util.ArrayList;
@@ -40,43 +42,67 @@ public class ChatActivity extends AppCompatActivity {
 
         //获取本地所有会话
         List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
-//        //在界面上显示所有会话
 
-//        for (EMConversation conversation : conversations) {
-//            List<EMMessage> messages = conversation.getAllMessages();
-//            messagesList.addAll(messages);
-//        }
         // msgId：要获取消息的消息 ID。
         EMMessage msg = EMClient.getInstance().chatManager().getMessage(conversationId);
-
-        msgAdapter = new ChatAdapter(this, messagesList);
-        msgListView.setAdapter(msgAdapter);
 
         //从上一个界面获取对方用户的ID
         Intent intent = getIntent();
         conversationId = intent.getStringExtra("conversationId");
 
-        // 根据会话ID获取特定会话的消息，并设置适配器
-        for (EMConversation conversation : conversations) {
-            String conversationId = conversation.conversationId();
-            if (conversationId.equals(this.conversationId)) {
-                List<EMMessage> messages = conversation.getAllMessages();
-//                messagesList.clear(); // 清空原有的消息列表
-                messagesList.addAll(messages); // 将特定会话的消息添加到消息列表中
-                msgAdapter = new ChatAdapter(this, messagesList);
-                msgListView.setAdapter(msgAdapter);
-                break; // 找到特定会话后退出循环
-            }
-        }
+//        EMClient.getInstance().chatManager().importMessages(messagesList);
+//        // 获取与特定好友的所有聊天记录
+//        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+//        if (conversation != null) {
+//            // 获取与特定好友的所有消息
+//            List<EMMessage> allMessages = conversation.getAllMessages();
+//            messagesList.addAll(allMessages); // 将所有消息添加到消息列表中
+//        }
+
+        // 设置消息适配器
+        msgAdapter = new ChatAdapter(this, messagesList);
+        msgListView.setAdapter(msgAdapter);
+
+        // 异步获取与特定好友的所有聊天记录
+        EMClient.getInstance().chatManager().asyncFetchHistoryMessage(
+                conversationId,
+                EMConversation.EMConversationType.Chat,
+                20, // 一次获取的消息数量
+                null, // 起始消息ID，可为null
+                EMConversation.EMSearchDirection.UP, // 查询方向
+                new EMValueCallBack<EMCursorResult<EMMessage>>() {
+                    @Override
+                    public void onSuccess(EMCursorResult<EMMessage> value) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                List<EMMessage> allMessages = value.getData();
+                                messagesList.addAll(allMessages);
+                                msgAdapter.notifyDataSetChanged();
+                                msgListView.smoothScrollToPosition(messagesList.size() - 1);
+
+                                // 批量导入消息到本地数据库
+                                EMClient.getInstance().chatManager().importMessages(allMessages);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError(int error, String errorMsg) {
+                        // 处理异常情况
+                        Toast.makeText(ChatActivity.this, "获取聊天记录失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
 
         receiveMsg();//接收消息
         setListener();//发送消息
 
         // 批量导入消息到本地数据库
-        EMClient.getInstance().chatManager().importMessages(messagesList);
-        // 正在使用 `EMConversation` 类时：先获取会话，再更新 SDK 本地数据库会话中的消息
-        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
+//        EMClient.getInstance().chatManager().importMessages(messagesList);
+
     }
 
 
@@ -92,9 +118,10 @@ public class ChatActivity extends AppCompatActivity {
 //                    messagesList.clear();
                     // 将收到的所有消息添加到消息列表中
                     messagesList.addAll(messages);
+
                     // 刷新适配器
                     msgAdapter.notifyDataSetChanged();
-                    //gundong
+                    msgListView.smoothScrollToPosition(messagesList.size() - 1);
                 });
             }
         };
@@ -115,7 +142,7 @@ public class ChatActivity extends AppCompatActivity {
                             Toast.makeText(ChatActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
                             messagesList.add(message);
                             msgAdapter.notifyDataSetChanged();
-                            //gundong
+                            msgListView.smoothScrollToPosition(messagesList.size() - 1);
                         });
                     }
 
