@@ -61,7 +61,7 @@ public class ChatActivity extends AppCompatActivity {
             String conversationId = conversation.conversationId();
             if (conversationId.equals(this.conversationId)) {
                 List<EMMessage> messages = conversation.getAllMessages();
-                messagesList.clear(); // 清空原有的消息列表
+//                messagesList.clear(); // 清空原有的消息列表
                 messagesList.addAll(messages); // 将特定会话的消息添加到消息列表中
                 msgAdapter = new ChatAdapter(this, messagesList);
                 msgListView.setAdapter(msgAdapter);
