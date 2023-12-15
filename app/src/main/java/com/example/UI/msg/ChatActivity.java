@@ -89,13 +89,12 @@ public class ChatActivity extends AppCompatActivity {
                 //更新UI
                 runOnUiThread(() -> {
                     // 清空原有的消息列表
-                    messagesList.clear();
+//                    messagesList.clear();
                     // 将收到的所有消息添加到消息列表中
                     messagesList.addAll(messages);
                     // 刷新适配器
                     msgAdapter.notifyDataSetChanged();
-                    // 滚动到最后一条消息
-//                    msgListView.smoothScrollToPosition(messagesList.size() - 1);
+                    //gundong
                 });
             }
         };
@@ -116,7 +115,7 @@ public class ChatActivity extends AppCompatActivity {
                             Toast.makeText(ChatActivity.this, "发送成功", Toast.LENGTH_SHORT).show();
                             messagesList.add(message);
                             msgAdapter.notifyDataSetChanged();
-//                            msgListView.smoothScrollToPosition(msgAdapter.getCount() - 1); // 滚动到最后一条消息
+                            //gundong
                         });
                     }
 

@@ -22,7 +22,6 @@
             android:id="@+id/tv_msg_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="小李"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -30,7 +29,6 @@
             android:id="@+id/tv_last_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你好"
             android:textSize="14sp" />
 
     </LinearLayout>
@@ -42,7 +40,6 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:padding="8dp"
-        android:text="12:00"
         android:textSize="12sp"
         android:textColor="@color/black" />
 </RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.adapter;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -93,6 +94,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
             // 设置列表项的显示内容
             //发信息来的用户名
             String msgUsername = conversation.conversationId();
+            Log.e("MsgAdapter", "msgUsername: " + msgUsername);
             tvMsgName.setText(msgUsername);
 
             //获取最近一条消息
@@ -105,6 +107,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
 
                 // 获取消息内容
                 String messageContent = getMessageContent(lastMsg);
+                Log.e("MsgAdapter", "lastMsg: " + messageContent);
                 tvLastMsg.setText(messageContent);
             }
         }
@@ -148,7 +151,13 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
                 case TXT:
                     // 文本消息
                     EMTextMessageBody textBody = (EMTextMessageBody) msg.getBody();
-                    msgContent = textBody.getMessage();
+                    String originalMsg = textBody.getMessage();
+                    if (originalMsg.length() > 15) {
+                        // 如果消息长度超过15，截取前15个字符并添加省略号
+                        msgContent = originalMsg.substring(0, 15) + "...";
+                    } else {
+                        msgContent = originalMsg;
+                    }
                     break;
                 case IMAGE:
                     // 图片消息

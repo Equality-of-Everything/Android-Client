@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     private View contextView;
 
 //    public static String ip = "39.105.24.22";
-    public static String ip = "10.7.88.107";
+    public static String ip = "192.168.137.12";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -158,6 +158,8 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
+                                //存用户名
+                                TokenManager.saveUserName(LoginActivity.this, loginUser);
 //                                showSnackBar(contextView,result.getMsg()+"","我知道了");
 //                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();
                                 showToast(LoginActivity.this,result.getMsg()+"");
