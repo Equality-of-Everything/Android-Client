@@ -1,24 +1,23 @@
 package com.example.UI.camera;
-import static androidx.core.content.ContextCompat.getSystemService;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.icu.text.SimpleDateFormat;
+import android.location.Location;
+import android.location.LocationManager;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 
 import android.util.Log;
-import android.util.Rational;
 import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.ScaleGestureDetector;
@@ -31,13 +30,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraControl;
-import androidx.camera.core.CameraProvider;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
 import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
-import androidx.camera.core.VideoCapture;
 import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -46,18 +44,16 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
@@ -81,6 +77,7 @@ public class CameraFragment extends Fragment {
     private ImageButton camera_shot;
     private ExecutorService cameraExecutor;
     private ImageCapture imageCapture;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -98,16 +95,17 @@ public class CameraFragment extends Fragment {
             public void run() {
                 try {
                     if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        // 如果相机权限未被授予，则请求相机权限
-                        ActivityCompat.requestPermissions((Activity) getContext(), new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                        // 如果相机权限未被授予，则请求权限
+                        ActivityCompat.requestPermissions((Activity) getContext(),
+                                new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
                     } else {
                         initializeCamera(); // 如果已经有权限，直接初始化相机
                     }
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+
         }, ContextCompat.getMainExecutor(getContext()));
         camera_shot.setOnClickListener(v -> {
             // 调用拍照功能
@@ -116,71 +114,37 @@ public class CameraFragment extends Fragment {
 
         return CameraView;
         }
-
-@Override
-
+    @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 // 相机权限已被授予，执行相应操作
-
                 initializeCamera();
-
             } else {
-
                 // 相机权限被拒绝，给出相应的提示
-
                 Toast.makeText(getContext(), "相机权限被拒绝", Toast.LENGTH_SHORT).show();
-
             }
-
         }
-
     }
-
-
 
     private void initializeCamera() {
-
         cameraProviderFuture.addListener(() -> {
-
             try {
-
                 ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
-
                 bindCameraView(cameraProvider);
-
             } catch (Exception e) {
-
                 e.printStackTrace();
-
             }
-
         }, ContextCompat.getMainExecutor(getContext()));
-
     }
-
-
-
     /**
-
      * @param cameraProvider:
-
      * @return void
-
      * @author xcc
-
      * @description 选择相机并绑定生命周期和用例
-
      * @date 2023/12/13 19:23
-
      */
-
     private void bindCameraView(ProcessCameraProvider cameraProvider) {
         // 在Fragment中获取屏幕尺寸和窗口管理器
         int width = 1920;
@@ -195,7 +159,6 @@ public class CameraFragment extends Fragment {
             CameraSelector cameraSelector = new CameraSelector.Builder()
                     .requireLensFacing(CameraSelector.LENS_FACING_BACK)
                     .build();
-
             // 设置预览界面
             preview.setSurfaceProvider(cameraView.getSurfaceProvider());
             // 实例化 ImageCapture 用例
@@ -237,9 +200,16 @@ public class CameraFragment extends Fragment {
         }
         return null;
     }
+    /**
+     * @param
+     * @return null
+     * @author xcc
+     * @description  缩放
+     * @date 2023/12/15 15:07
+     */
+
     private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
         @Override
-
         public boolean onScale(ScaleGestureDetector detector) {
             float scaleFactor = detector.getScaleFactor();
             ZoomState zoomState = camera.getCameraInfo().getZoomState().getValue();
@@ -252,99 +222,76 @@ public class CameraFragment extends Fragment {
             return true;
         }
     }
-
-
-
-    // Helper function used to create a timestamped file
-
-    private File createFile(File baseFolder, String format, String extension) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.US);
-        String timestamp = dateFormat.format(System.currentTimeMillis());
-        return new File(baseFolder, timestamp + extension);
-    }
-    // 获取应用的输出目录，先尝试获取外部存储的媒体目录，如果存在则返回，否则返回应用的文件目录
-    public File getOutputDirectory(Context context) {
-        Context appContext = context.getApplicationContext();
-        File[] mediaDirs = context.getExternalMediaDirs();
-        File mediaDir = null;
-        if (mediaDirs.length > 0) {
-            mediaDir = new File(mediaDirs[0], appContext.getResources().getString(R.string.app_name));
-            mediaDir.mkdirs();
-        }
-        if (mediaDir != null && mediaDir.exists()) {
-            return mediaDir;
-        } else {
-            return appContext.getFilesDir();
-        }
-    }
-
-
-
-    // Constants
-    private static final String FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS";
-    private static final String PHOTO_EXTENSION = ".jpg";
-
-    // 拍摄照片并保存到指定路径
-    private File takePictureSaveToDisk() {
-        if (imageCapture != null) {
-            // Create output file to hold the image
-            File photoFile = createFile(getOutputDirectory(getContext()), FILENAME, PHOTO_EXTENSION);
-            Log.i(TAG, "photoFile:" + photoFile);
-            // 设置图像捕捉元数据
-            ImageCapture.Metadata metadata = new ImageCapture.Metadata();
-            // Mirror image when using the front camera
-            int lensFacing = CameraSelector.LENS_FACING_BACK;
-            metadata.setReversedHorizontal(lensFacing == CameraSelector.LENS_FACING_FRONT);
-            // Create output options object which contains file + metadata
-            ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile)
-                    .setMetadata(metadata)
-                    .build();
-            // Setup image capture listener which is triggered after photo has been taken
-            imageCapture.takePicture(
-                    outputOptions,
-                    ContextCompat.getMainExecutor(getContext()),
-                    new ImageCapture.OnImageSavedCallback() {
-                        @Override
-                        public void onError(@NonNull ImageCaptureException exc) {
-                            Log.e(TAG, "Photo capture failed: " + exc.getMessage(), exc);
-                        }
-                        @Override
-                        public void onImageSaved(@NonNull ImageCapture.OutputFileResults output) {
-                            Uri savedUri = output.getSavedUri() != null ? output.getSavedUri() : Uri.fromFile(photoFile);
-                            Log.d(TAG, "Photo capture succeeded: " + savedUri);
-                            // ... 其他处理逻辑 ...
-                        }
-                    });
-        }
-        return null;
-    }
-
-
-
     private void takePhoto() {
+
         if (imageCapture != null) {
             Executor mainExecutor = ContextCompat.getMainExecutor(getContext());
             imageCapture.takePicture(mainExecutor, new ImageCapture.OnImageCapturedCallback() {
                 @Override
-                public void onCaptureSuccess(@NonNull ImageProxy image) {
+                public void  onCaptureSuccess(@NonNull ImageProxy image) {
                     super.onCaptureSuccess(image);
+
                     Toast.makeText(getContext(), "拍照成功", Toast.LENGTH_SHORT).show();
-
                     // 拍照成功后的处理
-
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
+                    String currentTime = sdf.format(new Date());
+                    String locationInfo = getLocationInfo();
+                    // 在拍照成功后执行保存到媒体库的操作
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Images.Media.TITLE, "Image_" + currentTime + "_" + locationInfo);
+                    values.put(MediaStore.Images.Media.DESCRIPTION, "My Image Description");
+                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
+                    Uri uri = requireActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+                    saveImageToMediaStore(uri, image);
                 }
+
                 @Override
                 public void onError(@NonNull ImageCaptureException exception) {
                     super.onError(exception);
                     // 拍照出错时的处理
+                    Toast.makeText(getContext(), "拍照失败", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
+    private void saveImageToMediaStore(Uri uri, ImageProxy image) {
+        try {
+            OutputStream outputStream = requireActivity().getContentResolver().openOutputStream(uri);
+            @ExperimentalGetImage
+            Image myImage = image.getImage();
+            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
+            byte[] bytes = new byte[buffer.remaining()];
+            buffer.get(bytes);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            // 这里假设你有一个名为bitmap的Bitmap对象，用于保存拍摄的图像
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
+        image.close(); // 释放Image资源
+    }
+
+    private String getLocationInfo() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location!= null) {
+                return "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude();
+            }
+            return "Latitude: " + 0 + " Longitude: " + 0;}
+        return null;
+    }
+
+    // 处理相机资源的生命周期方法
     @Override
     public void onPause() {
         super.onPause();
+        releaseCamera(); // 当片段暂停时释放相机
+    }
+    private void releaseCamera() {
         if (cameraProviderFuture != null) {
             cameraProviderFuture.addListener(() -> {
                 try {
@@ -356,4 +303,6 @@ public class CameraFragment extends Fragment {
             }, ContextCompat.getMainExecutor(getContext()));
         }
     }
+
+
 }
