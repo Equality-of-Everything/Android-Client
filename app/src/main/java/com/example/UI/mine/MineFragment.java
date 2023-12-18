@@ -23,6 +23,7 @@ import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
 import com.example.util.TokenManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 
 public class MineFragment extends Fragment {
@@ -90,7 +91,9 @@ public class MineFragment extends Fragment {
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
+                bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+                bottomSheetDialog.show();
             }
         });
     }
