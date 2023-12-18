@@ -46,10 +46,11 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;//点击登录
     private Button btnJumpEnroll;//跳转注册（没有账号，注册一个）
     private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
+
     private View contextView;
-//    public static String ip = "192.168.137.12";
-//    public static String ip = "192.168.137.12";
+
     public static String ip = "39.105.24.22";
+//    public static String ip = "10.7.88.107";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -158,7 +159,6 @@ public class LoginActivity extends AppCompatActivity {
                                 //成功
                                 //存Token
                                 TokenManager.saveToken(LoginActivity.this, result.getData().toString());
-                                //存用户名
                                 TokenManager.saveUserName(LoginActivity.this, loginUser);
 //                                showSnackBar(contextView,result.getMsg()+"","我知道了");
 //                                Toast.makeText(LoginActivity.this, result.getMsg()+"", Toast.LENGTH_SHORT).show();

@@ -186,6 +186,7 @@ public class EnrollActivity extends AppCompatActivity {
                             public void run() {
                                 if (!result.getFlag()) {
                                     showSnackBar(contextView,result.getMsg(),"我知道了");
+                                    return;
 //                                    Toast.makeText(EnrollActivity.this,result.getMsg()+"",Toast.LENGTH_SHORT).show();
                                 }
 //                                showSnackBar(contextView,result.getMsg(),"我知道了");

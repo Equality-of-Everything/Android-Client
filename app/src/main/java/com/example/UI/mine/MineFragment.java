@@ -33,6 +33,8 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
 
+import java.util.UUID;
+
 
 public class MineFragment extends Fragment {
     private ImageView btnCamera;
@@ -42,6 +44,8 @@ public class MineFragment extends Fragment {
     private String userName ;
     int REQUEST_IMAGE_OPEN = 2;
 
+
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -49,10 +53,15 @@ public class MineFragment extends Fragment {
 
         userName = TokenManager.getUserName(getActivity());
 
+
         btnCamera = view.findViewById(R.id.image_avatar);
         tvMineName = view.findViewById(R.id.tv_mine_name);
         btnFriends = view.findViewById(R.id.btn_friends);
         btnLogout = view.findViewById(R.id.btn_logout);
+        tvUid = view.findViewById(R.id.tv_mine_uid);
+
+        String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+        tvUid.setText("uid: "+uid);
 
         setListenerForLogout();
 
@@ -62,6 +71,7 @@ public class MineFragment extends Fragment {
         return view;
     }
 
+    private TextView tvUid;
 
     /**
      * @param :
