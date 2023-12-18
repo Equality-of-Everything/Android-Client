@@ -1,20 +1,20 @@
 package com.example.UI.camera;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraManager;
 import android.icu.text.SimpleDateFormat;
-import android.location.Location;
-import android.location.LocationManager;
-import android.media.Image;
+
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 
 import android.util.Log;
@@ -31,11 +31,8 @@ import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraControl;
 import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ExperimentalGetImage;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.VideoCapture;
 import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -48,10 +45,10 @@ import com.example.android_client.R;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
 
-import java.nio.ByteBuffer;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -68,6 +65,7 @@ public class CameraFragment extends Fragment {
     private static final String TAG = "YourActivity";
     //权限码
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 101;
     private PreviewView cameraView;
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private Camera camera;
@@ -76,7 +74,9 @@ public class CameraFragment extends Fragment {
     private float maxZoomRatio;
     private ImageButton camera_shot;
     private ExecutorService cameraExecutor;
-    private ImageCapture imageCapture;
+    private VideoCapture videoCapture;
+    private String videoOutputPath;
+    private boolean isRecording = false;
 
     @Nullable
     @Override
@@ -94,10 +94,11 @@ public class CameraFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        // 如果相机权限未被授予，则请求权限
+                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                        // 如果相机或录音权限未被授予，则请求权限
                         ActivityCompat.requestPermissions((Activity) getContext(),
-                                new String[]{Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQUEST_CODE);
+                                new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, CAMERA_PERMISSION_REQUEST_CODE);
                     } else {
                         initializeCamera(); // 如果已经有权限，直接初始化相机
                     }
@@ -105,28 +106,38 @@ public class CameraFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-
         }, ContextCompat.getMainExecutor(getContext()));
         camera_shot.setOnClickListener(v -> {
-            // 调用拍照功能
-            takePhoto();
+            if (isRecording) {
+                stopRecordingVideo();
+                Toast.makeText(getContext(), "视频录制已结束", Toast.LENGTH_SHORT).show();
+                isRecording = false;
+            } else {
+                startRecordingVideo();
+                Toast.makeText(getContext(), "视频录制已开始", Toast.LENGTH_SHORT).show();
+                isRecording = true;
+            }
         });
-
         return CameraView;
-        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // 相机权限已被授予，执行相应操作
+            boolean cameraPermissionGranted = grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            boolean recordAudioPermissionGranted = grantResults.length > 1 && grantResults[1] == PackageManager.PERMISSION_GRANTED;
+
+            if (cameraPermissionGranted && recordAudioPermissionGranted) {
+                // 相机和录音权限已被授予，执行相应操作
                 initializeCamera();
             } else {
-                // 相机权限被拒绝，给出相应的提示
-                Toast.makeText(getContext(), "相机权限被拒绝", Toast.LENGTH_SHORT).show();
+                // 相机或录音权限被拒绝，给出相应的提示
+                Toast.makeText(getContext(), "相机或录音权限被拒绝", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 
     private void initializeCamera() {
         cameraProviderFuture.addListener(() -> {
@@ -138,6 +149,7 @@ public class CameraFragment extends Fragment {
             }
         }, ContextCompat.getMainExecutor(getContext()));
     }
+
     /**
      * @param cameraProvider:
      * @return void
@@ -145,6 +157,7 @@ public class CameraFragment extends Fragment {
      * @description 选择相机并绑定生命周期和用例
      * @date 2023/12/13 19:23
      */
+    @SuppressLint("RestrictedApi")
     private void bindCameraView(ProcessCameraProvider cameraProvider) {
         // 在Fragment中获取屏幕尺寸和窗口管理器
         int width = 1920;
@@ -161,13 +174,24 @@ public class CameraFragment extends Fragment {
                     .build();
             // 设置预览界面
             preview.setSurfaceProvider(cameraView.getSurfaceProvider());
-            // 实例化 ImageCapture 用例
-            imageCapture = new ImageCapture.Builder()
-                    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+            // 实例化 videoCapture 用例
+            videoCapture = new VideoCapture.Builder()
                     .setTargetRotation(cameraView.getDisplay().getRotation())
+                    .setVideoFrameRate(36)//每秒的帧数
+                    .setBitRate(3 * 1024 * 1024)
                     .build();
+            ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
+                    ProcessCameraProvider.getInstance(getContext());
+            try {
+                cameraProvider= cameraProviderFuture.get();
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            cameraProvider.unbindAll();
             // 绑定相机生命周期
-            camera = cameraProvider.bindToLifecycle((LifecycleOwner)this, cameraSelector, preview,imageCapture);
+            camera = cameraProvider.bindToLifecycle((LifecycleOwner) this, cameraSelector, preview, videoCapture);
             // 获取相机的控制器
             cameraControl = camera.getCameraControl();
             // 获取最大缩放比例
@@ -199,11 +223,12 @@ public class CameraFragment extends Fragment {
         }
         return null;
     }
+
     /**
      * @param
      * @return null
      * @author xcc
-     * @description  缩放
+     * @description 缩放
      * @date 2023/12/15 15:07
      */
 
@@ -221,68 +246,78 @@ public class CameraFragment extends Fragment {
             return true;
         }
     }
-    private void takePhoto() {
 
-        if (imageCapture != null) {
-            Executor mainExecutor = ContextCompat.getMainExecutor(getContext());
-            imageCapture.takePicture(mainExecutor, new ImageCapture.OnImageCapturedCallback() {
-                @Override
-                public void  onCaptureSuccess(@NonNull ImageProxy image) {
-                    super.onCaptureSuccess(image);
 
-                    Toast.makeText(getContext(), "拍照成功", Toast.LENGTH_SHORT).show();
-                    // 拍照成功后的处理
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault());
-                    String currentTime = sdf.format(new Date());
-                    String locationInfo = getLocationInfo();
-                    // 在拍照成功后执行保存到媒体库的操作
-                    ContentValues values = new ContentValues();
-                    values.put(MediaStore.Images.Media.TITLE, "Image_" + currentTime + "_" + locationInfo);
-                    values.put(MediaStore.Images.Media.DESCRIPTION, "My Image Description");
-                    values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-                    Uri uri = requireActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-                    saveImageToMediaStore(uri, image);
-                }
+    @SuppressLint("RestrictedApi")
+    private void startRecordingVideo() {
+        if (videoCapture != null && !isRecording&& camera != null) {
 
-                @Override
-                public void onError(@NonNull ImageCaptureException exception) {
-                    super.onError(exception);
-                    // 拍照出错时的处理
-                    Toast.makeText(getContext(), "拍照失败", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-
-    private void saveImageToMediaStore(Uri uri, ImageProxy image) {
-        try {
-            OutputStream outputStream = requireActivity().getContentResolver().openOutputStream(uri);
-            @ExperimentalGetImage
-            Image myImage = image.getImage();
-            ByteBuffer buffer = image.getPlanes()[0].getBuffer();
-            byte[] bytes = new byte[buffer.remaining()];
-            buffer.get(bytes);
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            // 这里假设你有一个名为bitmap的Bitmap对象，用于保存拍摄的图像
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Toast.makeText(getContext(), "保存成功", Toast.LENGTH_SHORT).show();
-        image.close(); // 释放Image资源
-    }
-
-    private String getLocationInfo() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
-            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            if (location!= null) {
-                return "Latitude: " + location.getLatitude() + " Longitude: " + location.getLongitude();
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                // 请求录音权限
+                ActivityCompat.requestPermissions((Activity) getContext(),
+                        new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
+                return;
             }
-            return "Latitude: " + 0 + " Longitude: " + 0;}
-        return null;
+            // 创建视频保存的文件地址
+            File mediaDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            if (mediaDir == null) {
+                Log.e(TAG, "无法获取到外部存储目录");
+                return;
+            }else {
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+                File file = new File(mediaDir, "VID_" + timeStamp + ".mp4");
+                VideoCapture.OutputFileOptions outputFileOptions =
+                        new VideoCapture.OutputFileOptions.Builder(file).build();
+                videoCapture.startRecording(outputFileOptions, Executors.newSingleThreadExecutor(), new VideoCapture.OnVideoSavedCallback() {
+                    @Override
+                    public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
+                        videoOutputPath=file.getAbsolutePath();
+
+                        saveVideoToMediaStore(videoOutputPath);
+                        Log.d(TAG, "视频录制成功：" + videoOutputPath);
+                    }
+
+                    @Override
+                    public void onError(int videoCaptureError, @NonNull String message, @Nullable Throwable cause) {
+                        Log.e(TAG, "视频录制失败：" + message, cause);
+                    }
+                });
+            }
+        }
     }
+    @SuppressLint("RestrictedApi")
+    private void stopRecordingVideo() {
+        if (videoCapture != null && isRecording) {
+            videoCapture.stopRecording();
+        }else {
+            Log.e(TAG, "相机未准备就绪，无法开始录制视频");
+        }
+    }
+//    private String getOutputFilePath() {
+//        File mediaDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+//        if (mediaDir != null) {
+//            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+//            return mediaDir.getAbsolutePath() + File.separator + "VID_" + timeStamp + ".mp4";
+//        } else {
+//            return null;
+//        }
+//    }
+    private void saveVideoToMediaStore(String videoPath) {
+        File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+
+        File videoFile = new File(videoPath);
+        File destFile = new File(moviesDir, videoFile.getName());
+        try {
+            Files.copy(new File(videoPath).toPath(), destFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            // 视频保存成功后，发送广播通知媒体库更新
+            MediaScannerConnection.scanFile(getContext(), new String[] { destFile.getAbsolutePath() }, null, null);
+            Log.d(TAG, "视频保存成功：" + destFile.getAbsolutePath());
+        } catch (IOException e) {
+            Log.e(TAG, "视频保存失败：" + e.getMessage(), e);
+        }
+    }
+
+
 
     @Override
     public void onResume() {
@@ -290,12 +325,6 @@ public class CameraFragment extends Fragment {
         initializeCamera();
     }
 
-    // 处理相机资源的生命周期方法
-    @Override
-    public void onPause() {
-        super.onPause();
-        releaseCamera(); // 当片段暂停时释放相机
-    }
     private void releaseCamera() {
         if (cameraProviderFuture != null) {
             cameraProviderFuture.addListener(() -> {

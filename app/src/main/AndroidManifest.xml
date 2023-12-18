@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <!--    过滤潜在的安装设备,如前置摄像头-->
     <uses-feature android:name="android.hardware.camera.any" />
-
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <!-- IM SDK required start -->
     <!-- 允许程序振动，用于本地通知设置振动 -->
     <uses-permission android:name="android.permission.VIBRATE" />
