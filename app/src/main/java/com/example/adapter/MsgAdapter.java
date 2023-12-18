@@ -94,7 +94,6 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
             // 设置列表项的显示内容
             //发信息来的用户名
             String msgUsername = conversation.conversationId();
-            Log.e("MsgAdapter", "msgUsername: " + msgUsername);
             tvMsgName.setText(msgUsername);
 
             //获取最近一条消息
@@ -107,7 +106,6 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
 
                 // 获取消息内容
                 String messageContent = getMessageContent(lastMsg);
-                Log.e("MsgAdapter", "lastMsg: " + messageContent);
                 tvLastMsg.setText(messageContent);
             }
         }

@@ -4,16 +4,20 @@ import static android.app.Activity.RESULT_OK;
 import static com.baidu.mapapi.BMapManager.init;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +31,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 
 public class MineFragment extends Fragment {
-    private ImageButton btnCamera;
+    private ImageView btnCamera;
     private TextView tvMineName;
     private Button btnFriends;
     private Button btnLogout;
-
+    int REQUEST_IMAGE_OPEN = 2;
 
     @Nullable
     @Override
@@ -94,31 +98,66 @@ public class MineFragment extends Fragment {
                 BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
                 bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
                 bottomSheetDialog.show();
+
+                // 查看头像
+                Button btnViewAvatar = bottomSheetDialog.findViewById(R.id.btn_view_avatar);
+                btnViewAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                // 从相册选择一张头像上传作为个人头像
+                Button btnSelectAvatar = bottomSheetDialog.findViewById(R.id.btn_select_avatar);
+                btnSelectAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //打开相册
+                        Intent intent = new  Intent(Intent.ACTION_PICK);
+                        //指定获取的是图片
+                        intent.setType("image/*");
+                        startActivityForResult(intent, REQUEST_IMAGE_OPEN);
+                    }
+                });
+
+                //拍照以上传个人头像
+                Button btnTakePhoto = bottomSheetDialog.findViewById(R.id.btn_take_photo);
+                btnTakePhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    // Add your code to handle the "拍照" button click
+                    }
+                });
             }
         });
     }
 
-//    private void openGallery() {
-//        // 使用Intent调用系统相册应用
-//        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-//    }
-//
-//    // 处理相册应用返回的结果
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-//            Uri uri = data.getData();
-//            // 根据Uri加载图片到ImageView中
-//            profileImage.setImageURI(uri);
-//        }
-//    }
-//
-//    // 查看头像
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
+            // 获取所选图片的URI
+            Uri selectedImageUri = data.getData();
+
+            // 将所选图片设置为头像
+            btnCamera.setImageURI(selectedImageUri);
+        }
+    }
+
+
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 查看头像
+     * @date 2023/12/18 16:24
+     */
 //    private void viewProfileImage() {
 //        // 跳转到新界面，显示当前头像的大图或详情
-//        Intent intent = new Intent(this, ViewProfileImageActivity.class);
+//        Intent intent = new Intent(getActivity(), ViewAvatarActivity.class);
 //        intent.putExtra("imageUri", getImageUri()); // 传递当前头像的Uri
 //        startActivity(intent);
 //    }
