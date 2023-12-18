@@ -80,4 +80,9 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         return false; // 其他情况不显示时间
     }
 
+    @Override
+    public boolean isEnabled(int position){
+        return false;
+    }
+
 }
