@@ -192,7 +192,7 @@ public class CameraFragment extends Fragment {
                 Log.e(TAG, "找到了");
                 return cameraIds[0];
             } else {
-                Log.e(TAG, "没有能用的摄像头，大傻春");Log.e(TAG, "没有能用的摄像头，大傻春");
+                Log.e(TAG, "没有能用的摄像头，大傻春");
             }
         } catch (CameraAccessException e) {
             Log.e(TAG, "Failed to access camera manager", e);
