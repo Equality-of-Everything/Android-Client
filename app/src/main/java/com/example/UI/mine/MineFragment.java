@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ import com.example.android_client.R;
 import com.example.util.TokenManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMUserInfo;
 
 
 public class MineFragment extends Fragment {
@@ -35,6 +39,7 @@ public class MineFragment extends Fragment {
     private TextView tvMineName;
     private Button btnFriends;
     private Button btnLogout;
+    private String userName = TokenManager.getUserName(getActivity());
     int REQUEST_IMAGE_OPEN = 2;
 
     @Nullable
@@ -51,7 +56,7 @@ public class MineFragment extends Fragment {
 
         setListeners();
 
-        tvMineName.setText(TokenManager.getUserName(getActivity()));
+        tvMineName.setText(userName);
         return view;
     }
 
@@ -143,9 +148,36 @@ public class MineFragment extends Fragment {
 
             // 将所选图片设置为头像
             btnCamera.setImageURI(selectedImageUri);
+
+            String url = selectedImageUri.toString();
+            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, url, new EMValueCallBack<String>() {
+                @Override
+                public void onSuccess(String value) {
+                    Log.i("mine", "头像上传成功");
+                }
+
+                @Override
+                public void onError(int error, String errorMsg) {
+                    Log.e("mine", "头像上传失败");
+                }
+            });
+
+            uploadToServer(userName, url);
         }
+
     }
 
+    /**
+     * @param userName:
+     * @param url:
+     * @return void
+     * @author Lee
+     * @description 将头像上传到服务器
+     * @date 2023/12/18 17:15
+     */
+    private void uploadToServer(String userName, String url) {
+
+    }
 
 
     /**
