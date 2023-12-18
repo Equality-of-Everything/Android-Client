@@ -47,8 +47,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnJumpEnroll;//跳转注册（没有账号，注册一个）
     private Button btnJumpEmail;//跳转邮箱（忘记密码，验证邮箱以重置）
     private View contextView;
-    public static String ip = "39.105.24.22";
 //    public static String ip = "192.168.137.12";
+//    public static String ip = "192.168.137.12";
+    public static String ip = "39.105.24.22";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 

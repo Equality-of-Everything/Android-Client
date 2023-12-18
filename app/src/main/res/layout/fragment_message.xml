@@ -1,66 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical">
-<!--    <RelativeLayout-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content">-->
-<!--    &lt;!&ndash; NestedScrollingChild goes here (NestedScrollView, RecyclerView, etc.). &ndash;&gt;-->
-<!--        <androidx.coordinatorlayout.widget.CoordinatorLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent">-->
 
-<!--            &lt;!&ndash; NestedScrollingChild goes here (NestedScrollView, RecyclerView, etc.). &ndash;&gt;-->
-<!--            <androidx.core.widget.NestedScrollView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                app:layout_behavior="@string/searchbar_scrolling_view_behavior">-->
-<!--                &lt;!&ndash; Screen content goes here. &ndash;&gt;-->
-<!--            </androidx.core.widget.NestedScrollView>-->
+    <!-- 搜索框 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.material.search.SearchBar
+            android:id="@+id/search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginRight="50dp"
+            android:hint="请输入搜索内容" />
+    </com.google.android.material.appbar.AppBarLayout>
 
-<!--            <com.google.android.material.appbar.AppBarLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content">-->
-<!--                <com.google.android.material.search.SearchBar-->
-<!--                    android:id="@+id/search_bar"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="40dp"-->
-<!--                    android:layout_marginRight="50dp"-->
-<!--                    android:hint="请输入搜索内容" />-->
-<!--            </com.google.android.material.appbar.AppBarLayout>-->
+    <com.google.android.material.search.SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入搜索内容"
+        >
+        <!-- Search suggestions/results go here (ScrollView, RecyclerView, etc.). -->
+        <androidx.recyclerview.widget.RecyclerView
+            app:layout_anchor="@id/search_bar"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </com.google.android.material.search.SearchView>
+
+    <!-- 添加按钮 -->
+    <Button
+        style="?attr/materialIconButtonStyle"
+        app:icon="@drawable/person_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp" />
+
+
     <!-- 会话列表 -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_conversation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@id/app_bar"/>
 
-<!--            <com.google.android.material.search.SearchView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:hint="请输入搜索内容"-->
-<!--                app:layout_anchor="@id/search_bar">-->
-<!--                &lt;!&ndash; Search suggestions/results go here (ScrollView, RecyclerView, etc.). &ndash;&gt;-->
-<!--                <androidx.recyclerview.widget.RecyclerView-->
-<!--                    android:id="@+id/OutIn_page_recyclerview"-->
-<!--                    android:layout_width="0dp"-->
-<!--                    android:layout_height="0dp"-->
-<!--                    app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                    app:layout_constraintEnd_toEndOf="parent"-->
-<!--                    app:layout_constraintStart_toStartOf="parent" />-->
-<!--            </com.google.android.material.search.SearchView>-->
-<!--        </androidx.coordinatorlayout.widget.CoordinatorLayout>-->
-<!--    <Button-->
-<!--        style="?attr/materialIconButtonStyle"-->
-<!--        android:id="@+id/iconButton"-->
-<!--        app:icon="@drawable/person_add"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentRight="true"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        />-->
-<!--    </RelativeLayout>-->
-</LinearLayout>
+</RelativeLayout>
