@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.example.adapter.ChatAdapter;
 import com.example.android_client.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.EMValueCallBack;
@@ -25,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ChatActivity extends AppCompatActivity {
+    private MaterialToolbar toolbar;
     private ListView msgListView;
     private EditText msgInput;
     private Button btnSend;
@@ -38,6 +40,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        setSupportActionBar(toolbar);
+
         init();
 
         //获取本地所有会话
@@ -50,14 +54,8 @@ public class ChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         conversationId = intent.getStringExtra("conversationId");
 
-//        EMClient.getInstance().chatManager().importMessages(messagesList);
-//        // 获取与特定好友的所有聊天记录
-//        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(conversationId);
-//        if (conversation != null) {
-//            // 获取与特定好友的所有消息
-//            List<EMMessage> allMessages = conversation.getAllMessages();
-//            messagesList.addAll(allMessages); // 将所有消息添加到消息列表中
-//        }
+        toolbarListener(conversationId);//顶部导航栏的监听器
+
 
         // 设置消息适配器
         msgAdapter = new ChatAdapter(this, messagesList);
@@ -100,9 +98,18 @@ public class ChatActivity extends AppCompatActivity {
         receiveMsg();//接收消息
         setListener();//发送消息
 
-        // 批量导入消息到本地数据库
-//        EMClient.getInstance().chatManager().importMessages(messagesList);
+    }
 
+    private void toolbarListener(String name) {
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();//返回上一个界面
+            }
+        });
+
+        // 设置标题文字
+        toolbar.setTitle(name);
     }
 
 
@@ -174,6 +181,7 @@ public class ChatActivity extends AppCompatActivity {
         msgListView = findViewById(R.id.msg_list);
         msgInput = findViewById(R.id.input_msg);
         btnSend = findViewById(R.id.btn_send);
+        toolbar = findViewById(R.id.topAppBar_name);
     }
 
 
