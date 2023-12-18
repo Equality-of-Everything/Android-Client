@@ -39,13 +39,15 @@ public class MineFragment extends Fragment {
     private TextView tvMineName;
     private Button btnFriends;
     private Button btnLogout;
-    private String userName = TokenManager.getUserName(getActivity());
+    private String userName ;
     int REQUEST_IMAGE_OPEN = 2;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
+
+        userName = TokenManager.getUserName(getActivity());
 
         btnCamera = view.findViewById(R.id.image_avatar);
         tvMineName = view.findViewById(R.id.tv_mine_name);
