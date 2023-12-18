@@ -132,7 +132,7 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
                 dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
             } else {
                 // 非当天的消息
-                dateFormat = new SimpleDateFormat("yy-MM-dd HH:mm", Locale.getDefault());
+                dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
             }
 
             return dateFormat.format(calendar.getTime());

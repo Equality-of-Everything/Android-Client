@@ -13,6 +13,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,7 +57,12 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         TextView messageTime = view.findViewById(R.id.msg_time);
         if (shouldDisplayTime(position)) {
             Date time = new Date(message.getMsgTime());
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf;
+            if (isToday(time)) {
+                sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            } else {
+                sdf = new SimpleDateFormat("MM-dd HH:mm", Locale.getDefault());
+            }
             messageTime.setText(sdf.format(time));
             messageTime.setVisibility(View.VISIBLE);
         } else {
@@ -66,6 +72,28 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         return view;
     }
 
+    /**
+     * @param time:
+     * @return boolean
+     * @author Lee
+     * @description 判断时间是否是当天
+     * @date 2023/12/18 15:34
+     */
+    private boolean isToday(Date time) {
+        Calendar messageTime = Calendar.getInstance();
+        messageTime.setTime(time);
+        Calendar now = Calendar.getInstance();
+        return messageTime.get(Calendar.YEAR) == now.get(Calendar.YEAR) &&
+                messageTime.get(Calendar.DAY_OF_YEAR) == now.get(Calendar.DAY_OF_YEAR);
+    }
+
+    /**
+     * @param position:
+     * @return boolean
+     * @author Lee
+     * @description 间隔3分钟不互相发消息显示时间
+     * @date 2023/12/18 15:34
+     */
     private boolean shouldDisplayTime(int position) {
         if (position == 0) {
             return true; // 第一条消息总是显示时间
