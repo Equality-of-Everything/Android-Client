@@ -1,15 +1,16 @@
 package com.example.UI.mine;
 
-import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
-import static com.baidu.mapapi.BMapManager.init;
 import static com.example.android_client.LoginActivity.ip;
+import static com.example.util.Code.LOGIN_ERROR_NOUSER;
+import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 import static com.example.util.TokenManager.saveAvatar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -18,11 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,10 +28,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
+import com.example.util.Result;
 import com.example.util.TokenManager;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
@@ -43,7 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.UUID;
+import java.net.MalformedURLException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,6 +52,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 public class MineFragment extends Fragment {
@@ -198,50 +198,44 @@ public class MineFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
             // 获取所选图片的URI
             Uri selectedImageUri = data.getData();
-
-
-            String url = selectedImageUri.toString();
-            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, url, new EMValueCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    Log.i("mine", "头像上传环信成功");
-                }
-
-                @Override
-                public void onError(int error, String errorMsg) {
-                    Log.e("mine", "头像上传环信失败");
-                }
-            });
-
-
             //将选择的图片保存在本地
-            try {
-                // 将选择的图片复制到应用的内部存储中
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
-                File internalStorageDir = getActivity().getFilesDir();
-                File avatarFile = new File(internalStorageDir, "avatar.jpg");
-                OutputStream outputStream = new FileOutputStream(avatarFile);
-                byte[] buffer = new byte[1024];
-                int length;
-                while ((length = inputStream.read(buffer)) > 0) {
-                    outputStream.write(buffer, 0, length);
-                }
-                outputStream.close();
-                inputStream.close();
-
-                // 将保存的头像图片路径存储起来，以便以后使用
-                saveAvatar(getActivity(), avatarFile.getAbsolutePath());
-
-                // 将所选图片设置为头像
-                btnCamera.setImageURI(selectedImageUri);
-
-                uploadToServer(userName, avatarFile);//上传到后端
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            SaveToLocalStorage(String.valueOf(selectedImageUri));
         }
+    }
 
+    /**
+     * @param selectedImageUri:
+     * @return void
+     * @author Lee
+     * @description 把选择的图片保存在本地
+     * @date 2023/12/19 19:28
+     */
+    private void SaveToLocalStorage(String selectedImageUri) {
+        try {
+            // 将选择的图片复制到应用的内部存储中
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedImageUri));
+            File internalStorageDir = getActivity().getFilesDir();
+            File avatarFile = new File(internalStorageDir, "avatar.jpg");
+            OutputStream outputStream = new FileOutputStream(avatarFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+
+            // 将保存的头像图片路径存储起来，以便以后使用
+            saveAvatar(getActivity(), avatarFile.getAbsolutePath());
+
+            // 将所选图片设置为头像
+            btnCamera.setImageURI(Uri.parse(selectedImageUri));
+
+            uploadToServer(userName, avatarFile);//上传到后端
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -281,17 +275,37 @@ public class MineFragment extends Fragment {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                Gson json = new Gson();
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                Log.e("minefragment : ", result.toString());
                 // 处理上传成功情况
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if(result.getData() != null) {
+                            //将头像对应的url传到环信
+                            String imageUrl = result.getData().toString();
+                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
+                                @Override
+                                public void onSuccess(String value) {
+                                    Log.i("mine", "头像上传环信成功");
+                                }
+
+                                @Override
+                                public void onError(int error, String errorMsg) {
+                                    Log.e("mine", "头像上传环信失败");
+                                }
+                            });
+                            Log.e("minefragment : " , imageUrl);
+                        }
                         showSnackBar(getView(), "头像更新成功", "我知道了");
+
                     }
                 });
             }
         });
     }
-
 
     /*
      * @param view:

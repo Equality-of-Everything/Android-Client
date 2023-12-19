@@ -259,7 +259,7 @@
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-<!--    帮助-->
+                    <!-- 个人资料编辑-->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
