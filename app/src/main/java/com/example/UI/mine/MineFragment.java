@@ -1,11 +1,15 @@
 package com.example.UI.mine;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 import static com.baidu.mapapi.BMapManager.init;
+import static com.example.android_client.LoginActivity.ip;
+import static com.example.util.TokenManager.saveAvatar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -33,7 +37,21 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.UUID;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 public class MineFragment extends Fragment {
@@ -42,16 +60,19 @@ public class MineFragment extends Fragment {
     private Button btnFriends;
     private Button btnLogout;
     private String userName ;
-    int REQUEST_IMAGE_OPEN = 2;
+    private String avatarPath;
+    public static final int REQUEST_IMAGE_OPEN = 2;
+    public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
 
 
-    @SuppressLint("MissingInflatedId")
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
 
         userName = TokenManager.getUserName(getActivity());
+        avatarPath = TokenManager.getAvatar(getActivity());
 
 
         btnCamera = view.findViewById(R.id.image_avatar);
@@ -68,6 +89,10 @@ public class MineFragment extends Fragment {
         setListeners();
 
         tvMineName.setText(userName);
+        if(avatarPath!= null) {
+            btnCamera.setImageURI(Uri.parse(avatarPath));
+        }
+
         return view;
     }
 
@@ -135,6 +160,9 @@ public class MineFragment extends Fragment {
                         //指定获取的是图片
                         intent.setType("image/*");
                         startActivityForResult(intent, REQUEST_IMAGE_OPEN);
+
+                        // 关闭底部面板
+                        bottomSheetDialog.dismiss();
                     }
                 });
 
@@ -150,6 +178,15 @@ public class MineFragment extends Fragment {
         });
     }
 
+    /**
+     * @param requestCode:
+     * @param resultCode:
+     * @param data:
+     * @return void
+     * @author Lee
+     * @description 选择完头像图片后的操作
+     * @date 2023/12/19 8:14
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -158,37 +195,85 @@ public class MineFragment extends Fragment {
             // 获取所选图片的URI
             Uri selectedImageUri = data.getData();
 
-            // 将所选图片设置为头像
-            btnCamera.setImageURI(selectedImageUri);
 
             String url = selectedImageUri.toString();
             EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, url, new EMValueCallBack<String>() {
                 @Override
                 public void onSuccess(String value) {
-                    Log.i("mine", "头像上传成功");
+                    Log.i("mine", "头像上传环信成功");
                 }
 
                 @Override
                 public void onError(int error, String errorMsg) {
-                    Log.e("mine", "头像上传失败");
+                    Log.e("mine", "头像上传环信失败");
                 }
             });
 
-            uploadToServer(userName, url);
+
+            //将选择的图片保存在本地
+            try {
+                // 将选择的图片复制到应用的内部存储中
+                InputStream inputStream = getActivity().getContentResolver().openInputStream(selectedImageUri);
+                File internalStorageDir = getActivity().getFilesDir();
+                File avatarFile = new File(internalStorageDir, "avatar.jpg");
+                OutputStream outputStream = new FileOutputStream(avatarFile);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+                outputStream.close();
+                inputStream.close();
+
+                // 将保存的头像图片路径存储起来，以便以后使用
+                saveAvatar(getActivity(), avatarFile.getAbsolutePath());
+
+                // 将所选图片设置为头像
+                btnCamera.setImageURI(selectedImageUri);
+
+                uploadToServer(userName, avatarFile);//上传到后端
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
 
     /**
      * @param userName:
-     * @param url:
+     * @param imageFile:
      * @return void
      * @author Lee
-     * @description 将头像上传到服务器
-     * @date 2023/12/18 17:15
+     * @description
+     * @date 2023/12/19 8:35
      */
-    private void uploadToServer(String userName, String url) {
+    private void uploadToServer(String userName, File imageFile) {
+        OkHttpClient client = new OkHttpClient();
 
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("userName", userName)
+                .addFormDataPart("image", "avatar.jpg",
+                        RequestBody.create(MEDIA_TYPE_JPG, imageFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/upload/image") // 替换成后端服务器的URL
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 处理上传失败情况
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 处理上传成功情况
+            }
+        });
     }
 
 
