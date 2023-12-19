@@ -107,7 +107,7 @@ public class MapFragment extends Fragment {
         button.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
         button.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
         button.setHighlightedColor(R.color.m3_button_ripple_color_selector);
-        button.setDraggable(true);
+//        button.setDraggable(true);
 
         mv = new MapView(getContext(), new BaiduMapOptions());
 

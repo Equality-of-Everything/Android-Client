@@ -12,4 +12,5 @@
     <item name="radio_button_1" type="id" />
     <item name="radio_button_2" type="id" />
     <item name="radio_button_3" type="id" />
+    <item name="bmb" type="id" />
 </resources>

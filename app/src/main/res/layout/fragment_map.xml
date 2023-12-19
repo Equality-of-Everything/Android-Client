@@ -20,8 +20,6 @@
         android:id="@+id/context_view"
         android:orientation="horizontal"
         ></LinearLayout>
-
-
     <com.nightonke.boommenu.BoomMenuButton
         android:id="@+id/bmb"
         android:layout_width="wrap_content"
@@ -47,5 +45,30 @@
             android:textSize="20dp"
             />
     </com.nightonke.boommenu.BoomMenuButton>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/bg_item_map">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialIconButtonStyle"
+            app:icon="@drawable/back"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialIconButtonStyle"
+            app:icon="@drawable/back"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="?attr/materialIconButtonStyle"
+            app:icon="@drawable/back"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

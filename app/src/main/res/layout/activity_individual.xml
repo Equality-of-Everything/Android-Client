@@ -5,52 +5,232 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.UI.mine.IndividualActivity">
-
-    <ImageView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/bg_item"/>
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        android:layout_marginBottom="80dp"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bg_item"/>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/iv_avatar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="150dp"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/friend_item"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/iv_avatar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginTop="100dp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/friend_item"/>
 
-    <TextView
-        android:id="@+id/tv_username"
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_avatar"
+                android:layout_centerHorizontal="true"
+                android:text="干饭"
+                android:textColor="?attr/colorPrimary"
+                android:textSize="20sp"/>
+
+            <!--    基本信息-->
+            <LinearLayout
+                android:id="@+id/card1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_username"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="基本信息"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="?attr/materialCardViewElevatedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/mine" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:text="男"
+                                android:textColor="?attr/colorPrimary"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/birthday" />
+                            <TextView
+                                android:layout_marginLeft="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textSize="15dp"
+                                android:textColor="?attr/colorPrimary"
+                                android:text="10.10"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginBottom="10dp">
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:src="@drawable/email" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="20dp"
+                                android:text="192222@qq.com"
+                                android:textSize="15dp"
+                                android:textColor="?attr/colorPrimary"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+            <!--    个性签名-->
+            <LinearLayout
+                android:id="@+id/card2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/card1"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="个性签名"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="?attr/materialCardViewElevatedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="组长爱干饭"
+                            android:textColor="?attr/colorPrimary"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+<!--     最近发布-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/card2"
+                android:layout_margin="20dp"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="最近发布"
+                    android:textColor="?attr/colorPrimary"/>
+
+                <com.google.android.material.card.MaterialCardView
+                    style="?attr/materialCardViewElevatedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="这个人很懒什么也没"
+                            android:textColor="?attr/colorPrimary"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </ScrollView>
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_avatar"
-        android:layout_centerHorizontal="true"
-        android:text="Username"
-        android:textSize="20sp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_horizontal">
-        <Button
-            style="?attr/materialButtonOutlinedStyle"
-            android:id="@+id/btn_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="发信息"/>
-        <Button
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:layout_weight="1"
-            android:text="分享圈"/>
-
-    </LinearLayout>
+        style="?attr/materialIconButtonStyle"
+        app:icon="@drawable/back"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center_horizontal"
+            android:background="@color/white">
+            <Button
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:text="分享圈"/>
+            <Button
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:id="@+id/btn_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:text="发信息"
+                android:textColor="?attr/colorPrimary"/>
+        </LinearLayout>
 </RelativeLayout>
 
 
