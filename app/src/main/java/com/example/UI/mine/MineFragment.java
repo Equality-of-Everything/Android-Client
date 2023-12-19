@@ -1,11 +1,16 @@
 package com.example.UI.mine;
 
-import static android.app.Activity.RESULT_OK;
-import static com.baidu.mapapi.BMapManager.init;
+import static com.example.android_client.LoginActivity.ip;
+import static com.example.util.Code.LOGIN_ERROR_NOUSER;
+import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
+import static com.example.util.TokenManager.saveAvatar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -14,11 +19,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,14 +28,31 @@ import androidx.fragment.app.Fragment;
 
 import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
+import com.example.util.Result;
 import com.example.util.TokenManager;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
 
-import java.util.UUID;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.MalformedURLException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 
 public class MineFragment extends Fragment {
@@ -42,7 +61,11 @@ public class MineFragment extends Fragment {
     private Button btnFriends;
     private Button btnLogout;
     private String userName ;
-    int REQUEST_IMAGE_OPEN = 2;
+    private String avatarPath;
+    public static final int REQUEST_IMAGE_OPEN = 2;
+    public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
+
+    private View contextView;
 
 
     @SuppressLint("MissingInflatedId")
@@ -52,6 +75,7 @@ public class MineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
 
         userName = TokenManager.getUserName(getActivity());
+        avatarPath = TokenManager.getAvatar(getActivity());
 
 
         btnCamera = view.findViewById(R.id.image_avatar);
@@ -59,6 +83,7 @@ public class MineFragment extends Fragment {
         btnFriends = view.findViewById(R.id.btn_friends);
         btnLogout = view.findViewById(R.id.btn_logout);
         tvUid = view.findViewById(R.id.tv_mine_uid);
+        contextView = view.findViewById(R.id.context_view);
 
         String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         tvUid.setText("uid: "+uid);
@@ -68,6 +93,10 @@ public class MineFragment extends Fragment {
         setListeners();
 
         tvMineName.setText(userName);
+        if(avatarPath!= null) {
+            btnCamera.setImageURI(Uri.parse(avatarPath));
+        }
+
         return view;
     }
 
@@ -135,6 +164,9 @@ public class MineFragment extends Fragment {
                         //指定获取的是图片
                         intent.setType("image/*");
                         startActivityForResult(intent, REQUEST_IMAGE_OPEN);
+
+                        // 关闭底部面板
+                        bottomSheetDialog.dismiss();
                     }
                 });
 
@@ -150,6 +182,15 @@ public class MineFragment extends Fragment {
         });
     }
 
+    /**
+     * @param requestCode:
+     * @param resultCode:
+     * @param data:
+     * @return void
+     * @author Lee
+     * @description 选择完头像图片后的操作
+     * @date 2023/12/19 8:14
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -157,38 +198,133 @@ public class MineFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
             // 获取所选图片的URI
             Uri selectedImageUri = data.getData();
+            //将选择的图片保存在本地
+            SaveToLocalStorage(String.valueOf(selectedImageUri));
+        }
+    }
+
+    /**
+     * @param selectedImageUri:
+     * @return void
+     * @author Lee
+     * @description 把选择的图片保存在本地
+     * @date 2023/12/19 19:28
+     */
+    private void SaveToLocalStorage(String selectedImageUri) {
+        try {
+            // 将选择的图片复制到应用的内部存储中
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedImageUri));
+            File internalStorageDir = getActivity().getFilesDir();
+            File avatarFile = new File(internalStorageDir, "avatar.jpg");
+            OutputStream outputStream = new FileOutputStream(avatarFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+
+            // 将保存的头像图片路径存储起来，以便以后使用
+            saveAvatar(getActivity(), avatarFile.getAbsolutePath());
 
             // 将所选图片设置为头像
-            btnCamera.setImageURI(selectedImageUri);
+            btnCamera.setImageURI(Uri.parse(selectedImageUri));
 
-            String url = selectedImageUri.toString();
-            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, url, new EMValueCallBack<String>() {
-                @Override
-                public void onSuccess(String value) {
-                    Log.i("mine", "头像上传成功");
-                }
+            uploadToServer(userName, avatarFile);//上传到后端
 
-                @Override
-                public void onError(int error, String errorMsg) {
-                    Log.e("mine", "头像上传失败");
-                }
-            });
-
-            uploadToServer(userName, url);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
     }
 
     /**
      * @param userName:
-     * @param url:
+     * @param imageFile:
      * @return void
      * @author Lee
-     * @description 将头像上传到服务器
-     * @date 2023/12/18 17:15
+     * @description
+     * @date 2023/12/19 8:35
      */
-    private void uploadToServer(String userName, String url) {
+    private void uploadToServer(String userName, File imageFile) {
+        OkHttpClient client = new OkHttpClient();
 
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("username", userName)
+                .addFormDataPart("file", "avatar.jpg",
+                        RequestBody.create(MEDIA_TYPE_JPG, imageFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 处理上传失败情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson json = new Gson();
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                Log.e("minefragment : ", result.toString());
+                // 处理上传成功情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result.getData() != null) {
+                            //将头像对应的url传到环信
+                            String imageUrl = result.getData().toString();
+                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
+                                @Override
+                                public void onSuccess(String value) {
+                                    Log.i("mine", "头像上传环信成功");
+                                }
+
+                                @Override
+                                public void onError(int error, String errorMsg) {
+                                    Log.e("mine", "头像上传环信失败");
+                                }
+                            });
+                            Log.e("minefragment : " , imageUrl);
+                        }
+                        showSnackBar(getView(), "头像更新成功", "我知道了");
+
+                    }
+                });
+            }
+        });
+    }
+
+    /*
+     * @param view:
+    	 * @param txt:
+    	 * @param btnTxt:
+      * @return void
+     * @author zhang
+     * @description 用于展示SnackBar
+     * @date 2023/12/19 9:11
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
     }
 
 

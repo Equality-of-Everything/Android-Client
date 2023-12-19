@@ -18,7 +18,6 @@ public class MyApplication extends Application {
         super.onCreate();
         // 应用动态颜色
         DynamicColors.applyToActivitiesIfAvailable(this);
-
         //设置隐私
         SDKInitializer.setAgreePrivacy(this,true);
         //初始化地图sdk
