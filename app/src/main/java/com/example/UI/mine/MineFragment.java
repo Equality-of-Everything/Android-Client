@@ -33,6 +33,7 @@ import com.example.android_client.R;
 import com.example.util.TokenManager;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.snackbar.Snackbar;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMUserInfo;
@@ -64,8 +65,10 @@ public class MineFragment extends Fragment {
     public static final int REQUEST_IMAGE_OPEN = 2;
     public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
 
+    private View contextView;
 
 
+    @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -80,6 +83,7 @@ public class MineFragment extends Fragment {
         btnFriends = view.findViewById(R.id.btn_friends);
         btnLogout = view.findViewById(R.id.btn_logout);
         tvUid = view.findViewById(R.id.tv_mine_uid);
+        contextView = view.findViewById(R.id.context_view);
 
         String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         tvUid.setText("uid: "+uid);
@@ -253,13 +257,13 @@ public class MineFragment extends Fragment {
 
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("userName", userName)
-                .addFormDataPart("image", "avatar.jpg",
+                .addFormDataPart("username", userName)
+                .addFormDataPart("file", "avatar.jpg",
                         RequestBody.create(MEDIA_TYPE_JPG, imageFile))
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://"+ip+":8080/upload/image") // 替换成后端服务器的URL
+                .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
                 .post(requestBody)
                 .build();
 
@@ -267,13 +271,46 @@ public class MineFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 处理上传失败情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
+                    }
+                });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // 处理上传成功情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSnackBar(getView(), "头像更新成功", "我知道了");
+                    }
+                });
             }
         });
+    }
+
+
+    /*
+     * @param view:
+    	 * @param txt:
+    	 * @param btnTxt:
+      * @return void
+     * @author zhang
+     * @description 用于展示SnackBar
+     * @date 2023/12/19 9:11
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 处理撤销逻辑
+            }
+        });
+        snackbar.show();
     }
 
 

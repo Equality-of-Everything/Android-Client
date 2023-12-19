@@ -325,4 +325,10 @@
                 </LinearLayout>
             </LinearLayout>
         </FrameLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/context_view"
+        android:orientation="horizontal"
+        ></LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
