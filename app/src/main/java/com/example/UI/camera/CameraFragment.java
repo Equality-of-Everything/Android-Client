@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,6 +77,9 @@ public class CameraFragment extends Fragment {
     private boolean isRecording = false;
     private ImageButton takeAgain;
     private int lensFacing = CameraSelector.LENS_FACING_BACK;
+    private TextView videoTime;
+    long startTime = System.currentTimeMillis();
+    Handler handler = new Handler(Looper.getMainLooper());
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,6 +87,7 @@ public class CameraFragment extends Fragment {
         cameraView = CameraView.findViewById(R.id.camera_view);
         camera_shot = CameraView.findViewById(R.id.camera_shot_btn);
         takeAgain = CameraView.findViewById(R.id.take_again);
+        videoTime = CameraView.findViewById(R.id.video_time);
         //获取 CameraProvider
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
         //手势操作
@@ -97,11 +104,10 @@ public class CameraFragment extends Fragment {
         camera_shot.setOnClickListener(v -> {
             if (isRecording) {
                 stopRecordingVideo();
-                Toast.makeText(getContext(), "视频录制已结束", Toast.LENGTH_SHORT).show();
+
                 isRecording = false;
             } else {
                 startRecordingVideo();
-                Toast.makeText(getContext(), "视频录制已开始", Toast.LENGTH_SHORT).show();
                 isRecording = true;
             }
         });
@@ -253,6 +259,7 @@ public class CameraFragment extends Fragment {
 
     @SuppressLint("RestrictedApi")
     private void startRecordingVideo() {
+        videoTime.setVisibility(View.VISIBLE);
         if (videoCapture != null && !isRecording&& camera != null) {
 
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -286,11 +293,45 @@ public class CameraFragment extends Fragment {
                 });
             }
         }
+        // 启动计时器
+        startTime = System.currentTimeMillis();
+        handler.postDelayed(updateDurationTask, 1000); // 每隔1秒更新一次
     }
+
+    private void updateRecordedDuration(long duration) {
+        // 更新界面上的已录制时长，例如更新 TextView 的文本
+        String formattedDuration = formatDuration(duration); // 格式化时长，例如将毫秒转换为分钟:秒 的格式
+        videoTime.setText(formattedDuration);
+    }
+    private String formatDuration(long duration) {
+        int seconds = (int) (duration / 1000);
+        int minutes = seconds / 60;
+        seconds = seconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+    }
+    private Runnable updateDurationTask = new Runnable() {
+        @Override
+        public void run() {
+            // 计算已录制的时长
+            long currentTime = System.currentTimeMillis();
+            long duration = currentTime - startTime;
+
+            // 更新界面上的已录制时长
+            updateRecordedDuration(duration);
+
+            // 每隔一定的时间更新一次已录制时长
+            handler.postDelayed(this, 1000); // 每隔1秒更新一次
+        }
+    };
+
+
     @SuppressLint("RestrictedApi")
     private void stopRecordingVideo() {
         if (videoCapture != null && isRecording) {
             videoCapture.stopRecording();
+            handler.removeCallbacks(updateDurationTask);
+            // 隐藏 TextView
+            videoTime.setVisibility(View.GONE);
         }else {
             Log.e(TAG, "相机未准备就绪，无法开始录制视频");
         }
