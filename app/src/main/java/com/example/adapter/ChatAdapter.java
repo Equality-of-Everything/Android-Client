@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android_client.R;
@@ -45,6 +46,9 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
         } else {
             view = inflater.inflate(R.layout.item_chat_receive, parent, false); // 接收方消息的布局
         }
+
+        ImageView avatar = view.findViewById(R.id.msg_avatar);
+        loadingAvatarImage()
 
         // 设置消息内容
         TextView messageText = view.findViewById(R.id.msg_text);

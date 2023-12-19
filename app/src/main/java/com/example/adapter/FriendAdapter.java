@@ -69,7 +69,6 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
 
         // 使用好友的 ID 来获取头像属性
-        // 获取指定用户的头像
         String[] userId = new String[1];
         userId[0] = friend.getUsername();
         EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
@@ -88,7 +87,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                             Glide.with(holder.itemView.getContext())
                                     .load(avatarUrl)
                                     .placeholder(R.drawable.loading)
-                                    .error(R.drawable.error)
+                                    .error(R.drawable.friend_item)
                                     .into(holder.ivFriendAvatar);
                         }
                     });
