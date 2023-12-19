@@ -294,13 +294,13 @@
                                     />
                                 <!-- 点击按钮 -->
                                 <Button
-                                    android:id="@+id/btn_help"
+                                    android:id="@+id/btn_edit"
                                     style="@style/Widget.Material3.Button.TextButton"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:gravity="left"
                                     android:textSize="16dp"
-                                    android:text="帮助"
+                                    android:text="个人资料编辑"
                                     android:textColor="@color/black"
                                     tools:ignore="MissingConstraints"
                                     android:layout_toRightOf="@+id/iv_help"

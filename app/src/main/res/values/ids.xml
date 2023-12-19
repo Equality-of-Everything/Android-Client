@@ -8,4 +8,8 @@
     <item name="topAppBar" type="id" />
     <item name="input_msg" type="id" />
     <item name="btn_send" type="id" />
+    <item name="radioGroup" type="id" />
+    <item name="radio_button_1" type="id" />
+    <item name="radio_button_2" type="id" />
+    <item name="radio_button_3" type="id" />
 </resources>
