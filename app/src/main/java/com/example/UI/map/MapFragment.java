@@ -4,10 +4,12 @@ import static com.example.android_client.LoginActivity.ip;
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -36,6 +39,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.example.UI.camera.CameraFragment;
 import com.example.android_client.EnrollActivity;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.MainActivity;

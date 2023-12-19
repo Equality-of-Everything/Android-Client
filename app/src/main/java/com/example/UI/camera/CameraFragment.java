@@ -2,8 +2,6 @@ package com.example.UI.camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
@@ -15,7 +13,6 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 
 import android.util.Log;
 import android.util.Size;
@@ -36,7 +33,6 @@ import androidx.camera.core.VideoCapture;
 import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -52,7 +48,6 @@ import java.nio.file.StandardCopyOption;
 import java.util.Date;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -77,36 +72,28 @@ public class CameraFragment extends Fragment {
     private VideoCapture videoCapture;
     private String videoOutputPath;
     private boolean isRecording = false;
-
+    private ImageButton takeAgain;
+    private int lensFacing = CameraSelector.LENS_FACING_BACK;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View CameraView = inflater.inflate(R.layout.fragment_camera, container, false);
         cameraView = CameraView.findViewById(R.id.camera_view);
         camera_shot = CameraView.findViewById(R.id.camera_shot_btn);
+        takeAgain = CameraView.findViewById(R.id.take_again);
         //获取 CameraProvider
         cameraProviderFuture = ProcessCameraProvider.getInstance(getContext());
         //手势操作
         scaleGestureDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
         cameraExecutor = Executors.newSingleThreadExecutor();
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            // 如果相机或录音权限未被授予，则请求权限
+            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, CAMERA_PERMISSION_REQUEST_CODE);
+        } else {
+            initializeCamera(); // 如果已经有权限，直接初始化相机
+        }
         //检查 CameraProvider 可用性
-        cameraProviderFuture.addListener(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
-                            ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                        // 如果相机或录音权限未被授予，则请求权限
-                        ActivityCompat.requestPermissions((Activity) getContext(),
-                                new String[]{Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO}, CAMERA_PERMISSION_REQUEST_CODE);
-                    } else {
-                        initializeCamera(); // 如果已经有权限，直接初始化相机
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }, ContextCompat.getMainExecutor(getContext()));
         camera_shot.setOnClickListener(v -> {
             if (isRecording) {
                 stopRecordingVideo();
@@ -118,8 +105,23 @@ public class CameraFragment extends Fragment {
                 isRecording = true;
             }
         });
+        takeAgain.setOnClickListener(v -> {
+            // 切换摄像头
+                    lensFacing = (lensFacing == CameraSelector.LENS_FACING_BACK) ?
+                    CameraSelector.LENS_FACING_FRONT : CameraSelector.LENS_FACING_BACK;
+            try {
+                bindCameraView(cameraProviderFuture.get());
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
         return CameraView;
     }
+
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -131,6 +133,7 @@ public class CameraFragment extends Fragment {
             if (cameraPermissionGranted && recordAudioPermissionGranted) {
                 // 相机和录音权限已被授予，执行相应操作
                 initializeCamera();
+                Toast.makeText(getContext(), "相机和录音权限已被授予", Toast.LENGTH_SHORT).show();
             } else {
                 // 相机或录音权限被拒绝，给出相应的提示
                 Toast.makeText(getContext(), "相机或录音权限被拒绝", Toast.LENGTH_SHORT).show();
@@ -170,7 +173,7 @@ public class CameraFragment extends Fragment {
         String firstCameraId = getFirstCameraId();
         if (firstCameraId != null) {
             CameraSelector cameraSelector = new CameraSelector.Builder()
-                    .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                    .requireLensFacing(lensFacing)
                     .build();
             // 设置预览界面
             preview.setSurfaceProvider(cameraView.getSurfaceProvider());
@@ -206,7 +209,7 @@ public class CameraFragment extends Fragment {
     }
 
     private String getFirstCameraId() {
-        Context context = requireActivity();
+        Context context = requireContext();
         CameraManager cameraManager = (CameraManager) context.getSystemService(Context.CAMERA_SERVICE);
         try {
             // 获取所有可用摄像头的ID列表
@@ -252,14 +255,13 @@ public class CameraFragment extends Fragment {
     private void startRecordingVideo() {
         if (videoCapture != null && !isRecording&& camera != null) {
 
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 // 请求录音权限
-                ActivityCompat.requestPermissions((Activity) getContext(),
-                        new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
+                requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO_PERMISSION);
                 return;
             }
             // 创建视频保存的文件地址
-            File mediaDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
+            File mediaDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
             if (mediaDir == null) {
                 Log.e(TAG, "无法获取到外部存储目录");
                 return;
@@ -293,15 +295,6 @@ public class CameraFragment extends Fragment {
             Log.e(TAG, "相机未准备就绪，无法开始录制视频");
         }
     }
-//    private String getOutputFilePath() {
-//        File mediaDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_MOVIES);
-//        if (mediaDir != null) {
-//            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-//            return mediaDir.getAbsolutePath() + File.separator + "VID_" + timeStamp + ".mp4";
-//        } else {
-//            return null;
-//        }
-//    }
     private void saveVideoToMediaStore(String videoPath) {
         File moviesDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
 
@@ -316,9 +309,6 @@ public class CameraFragment extends Fragment {
             Log.e(TAG, "视频保存失败：" + e.getMessage(), e);
         }
     }
-
-
-
     @Override
     public void onResume() {
         super.onResume();
