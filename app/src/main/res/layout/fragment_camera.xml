@@ -22,6 +22,7 @@
     </androidx.camera.view.PreviewView>
 
     <ImageButton
+        android:visibility="visible"
         android:id="@+id/take_again"
         android:layout_width="50dp"
         android:layout_height="50dp"

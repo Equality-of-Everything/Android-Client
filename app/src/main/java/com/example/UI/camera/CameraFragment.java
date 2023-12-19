@@ -255,11 +255,10 @@ public class CameraFragment extends Fragment {
             return true;
         }
     }
-
-
     @SuppressLint("RestrictedApi")
     private void startRecordingVideo() {
         videoTime.setVisibility(View.VISIBLE);
+        takeAgain.setVisibility(View.GONE);
         if (videoCapture != null && !isRecording&& camera != null) {
 
             if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
@@ -332,6 +331,7 @@ public class CameraFragment extends Fragment {
             handler.removeCallbacks(updateDurationTask);
             // 隐藏 TextView
             videoTime.setVisibility(View.GONE);
+            takeAgain.setVisibility(View.VISIBLE);
         }else {
             Log.e(TAG, "相机未准备就绪，无法开始录制视频");
         }
