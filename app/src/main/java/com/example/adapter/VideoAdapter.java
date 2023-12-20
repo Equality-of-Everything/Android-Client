@@ -15,6 +15,8 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
@@ -93,6 +95,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private ExoPlayer player;
     private String[] imageUrls;
     private View imageVr;
+
+    private Button likeButton;
     public int getCurrentPlayingPosition() {
         return currentPlayingPosition;
     }
@@ -143,8 +147,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //添加item布局，并转为一个view对象
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
+        likeButton = view.findViewById(R.id.favorite_icon);
         return new VideoViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, @SuppressLint("RecyclerView") int position) {

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -28,31 +27,31 @@
             android:layout_marginBottom="310dp"
             android:background="@drawable/avatar"
             android:elevation="10dp" />
-<!--        <CheckBox-->
-<!--            android:id="@+id/favorite_icon"-->
-<!--            android:layout_width="60dp"-->
-<!--            android:layout_height="60dp"-->
-<!--            android:button="@drawable/btn_favorite_icon"-->
-<!--            app:buttonTint="@android:color/white"-->
-<!--            android:layout_gravity="right|bottom"-->
-<!--            android:layout_marginRight="10dp"-->
-<!--            android:layout_marginBottom="230dp"-->
-<!--            />-->
-
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <CheckBox
             android:id="@+id/favorite_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:button="@drawable/btn_favorite_icon"
+            app:buttonTint="@android:color/white"
             android:layout_gravity="right|bottom"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="230dp"
-            android:backgroundTint="@android:color/transparent"
-            android:elevation="10dp"
-            android:src="@drawable/favorite_white"
-            app:maxImageSize="35dp"
-            app:tint="@android:color/white"
-            app:elevation="0dp"/>
+            />
+
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/favorite_icon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="right|bottom"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_marginBottom="230dp"-->
+<!--            android:backgroundTint="@android:color/transparent"-->
+<!--            android:elevation="10dp"-->
+<!--            android:src="@drawable/favorite_white"-->
+<!--            app:maxImageSize="35dp"-->
+<!--            app:tint="@android:color/white"-->
+<!--            app:elevation="0dp"/>-->
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/msg_icon"
