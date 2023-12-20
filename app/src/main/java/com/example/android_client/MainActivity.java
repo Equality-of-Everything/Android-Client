@@ -6,6 +6,8 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
+
+import com.example.UI.camera.CameraFragment;
 import com.example.adapter.CustomViewPager;
 import com.example.adapter.FragmentAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,9 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        DynamicColors.applyToActivitiesIfAvailable(getApplication());
         initView();
-
+        mViewPager.setOffscreenPageLimit(1);
     }
 
     public void initView() {
@@ -66,6 +67,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                CameraFragment cameraFragment = (CameraFragment) getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewpager + ":" + 2);
+                if (position == 2) {
+                    if (cameraFragment != null) {
+                        getSupportFragmentManager().beginTransaction().attach(cameraFragment).commit();
+                    }
+                } else {
+                    if (cameraFragment != null) {
+                        getSupportFragmentManager().beginTransaction().detach(cameraFragment).commit();
+                    }
+                }
                 navigation.getMenu().getItem(position).setChecked(true);
                 switchMenu(navigation.getMenu().getItem(position));
             }

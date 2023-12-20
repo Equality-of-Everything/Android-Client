@@ -1,22 +1,30 @@
 package com.example.UI.msg;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.UI.camera.CameraFragment;
 import com.example.adapter.MsgAdapter;
 import com.example.android_client.R;
+import com.google.common.util.concurrent.ListenableFuture;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 public class MessageFragment extends Fragment {
@@ -50,5 +58,11 @@ public class MessageFragment extends Fragment {
         List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
         adapter.updateConversations(conversations);
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
 
 }
