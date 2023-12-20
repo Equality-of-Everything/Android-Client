@@ -103,34 +103,5 @@ public class TokenManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(USER_NAME, null);
     }
-
-    /**
-     * @param context:
-     * @param avatarPath:
-     * @return void
-     * @author Lee
-     * @description 存取头像路径
-     * @return void
-     * @date 2023/12/19 8:44
-     */
-    public static void saveAvatar(Context context, String avatarPath) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(AVATAR_KEY, avatarPath);
-        editor.apply();
-    }
-
-    /**
-     * @param context:
-     * @return String
-     * @author Lee
-     * @description 取头像路径
-     * @date 2023/12/19 8:44
-     */
-    public static String getAvatar(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(AVATAR_KEY, null);
-    }
-
-
+    
 }

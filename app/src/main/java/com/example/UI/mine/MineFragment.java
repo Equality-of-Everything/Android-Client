@@ -3,6 +3,7 @@ package com.example.UI.mine;
 import static com.example.android_client.LoginActivity.ip;
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
+import static com.example.util.TokenManager.getUserName;
 import static com.example.util.TokenManager.saveAvatar;
 
 import android.annotation.SuppressLint;
@@ -13,6 +14,8 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +29,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.android_client.EmailActivity;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
@@ -37,6 +41,7 @@ import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMDeviceInfo;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -47,6 +52,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -67,7 +73,7 @@ public class MineFragment extends Fragment {
     private Button btnEdit;
     private Button btnLogout;
     private String userName ;
-    private String avatarPath;
+//    private String avatarPath;
     public static final int REQUEST_IMAGE_OPEN = 2;
     public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
 
@@ -81,7 +87,7 @@ public class MineFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
 
         userName = TokenManager.getUserName(getActivity());
-        avatarPath = TokenManager.getAvatar(getActivity());
+//        avatarPath = TokenManager.getAvatar(getActivity());
 
 
         btnCamera = view.findViewById(R.id.image_avatar);
@@ -100,11 +106,44 @@ public class MineFragment extends Fragment {
         setListeners();
 
         tvMineName.setText(userName);
-        if(avatarPath!= null) {
-            btnCamera.setImageURI(Uri.parse(avatarPath));
-        }
+        setMineAvatar(userName);//设置头像
 
         return view;
+    }
+
+    private void setMineAvatar(String userName) {
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                EMUserInfo userInfo = value.get(userName);
+                if (userInfo != null) {
+                    String avatarUrl = userInfo.getAvatarUrl();
+                    Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
+                    // 更新头像加载逻辑
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
+                                // 加载头像图片
+                                Glide.with(getContext())
+                                        .load(avatarUrl)
+                                        .error(R.drawable.friend_item)
+                                        .into(btnCamera);
+                            } else {
+                                // 处理无头像URL的情况，显示默认头像
+                                btnCamera.setImageResource(R.drawable.head);
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+
+        });
     }
 
     /**
