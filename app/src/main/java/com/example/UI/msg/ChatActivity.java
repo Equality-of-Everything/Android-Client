@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.adapter.ChatAdapter;
 import com.example.android_client.R;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -175,6 +176,15 @@ public class ChatActivity extends AppCompatActivity {
         // 解注册消息监听
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         super.onDestroy();
+        // 取消所有的图片加载操作
+//        Glide.with(this).pauseRequests();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // 恢复所有的图片加载操作
+        Glide.with(this).resumeRequests();
     }
 
     public void init() {

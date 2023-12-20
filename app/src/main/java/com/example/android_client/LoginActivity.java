@@ -29,6 +29,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 
 import java.io.IOException;
 
@@ -56,6 +57,12 @@ public class LoginActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //环信
+        EMOptions options = new EMOptions();
+        options.setAppKey("1133231211160621#android-client");
+        // 其他 EMOptions 配置。
+        EMClient.getInstance().init(this, options);
 
         init();
 

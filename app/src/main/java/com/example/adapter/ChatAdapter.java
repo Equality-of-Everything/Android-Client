@@ -1,8 +1,13 @@
 package com.example.adapter;
 
+import static com.example.util.TokenManager.getUserName;
+
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,28 +60,32 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
             view = inflater.inflate(R.layout.item_chat_receive, parent, false); // 接收方消息的布局
         }
 
-        ImageView messageAvatar = view.findViewById(R.id.msg_avatar);
-        // 使用好友的 ID 来获取头像属性
-        String[] userId = new String[1];
-        userId[0] = message.conversationId();
-        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
+        // 获取消息发送方或接收方的用户名
+        String username = message.direct() == EMMessage.Direct.SEND ? getUserName(getContext()) : message.conversationId();
+
+        View finalView = view;
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{username}, new EMValueCallBack<Map<String, EMUserInfo>>() {
             @Override
             public void onSuccess(Map<String, EMUserInfo> value) {
-                // 获取用户头像属性成功后，在主线程中加载用户头像
-                EMUserInfo userInfo = value.get(userId[0]);
+                EMUserInfo userInfo = value.get(username);
                 if (userInfo != null) {
                     String avatarUrl = userInfo.getAvatarUrl();
-                    Log.e("FriendAdapter", "获取用户头像成功：" + "avatarUrl" + avatarUrl);
-                    // 在主线程中加载头像图片
+                    Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
+                    // 更新头像加载逻辑
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            // 加载头像图片
-                            Glide.with(getContext())
-                                    .load(avatarUrl)
-                                    .placeholder(R.drawable.loading)
-                                    .error(R.drawable.friend_item)
-                                    .into(messageAvatar);
+                            ImageView messageAvatar = (ImageView) finalView.findViewById(message.direct() == EMMessage.Direct.SEND ? R.id.msg_send_avatar : R.id.msg_avatar);
+                            if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
+                                // 加载头像图片
+                                Glide.with(getContext())
+                                        .load(avatarUrl)
+                                        .error(R.drawable.friend_item)
+                                        .into(messageAvatar);
+                            } else {
+                                // 处理无头像URL的情况，显示默认头像
+                                messageAvatar.setImageResource(R.drawable.friend_item);
+                            }
                         }
                     });
                 }
@@ -84,10 +93,85 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
 
             @Override
             public void onError(int error, String errorMsg) {
-                // 处理加载头像失败的情况
-                Log.e("FriendAdapter", "获取用户头像失败：" + error + ", " + errorMsg);
+
             }
+
         });
+
+
+        String sendUserName = getUserName(getContext());
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{sendUserName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                EMUserInfo userInfo = value.get(username);
+                if (userInfo != null) {
+                    String avatarUrl = userInfo.getAvatarUrl();
+                    Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
+                    // 更新头像加载逻辑
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            ImageView messageAvatar = (ImageView) finalView.findViewById(message.direct() == EMMessage.Direct.SEND ? R.id.msg_send_avatar : R.id.msg_avatar);
+                            if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
+                                // 加载头像图片
+                                Glide.with(getContext())
+                                        .load(avatarUrl)
+                                        .error(R.drawable.friend_item)
+                                        .into(messageAvatar);
+                            } else {
+                                // 处理无头像URL的情况，显示默认头像
+                                messageAvatar.setImageResource(R.drawable.friend_item);
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+
+            }
+
+        });
+
+//        ImageView messageAvatar = (ImageView) view.findViewById(message.direct() == EMMessage.Direct.SEND ? R.id.msg_send_avatar : R.id.msg_avatar);
+//        // 根据消息的发送方或接收方来获取头像URL
+//        String username = message.direct() == EMMessage.Direct.SEND ? getUserName(getContext()) : message.conversationId();
+//        Log.e("ChatAdapter", "获取用户名称：" + getUserName(getContext()));
+//        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{username}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+//            @Override
+//            public void onSuccess(Map<String, EMUserInfo> value) {
+//                String username = message.direct() == EMMessage.Direct.SEND ? getUserName(getContext()) : message.conversationId();
+//                EMUserInfo userInfo = value.get(username);
+//                if (userInfo != null) {
+//                    String avatarUrl = userInfo.getAvatarUrl();
+//                    Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
+//                    // 更新头像加载逻辑
+//                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                        @Override
+//                        public void run() {
+////                            ImageView messageAvatar = (ImageView) view.findViewById(message.direct() == EMMessage.Direct.SEND ? R.id.msg_send_avatar : R.id.msg_avatar);
+//                            if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
+//                                // 加载头像图片
+//                                Glide.with(getContext())
+//                                        .load(avatarUrl)
+//                                        .error(R.drawable.friend_item)
+//                                        .into(messageAvatar);
+//                            } else {
+//                                // 处理无头像URL的情况，显示默认头像
+//                                messageAvatar.setImageResource(R.drawable.friend_item);
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//
+//            @Override
+//            public void onError(int error, String errorMsg) {
+//                // 处理加载头像失败的情况
+//                Log.e("FriendAdapter", "获取用户头像失败：" + error + ", " + errorMsg);
+//            }
+//        });
 
         // 设置消息内容
         TextView messageText = view.findViewById(R.id.msg_text);
@@ -114,6 +198,7 @@ public class ChatAdapter extends ArrayAdapter<EMMessage> {
 
         return view;
     }
+
 
     /**
      * @param time:
