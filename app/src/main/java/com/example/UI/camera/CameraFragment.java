@@ -2,7 +2,9 @@ package com.example.UI.camera;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import android.hardware.camera2.CameraAccessException;
@@ -38,6 +40,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.example.android_client.R;
@@ -80,6 +83,7 @@ public class CameraFragment extends Fragment {
     private TextView videoTime;
     long startTime = System.currentTimeMillis();
     Handler handler = new Handler(Looper.getMainLooper());
+    private static final int REQUEST_PREVIEW_VIDEO = 1;  // 定义请求码
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -255,6 +259,19 @@ public class CameraFragment extends Fragment {
             return true;
         }
     }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_PREVIEW_VIDEO && resultCode == Activity.RESULT_OK) {
+            String fragmentTag = data.getStringExtra("returnToFragment");
+            if (fragmentTag != null) {
+                FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                Fragment fragment = fragmentManager.findFragmentByTag(fragmentTag);
+                if (fragment != null) {
+                    fragmentManager.beginTransaction().replace(R.id.navigation_camera, fragment).commit();
+                }
+            }
+        }
+    }
     @SuppressLint("RestrictedApi")
     private void startRecordingVideo() {
         videoTime.setVisibility(View.VISIBLE);
@@ -280,9 +297,11 @@ public class CameraFragment extends Fragment {
                     @Override
                     public void onVideoSaved(@NonNull VideoCapture.OutputFileResults outputFileResults) {
                         videoOutputPath=file.getAbsolutePath();
-
-                        saveVideoToMediaStore(videoOutputPath);
+//                        saveVideoToMediaStore(videoOutputPath);
                         Log.d(TAG, "视频录制成功：" + videoOutputPath);
+                        Intent intent = new Intent(getActivity(), PreviewVideoActivity.class);
+                        intent.putExtra("videoPath", videoOutputPath);
+                        startActivity(intent);
                     }
 
                     @Override
@@ -296,7 +315,6 @@ public class CameraFragment extends Fragment {
         startTime = System.currentTimeMillis();
         handler.postDelayed(updateDurationTask, 1000); // 每隔1秒更新一次
     }
-
     private void updateRecordedDuration(long duration) {
         // 更新界面上的已录制时长，例如更新 TextView 的文本
         String formattedDuration = formatDuration(duration); // 格式化时长，例如将毫秒转换为分钟:秒 的格式

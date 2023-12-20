@@ -63,6 +63,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.example.UI.camera.PreviewVideoActivity"
+            android:exported="true" />
+        <activity
             android:name="com.example.android_client.ResetActivity"
             android:exported="true" />
         <activity
@@ -83,7 +86,6 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="jiq3v5vdYhEzbdz37z2jWMkD6g4Wantx" />
-            android:value="DoDtmLqaoLG2RTse8cKR92cQwGPkQWI9" />
         <!-- 声明 SDK 所需的 service 的核心功能-->
         <service
             android:name="com.hyphenate.chat.EMChatService"
