@@ -169,7 +169,7 @@ public class PersonDataEditActivity extends AppCompatActivity {
             public void run() {
                 OkHttpClient client = new OkHttpClient();
                 Request request = new Request.Builder()
-                       .url("http://"+ip+":8080/user/login")
+                       .url("http://"+ip+":8080/userInfo/setUserInformation")
                         .post(body)
                        .build();
 
