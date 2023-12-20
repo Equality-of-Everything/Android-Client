@@ -26,6 +26,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.android_client.EmailActivity;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
 import com.example.util.Result;
@@ -59,6 +60,7 @@ public class MineFragment extends Fragment {
     private ImageView btnCamera;
     private TextView tvMineName;
     private Button btnFriends;
+    private Button btnEdit;
     private Button btnLogout;
     private String userName ;
     private String avatarPath;
@@ -81,6 +83,7 @@ public class MineFragment extends Fragment {
         btnCamera = view.findViewById(R.id.image_avatar);
         tvMineName = view.findViewById(R.id.tv_mine_name);
         btnFriends = view.findViewById(R.id.btn_friends);
+        btnEdit = view.findViewById(R.id.btn_edit);
         btnLogout = view.findViewById(R.id.btn_logout);
         tvUid = view.findViewById(R.id.tv_mine_uid);
         contextView = view.findViewById(R.id.context_view);
@@ -134,6 +137,15 @@ public class MineFragment extends Fragment {
             public void onClick(View v) {
                 //点击跳转所有好友页面
                 Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到个人信息编辑页面
+                Intent intent = new Intent(getActivity(), PersonDataEditActivity.class);
                 startActivity(intent);
             }
         });
