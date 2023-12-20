@@ -25,11 +25,11 @@ public class UserInfo {
     // 个性签名
     private String signature;
     // 生日
-    private LocalDate birthday;
+    private String birthday;
     //邮箱
     private String email;
     // 最近修改时间
-    private LocalDateTime lastModifiedTime;
+    private String lastModifiedTime;
     // 地址
     private String address;
     // 与图文与视频分享信息表关联的ID
@@ -43,9 +43,9 @@ public class UserInfo {
 
     public UserInfo(int userId, String username, String nickname,
                     String avatar, String gender, String status,
-                    String signature, LocalDate birthday, String email,
-                    LocalDateTime lastModifiedTime, String address,
-                    int shareInfoId, int trajectoryId, int friendShareId) {
+                    String signature, String birthday, String email,
+                    String lastModifiedTime, String address, int shareInfoId,
+                    int trajectoryId, int friendShareId) {
         this.userId = userId;
         this.username = username;
         this.nickname = nickname;
@@ -118,11 +118,11 @@ public class UserInfo {
         this.signature = signature;
     }
 
-    public LocalDate getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -134,11 +134,11 @@ public class UserInfo {
         this.email = email;
     }
 
-    public LocalDateTime getLastModifiedTime() {
+    public String getLastModifiedTime() {
         return lastModifiedTime;
     }
 
-    public void setLastModifiedTime(LocalDateTime lastModifiedTime) {
+    public void setLastModifiedTime(String lastModifiedTime) {
         this.lastModifiedTime = lastModifiedTime;
     }
 
@@ -184,9 +184,9 @@ public class UserInfo {
                 ", gender='" + gender + '\'' +
                 ", status='" + status + '\'' +
                 ", signature='" + signature + '\'' +
-                ", birthday=" + birthday +
+                ", birthday='" + birthday + '\'' +
                 ", email='" + email + '\'' +
-                ", lastModifiedTime=" + lastModifiedTime +
+                ", lastModifiedTime='" + lastModifiedTime + '\'' +
                 ", address='" + address + '\'' +
                 ", shareInfoId=" + shareInfoId +
                 ", trajectoryId=" + trajectoryId +

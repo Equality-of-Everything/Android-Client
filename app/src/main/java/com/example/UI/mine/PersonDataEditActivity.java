@@ -155,15 +155,16 @@ public class PersonDataEditActivity extends AppCompatActivity {
         // 获取当前时刻
         LocalDateTime now = LocalDateTime.now();
 
-        userInfo.setBirthday(LocalDate.parse(date + ""));
-        userInfo.setLastModifiedTime(now);
-        Log.d("PersonDataEditActivity", date.toString());
+        userInfo.setBirthday(date+"");
+        userInfo.setLastModifiedTime(now+"");
+        Log.e("now", now.toString());
+        Log.e("date", date.toString());
 
         Gson gson = new Gson();
         String formBody = gson.toJson(userInfo);
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, formBody);
-        Log.d("PersonDataEditActivity", formBody);
+        Log.d("Body", body.toString());
 
         new Thread(new Runnable() {
             Gson json = new Gson();
