@@ -1,6 +1,8 @@
 package com.example.adapter;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,17 +13,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.UI.msg.ChatActivity;
 import com.example.android_client.R;
+import com.hyphenate.EMValueCallBack;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.EMUserInfo;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @Author : Lee
@@ -54,6 +61,39 @@ public class MsgAdapter extends RecyclerView.Adapter<MsgAdapter.ConversationView
     public void onBindViewHolder(@NonNull MsgAdapter.ConversationViewHolder holder, int position) {
         EMConversation conversation = conversationList.get(position);
         holder.bind(conversation);
+
+        // 使用好友的 ID 来获取头像属性
+        String[] userId = new String[1];
+        userId[0] = conversation.conversationId();
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                // 获取用户头像属性成功后，在主线程中加载用户头像
+                EMUserInfo userInfo = value.get(userId[0]);
+                if (userInfo != null) {
+                    String avatarUrl = userInfo.getAvatarUrl();
+                    Log.e("MsgAdapter", "获取用户头像成功：" + "avatarUrl" + avatarUrl);
+                    // 在主线程中加载头像图片
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 加载头像图片
+                            Glide.with(holder.itemView.getContext())
+                                    .load(avatarUrl)
+                                    .placeholder(R.drawable.loading)
+                                    .error(R.drawable.friend_item)
+                                    .into(holder.ivAvatar);
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                // 处理加载头像失败的情况
+                Log.e("FriendAdapter", "获取用户头像失败：" + error + ", " + errorMsg);
+            }
+        });
 
         // 添加点击事件监听器
         holder.itemView.setOnClickListener(new View.OnClickListener() {
