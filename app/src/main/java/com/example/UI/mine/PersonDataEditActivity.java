@@ -22,6 +22,7 @@ import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
 import com.example.entity.UserInfo;
 import com.example.entity.UserLogin;
+import com.example.util.Result;
 import com.example.util.TokenManager;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
@@ -143,7 +144,6 @@ public class PersonDataEditActivity extends AppCompatActivity {
         userInfo.setSignature(signature);
         userInfo.setEmail(email);
         userInfo.setGender(gender);
-        Log.d("PersonDataEditActivity", birthDate);
 
         // 去掉"出生日期:"文本
         String formattedBirthDate = birthDate.replace("出生日期: ", "");
@@ -155,13 +155,15 @@ public class PersonDataEditActivity extends AppCompatActivity {
         // 获取当前时刻
         LocalDateTime now = LocalDateTime.now();
 
-        userInfo.setBirthday(date);
+        userInfo.setBirthday(LocalDate.parse(date + ""));
         userInfo.setLastModifiedTime(now);
+        Log.d("PersonDataEditActivity", date.toString());
 
         Gson gson = new Gson();
         String formBody = gson.toJson(userInfo);
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, formBody);
+        Log.d("PersonDataEditActivity", formBody);
 
         new Thread(new Runnable() {
             Gson json = new Gson();
@@ -182,6 +184,19 @@ public class PersonDataEditActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         Log.i("PersonDataEditActivity", "上传到服务器端成功");
+                        String responseData = response.body().string();
+                        Result result = json.fromJson(responseData, Result.class);
+
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (result.getFlag()) {
+                                    Log.e("PersonDataEditActivity", "服务器响应修改成功 " + result.getMsg());
+                                } else {
+                                    Log.e("PersonDataEditActivity", "服务器响应修改失败 " + result.getMsg());
+                                }
+                            }
+                        });
                     }
                 });
 
