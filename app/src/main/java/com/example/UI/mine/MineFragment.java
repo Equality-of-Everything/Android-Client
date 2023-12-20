@@ -1,10 +1,6 @@
 package com.example.UI.mine;
 
 import static com.example.android_client.LoginActivity.ip;
-import static com.example.util.Code.LOGIN_ERROR_NOUSER;
-import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
-import static com.example.util.TokenManager.getUserName;
-import static com.example.util.TokenManager.saveAvatar;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -258,9 +254,6 @@ public class MineFragment extends Fragment {
             }
             outputStream.close();
             inputStream.close();
-
-            // 将保存的头像图片路径存储起来，以便以后使用
-            saveAvatar(getActivity(), avatarFile.getAbsolutePath());
 
             // 将所选图片设置为头像
             btnCamera.setImageURI(Uri.parse(selectedImageUri));

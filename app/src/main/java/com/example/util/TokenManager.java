@@ -103,5 +103,5 @@ public class TokenManager {
         SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
         return sharedPreferences.getString(USER_NAME, null);
     }
-    
+
 }
