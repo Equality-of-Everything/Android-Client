@@ -26,6 +26,8 @@ public class UserInfo {
     private String signature;
     // 生日
     private LocalDate birthday;
+    //邮箱
+    private String email;
     // 最近修改时间
     private LocalDateTime lastModifiedTime;
     // 地址
@@ -38,9 +40,10 @@ public class UserInfo {
     private int friendShareId;
 
     public UserInfo() {}
+
     public UserInfo(int userId, String username, String nickname,
                     String avatar, String gender, String status,
-                    String signature, LocalDate birthday,
+                    String signature, LocalDate birthday, String email,
                     LocalDateTime lastModifiedTime, String address,
                     int shareInfoId, int trajectoryId, int friendShareId) {
         this.userId = userId;
@@ -51,6 +54,7 @@ public class UserInfo {
         this.status = status;
         this.signature = signature;
         this.birthday = birthday;
+        this.email = email;
         this.lastModifiedTime = lastModifiedTime;
         this.address = address;
         this.shareInfoId = shareInfoId;
@@ -122,6 +126,14 @@ public class UserInfo {
         this.birthday = birthday;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public LocalDateTime getLastModifiedTime() {
         return lastModifiedTime;
     }
@@ -160,5 +172,25 @@ public class UserInfo {
 
     public void setFriendShareId(int friendShareId) {
         this.friendShareId = friendShareId;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", gender='" + gender + '\'' +
+                ", status='" + status + '\'' +
+                ", signature='" + signature + '\'' +
+                ", birthday=" + birthday +
+                ", email='" + email + '\'' +
+                ", lastModifiedTime=" + lastModifiedTime +
+                ", address='" + address + '\'' +
+                ", shareInfoId=" + shareInfoId +
+                ", trajectoryId=" + trajectoryId +
+                ", friendShareId=" + friendShareId +
+                '}';
     }
 }

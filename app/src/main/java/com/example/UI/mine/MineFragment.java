@@ -228,8 +228,8 @@ public class MineFragment extends Fragment {
         if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
             // 获取所选图片的URI
             Uri selectedImageUri = data.getData();
-            //将选择的图片保存在本地
-            SaveToLocalStorage(String.valueOf(selectedImageUri));
+            //将选择的图片转成文件，然后上传到服务器
+            transToFile(String.valueOf(selectedImageUri));
         }
     }
 
@@ -240,7 +240,7 @@ public class MineFragment extends Fragment {
      * @description 把选择的图片保存在本地
      * @date 2023/12/19 19:28
      */
-    private void SaveToLocalStorage(String selectedImageUri) {
+    private void transToFile(String selectedImageUri) {
         try {
             // 将选择的图片复制到应用的内部存储中
             InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedImageUri));

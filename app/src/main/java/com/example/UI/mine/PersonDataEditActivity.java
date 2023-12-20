@@ -1,9 +1,13 @@
 package com.example.UI.mine;
 
+import static com.example.android_client.LoginActivity.ip;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,17 +18,33 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
+import com.example.entity.UserInfo;
 import com.example.entity.UserLogin;
 import com.example.util.TokenManager;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.gson.Gson;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class PersonDataEditActivity extends AppCompatActivity {
+    private String userName;
     private Button mPickDateButton;
     private TextView mShowSelectedDateText;
     private TextInputEditText mSignatureEditText ;
@@ -111,9 +131,64 @@ public class PersonDataEditActivity extends AppCompatActivity {
             // 保存用户个人信息到SharedPreferences
             saveUserData(signature, email, gender, birthDate);
             Toast.makeText(PersonDataEditActivity.this, "修改成功", Toast.LENGTH_SHORT).show();
+            userName = TokenManager.getUserName(this);
             //将信息上传到服务器
+            uploadToServer(userName, signature, email, gender, birthDate);
         }
     }
+
+    private void uploadToServer(String userName, String signature, String email, String gender, String birthDate) {
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(userName);
+        userInfo.setSignature(signature);
+        userInfo.setEmail(email);
+        userInfo.setGender(gender);
+        Log.d("PersonDataEditActivity", birthDate);
+
+        // 去掉"出生日期:"文本
+        String formattedBirthDate = birthDate.replace("出生日期: ", "");
+
+        // 定义日期格式
+        DateTimeFormatter formatterBirthday = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+        LocalDate date = LocalDate.parse(formattedBirthDate, formatterBirthday);
+
+        // 获取当前时刻
+        LocalDateTime now = LocalDateTime.now();
+
+        userInfo.setBirthday(date);
+        userInfo.setLastModifiedTime(now);
+
+        Gson gson = new Gson();
+        String formBody = gson.toJson(userInfo);
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, formBody);
+
+        new Thread(new Runnable() {
+            Gson json = new Gson();
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                       .url("http://"+ip+":8080/user/login")
+                        .post(body)
+                       .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.e("PersonDataEditActivity", "上传到服务器端失败 " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.i("PersonDataEditActivity", "上传到服务器端成功");
+                    }
+                });
+
+            }
+        }).start();
+    }
+
 
     private boolean isValidEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
