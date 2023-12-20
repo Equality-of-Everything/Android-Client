@@ -2,6 +2,7 @@ package com.example.UI.camera;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -12,7 +13,7 @@ import android.os.Environment;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -27,12 +28,13 @@ import java.nio.file.StandardCopyOption;
 
 public class PreviewVideoActivity extends AppCompatActivity {
     private VideoView videoPreview;
-    private ImageButton saveLocal;
-    private ImageButton videoPublish;
-    private ImageButton backCamera;
+    private Button saveLocal;
+    private Button videoPublish;
+    private Button backCamera;
     private String videoPath;
     private static final String TAG = "YourActivity";
     private Uri videoUri;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
