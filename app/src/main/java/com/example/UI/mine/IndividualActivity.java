@@ -16,6 +16,7 @@ public class IndividualActivity extends AppCompatActivity {
     private ImageView ivAvatar;
     private TextView tvUserName;
     private Button btnSendMsg;
+    private Button btnBack;
     private String conversationId;
 
     @Override
@@ -42,9 +43,16 @@ public class IndividualActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        btnBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();//返回上一个页面
+            }
+        });
     }
 
     public void init() {
+        btnBack = findViewById(R.id.btn_back);
         ivAvatar = findViewById(R.id.iv_avatar);
         tvUserName = findViewById(R.id.tv_username);
         btnSendMsg = findViewById(R.id.btn_send_message);

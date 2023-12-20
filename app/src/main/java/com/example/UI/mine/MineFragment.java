@@ -36,7 +36,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMDeviceInfo;
 import com.hyphenate.chat.EMUserInfo;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -59,6 +62,7 @@ import okhttp3.ResponseBody;
 public class MineFragment extends Fragment {
     private ImageView btnCamera;
     private TextView tvMineName;
+    private TextView tvUid;
     private Button btnFriends;
     private Button btnEdit;
     private Button btnLogout;
@@ -101,27 +105,6 @@ public class MineFragment extends Fragment {
         }
 
         return view;
-    }
-
-    private TextView tvUid;
-
-    /**
-     * @param :
-     * @return void
-     * @author zhang
-     * @description 为登出按钮绑定点击事件
-     * @date 2023/12/13 15:41
-     */
-    private void setListenerForLogout() {
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                TokenManager.deleteExpiredTokenFromSharedPreferences(getActivity());
-                //点击跳转登出页面
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     /**
@@ -337,6 +320,34 @@ public class MineFragment extends Fragment {
             }
         });
         snackbar.show();
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author zhang
+     * @description 为登出按钮绑定点击事件
+     * @date 2023/12/13 15:41
+     */
+    private void setListenerForLogout() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TokenManager.deleteExpiredTokenFromSharedPreferences(getActivity());
+                new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        EMClient.getInstance().logout(true);
+                        Log.e("mineFragment : ", "登出成功");
+                    }
+                }.start();
+
+                //点击跳转登出页面
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
 
