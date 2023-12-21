@@ -32,6 +32,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 
 import java.io.IOException;
+import java.net.Socket;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,8 +52,8 @@ public class LoginActivity extends AppCompatActivity {
     private View contextView;
 
 //    public static String ip = "192.168.137.12";
-    public static String ip = "39.105.24.22";
-//    public static String ip = "10.7.88.107";
+//    public static String ip = "39.105.24.22";
+    public static String ip = "10.7.88.107";
     @Override
     protected void onCreate(Bundle savedInstanceState){
 
@@ -84,12 +85,16 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+
                 login(loginUser, loginPwd);
             }
         });
 
         setListener();
     }
+
+
+
 
     /*
      * @param :

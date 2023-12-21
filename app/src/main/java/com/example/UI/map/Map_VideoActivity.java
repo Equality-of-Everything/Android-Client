@@ -44,13 +44,13 @@ public class Map_VideoActivity extends AppCompatActivity {
                 null,
                 null
         };
-        //获取urls
-        //String[] serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
-        //String[] serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
-        //imageUrls = serverImageUrls;
-        //videoUrls = serverVideoUrls;
-        //System.out.println("videoUrls:"+videoUrls);
-        //System.out.println("vrUrls:"+serverImageUrls);
+//        获取urls
+        String[] serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
+        String[] serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
+        imageUrls = serverImageUrls;
+        videoUrls = serverVideoUrls;
+        System.out.println("videoUrls:"+videoUrls);
+        System.out.println("vrUrls:"+serverImageUrls);
 
 
         //初始化 RecyclerView 和 VideoAdapter
