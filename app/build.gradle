@@ -109,6 +109,12 @@ dependencies {
     implementation "androidx.camera:camera-extensions:${camerax_version}"
     //圆形头像
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //NineGridLayout
+    implementation 'com.github.goweii:NineGridLayout:1.0.1'
+    //图像预览
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+    //图片选择器
+    implementation 'com.github.donkingliang:ImageSelector:2.2.1'
 }
 
 
