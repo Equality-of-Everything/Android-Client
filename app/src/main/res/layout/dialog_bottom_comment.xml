@@ -1,34 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
-    <!--   点击头像底板-->
-    <FrameLayout
-        android:id="@+id/standard_bottom_sheet"
-        style="@style/Widget.Material3.BottomSheet"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:behavior_peekHeight="450dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-        <LinearLayout
+        android:layout_height="match_parent">
+        <!--   点击头像底板-->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <FrameLayout
+            android:id="@+id/standard_bottom_sheet"
+            style="@style/Widget.Material3.BottomSheet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="评论"/>
-            <androidx.recyclerview.widget.RecyclerView
+            app:behavior_peekHeight="450dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/app_bar"/>
+                android:orientation="vertical"
+                android:gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评论"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/app_bar"/>
+            </LinearLayout>
+        </FrameLayout>
+     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <LinearLayout
+            android:id="@+id/input_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:background="?attr/colorOnPrimary"
+            >
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                app:boxStrokeColor="?attr/colorPrimary"
+                app:boxStrokeWidth="2dp"
+                app:startIconContentDescription="账号"
+                tools:ignore="ExtraText,MissingConstraints"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/input_msg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:autofillHints="verify_number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_send"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_alignParentTop="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_toRightOf="@+id/edtTxt_verify_number"
+                android:text="发送"
+                android:textColor="@color/white"
+                android:backgroundTint="?attr/colorPrimary"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                app:rippleColor="@color/m3_text_button_ripple_color_selector"
+                tools:ignore="NotSibling" />
         </LinearLayout>
-    </FrameLayout>
+
+    </RelativeLayout>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+<!--    </RelativeLayout>-->
+
+<!--            <LinearLayout-->
+<!--                android:id="@+id/input_layout"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:orientation="horizontal"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:background="?attr/colorOnPrimary"-->
+<!--                >-->
+
+<!--                <com.google.android.material.textfield.TextInputLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginBottom="10dp"-->
+<!--                    android:layout_weight="1"-->
+<!--                    android:layout_marginTop="5dp"-->
+<!--                    app:boxStrokeColor="?attr/colorPrimary"-->
+<!--                    app:boxStrokeWidth="2dp"-->
+<!--                    app:startIconContentDescription="账号"-->
+<!--                    tools:ignore="ExtraText,MissingConstraints"-->
+<!--                    >-->
+
+<!--                    <com.google.android.material.textfield.TextInputEditText-->
+<!--                        android:id="@+id/input_msg"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_weight="1"-->
+<!--                        android:autofillHints="verify_number" />-->
+<!--                </com.google.android.material.textfield.TextInputLayout>-->
+
+<!--                <Button-->
+<!--                    android:id="@+id/btn_send"-->
+<!--                    style="@style/Widget.Material3.Button.TextButton"-->
+<!--                    android:layout_alignParentTop="true"-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_alignParentRight="true"-->
+<!--                    android:layout_toRightOf="@+id/edtTxt_verify_number"-->
+<!--                    android:text="发送"-->
+<!--                    android:textColor="@color/white"-->
+<!--                    android:backgroundTint="?attr/colorPrimary"-->
+<!--                    android:layout_marginLeft="10dp"-->
+<!--                    android:layout_marginRight="10dp"-->
+<!--                    app:rippleColor="@color/m3_text_button_ripple_color_selector"-->
+<!--                    tools:ignore="NotSibling" />-->
+
+
+</LinearLayout>
