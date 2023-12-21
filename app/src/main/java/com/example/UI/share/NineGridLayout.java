@@ -2,13 +2,25 @@ package com.example.UI.share;
 
 import static com.baidu.mapapi.BMapManager.init;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.example.android_client.R;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
 
@@ -22,6 +34,8 @@ import java.util.List;
 
 public class NineGridLayout extends GridLayout {
     private static final int MAX_CHILD_COUNT = 9;
+    private List<String> urls;
+
     public NineGridLayout(Context context) {
         super(context);
         init();
@@ -32,6 +46,12 @@ public class NineGridLayout extends GridLayout {
         init();
     }
     public void setUrls(List<String> urls) {
+        this.urls = urls;
+        if (urls == null || urls.size() == 0) {
+            setVisibility(GONE);
+            return;
+        }
+        setVisibility(VISIBLE);
         removeAllViews();
         int size = urls.size();
         int rows, columns;
@@ -50,6 +70,7 @@ public class NineGridLayout extends GridLayout {
         setRowCount(rows);
         setColumnCount(columns);
         for (int i = 0; i < size; i++) {
+            final int position = i;
             ImageView imageView = new ImageView(getContext());
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
@@ -63,27 +84,63 @@ public class NineGridLayout extends GridLayout {
             // 加载图片，你可以使用 Glide 或其他图片加载库
              Glide.with(imageView)
                      .load(urls.get(i))
-                     .into(imageView);
-            // 设置点击监听器以进行图片预览
-            final int position = i;
-            imageView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    // 使用 PhotoView 库进行图片预览
-                    PhotoView photoView = new PhotoView(getContext());
-                }
-            });
+                     .into(new SimpleTarget<Drawable>() {
+                         @Override
+                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                             // 图片加载完成后，设置给 ImageView
+                             imageView.setImageDrawable(resource);
+                             // 设置点击监听器以进行图片预览
+                             imageView.setOnClickListener(new OnClickListener() {
+                                 @Override
+                                 public void onClick(View v) {
+                                     // 打开图片预览
+                                     openImagePreview(urls,position);
+                                 }
+                             });
+                         }
+                         @Override
+                         public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                             super.onLoadFailed(errorDrawable);
+                             Log.e("Glide", "Image load failed");
+                         }
+                     });
             addView(imageView);
-            // 检查图片数量，如果为零，则隐藏 NineGridLayout
-            if (getChildCount() == 0) {
-                setVisibility(View.GONE);
-            } else {
-                setVisibility(View.VISIBLE);
-            }
+//            // 检查图片数量，如果为零，则隐藏 NineGridLayout
+//            if (getChildCount() == 0) {
+//                setVisibility(View.GONE);
+//            } else {
+//                setVisibility(View.VISIBLE);
+//            }
         }
     }
 
+    private void openImagePreview(List<String> urls,int position) {
+        // 使用 PhotoView 库进行图片预览
+        PhotoView photoView = new PhotoView(getContext());
 
+        // 使用 Glide 加载图片
+        Glide.with(getContext())
+                .load(urls.get(position))
+                .into(photoView);
+        //获取到了url
+        // 显示图片
+        Dialog dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        dialog.setContentView(R.layout.dialog_full_screen_image);
+        // 在 Dialog 中找到 PhotoView，并设置图片
+        photoView = dialog.findViewById(R.id.fullScreenImageView);
+        Glide.with(getContext())
+                .load(urls.get(position))
+                .into(photoView);
+        // 设置点击监听器以关闭 Dialog
+        photoView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        // 显示 Dialog
+        dialog.show();
+    }
     private int dpToPx(int dp) {
         float density = getResources().getDisplayMetrics().density;
         return Math.round(dp * density);
