@@ -8,6 +8,7 @@ import android.media.AudioDeviceInfo;
 import android.net.Uri;
 import android.os.Looper;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -16,6 +17,7 @@ import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 
@@ -97,6 +99,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private View imageVr;
 
     private Button likeButton;
+    private static SparseBooleanArray favoriteStates;//记录点赞控件状态
     public int getCurrentPlayingPosition() {
         return currentPlayingPosition;
     }
@@ -107,6 +110,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         this.context = context;
         this.imageUrls = imageUrls;
         this.imageVr = imageVr;
+        favoriteStates = new SparseBooleanArray();
+
         //设置缓冲区大小
         LoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
@@ -178,6 +183,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 }
             }
         });
+        holder.iconFavorite.setChecked(favoriteStates.get(position));
         // 设置视频播放状态监听器
         player.addListener(new Player.Listener() {
             @Override
@@ -247,11 +253,27 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
     public static class VideoViewHolder extends RecyclerView.ViewHolder {
         public PlayerView playerView;
+        public CheckBox iconFavorite;
         View playicon;
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             playerView = itemView.findViewById(R.id.map_video);
             playicon = itemView.findViewById(R.id.video_play);
+            iconFavorite = itemView.findViewById(R.id.favorite_icon);
+
+            iconFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    int adapterPosition = getAdapterPosition();
+                    if(isChecked) {
+                        iconFavorite.setButtonDrawable(R.drawable.favorite_red);
+                        favoriteStates.put(adapterPosition, true);
+                    } else {
+                        iconFavorite.setButtonDrawable(R.drawable.favorite_white);
+                        favoriteStates.put(adapterPosition, false);
+                    }
+                }
+            });
         }
         public void setPlayIconVisibility(int visibility) {
             playicon.setVisibility(visibility);
