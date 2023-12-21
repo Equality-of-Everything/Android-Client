@@ -31,11 +31,11 @@
             android:id="@+id/favorite_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:button="@null"
-            android:background="@drawable/favorite_white"
+            android:button="@drawable/btn_favorite_icon"
             android:layout_gravity="right|bottom"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="230dp"
+            app:buttonTint="@android:color/white"
             />
         <TextView
             android:id="@+id/favorite_count"

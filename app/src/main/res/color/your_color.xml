@@ -2,12 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:drawable="@drawable/favorite_white"
-        android:state_checked="false"
-        />
+        android:state_checked="false" android:color="?attr/colorSurface" />
     <item
         android:drawable="@drawable/favorite_red"
-        android:state_checked="true"
-        />
-    <item android:drawable="@drawable/favorite_white" />
+        android:state_checked="true" android:color="?attr/colorError" />
+    <item android:drawable="@drawable/favorite_white" android:color="?attr/colorSurface" />
 
 </selector>

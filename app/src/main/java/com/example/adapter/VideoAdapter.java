@@ -3,6 +3,8 @@ package com.example.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.media.AudioDeviceInfo;
 import android.net.Uri;
@@ -23,6 +25,7 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -266,10 +269,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     int adapterPosition = getAdapterPosition();
                     if(isChecked) {
-                        iconFavorite.setButtonDrawable(R.drawable.favorite_red);
+                        iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                        CompoundButtonCompat.setButtonTintList(iconFavorite, ColorStateList.valueOf(Color.RED));
                         favoriteStates.put(adapterPosition, true);
                     } else {
-                        iconFavorite.setButtonDrawable(R.drawable.favorite_white);
+                        iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                        CompoundButtonCompat.setButtonTintList(iconFavorite, ColorStateList.valueOf(Color.WHITE));
                         favoriteStates.put(adapterPosition, false);
                     }
                 }
