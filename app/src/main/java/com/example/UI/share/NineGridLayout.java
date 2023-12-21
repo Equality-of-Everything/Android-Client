@@ -27,7 +27,7 @@ import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import java.util.List;
 
 /**
- * @Author : 你的名字
+ * @Author : xcc
  * @Date : Created in 2023/12/21 13:19
  * @Decription :
  */
@@ -40,7 +40,6 @@ public class NineGridLayout extends GridLayout {
         super(context);
         init();
     }
-
     public NineGridLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
@@ -52,13 +51,14 @@ public class NineGridLayout extends GridLayout {
             return;
         }
         setVisibility(VISIBLE);
+
         removeAllViews();
         int size = urls.size();
         int rows, columns;
 
         if (size == 1) {
             rows = columns = 1;
-        } else if (size == 2 || size == 4) {
+        } else if (size == 3 || size == 4|| size == 2) {
             rows = columns = 2;
         } else {
             rows = columns = 3;
@@ -66,7 +66,6 @@ public class NineGridLayout extends GridLayout {
                 size = MAX_CHILD_COUNT;
             }
         }
-
         setRowCount(rows);
         setColumnCount(columns);
         for (int i = 0; i < size; i++) {
@@ -84,26 +83,12 @@ public class NineGridLayout extends GridLayout {
             // 加载图片，你可以使用 Glide 或其他图片加载库
              Glide.with(imageView)
                      .load(urls.get(i))
-                     .into(new SimpleTarget<Drawable>() {
-                         @Override
-                         public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                             // 图片加载完成后，设置给 ImageView
-                             imageView.setImageDrawable(resource);
-                             // 设置点击监听器以进行图片预览
-                             imageView.setOnClickListener(new OnClickListener() {
-                                 @Override
-                                 public void onClick(View v) {
-                                     // 打开图片预览
-                                     openImagePreview(urls,position);
-                                 }
-                             });
-                         }
-                         @Override
-                         public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                             super.onLoadFailed(errorDrawable);
-                             Log.e("Glide", "Image load failed");
-                         }
-                     });
+                     .into(imageView);
+             imageView.setOnClickListener(new OnClickListener() {
+                 public void onClick(View v){
+                     openImagePreview(urls,position);
+                 }
+             });
             addView(imageView);
 //            // 检查图片数量，如果为零，则隐藏 NineGridLayout
 //            if (getChildCount() == 0) {

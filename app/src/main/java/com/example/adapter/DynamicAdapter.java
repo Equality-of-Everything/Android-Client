@@ -73,7 +73,6 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DynamicV
         TextView textDynamic;
         NineGridLayout gridLayout;
         TextView shareTime;
-
         public DynamicViewHolder(@NonNull View itemView) {
             super(itemView);
             share_user_avatar = itemView.findViewById(R.id.share_user_avatar);
