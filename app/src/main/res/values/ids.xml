@@ -13,4 +13,6 @@
     <item name="radio_button_2" type="id" />
     <item name="radio_button_3" type="id" />
     <item name="bmb" type="id" />
+    <item name="save_to_local" type="id" />
+    <item name="video_publish" type="id" />
 </resources>
