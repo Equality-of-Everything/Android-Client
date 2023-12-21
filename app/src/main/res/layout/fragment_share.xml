@@ -13,10 +13,12 @@
         app:behavior_hideable="false"
         app:behavior_peekHeight="500dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_conversation"
+            android:id="@+id/share_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:padding="20dp"/>
     </FrameLayout>
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_edit_button"
