@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +33,19 @@ import androidx.fragment.app.Fragment;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
 import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Overlay;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.PolygonOptions;
+import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.model.LatLngBounds;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.district.DistrictResult;
+import com.baidu.mapapi.search.district.DistrictSearch;
+import com.baidu.mapapi.search.district.DistrictSearchOption;
+import com.baidu.mapapi.search.district.OnGetDistricSearchResultListener;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
@@ -95,6 +107,11 @@ public class MapFragment extends Fragment {
 
     private View contextView;
 
+    private Button btnNormalMap;
+    private Button btnSatelliteMap;
+    private Button btnTraceMap;
+    private List<Overlay> mOverlayList = new ArrayList<>();
+    private DistrictSearch mDistrictSearch;
 
     @SuppressLint("ResourceAsColor")
     @Nullable
@@ -117,6 +134,9 @@ public class MapFragment extends Fragment {
 
         mv = (MapView) mapView.findViewById(R.id.map);
         contextView = mapView.findViewById(R.id.context_view);
+        btnNormalMap = mapView.findViewById(R.id.btn_normal_map);
+        btnSatelliteMap = mapView.findViewById(R.id.btn_satellite_map);
+        btnTraceMap = mapView.findViewById(R.id.btn_trace_map);
         String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NORMAL);
         // 设置个性化地图样式文件的路径和加载方式
         mv.setMapCustomStylePath(customStyleFilePath);
@@ -227,8 +247,68 @@ public class MapFragment extends Fragment {
                 });
         button.addBuilder(builder2);
 
+        //地图上三个按钮的点击事件
+        setListener();
+        // 初始化DistrictSearch
+        mDistrictSearch = DistrictSearch.newInstance();
+        mDistrictSearch.setOnDistrictSearchListener(new OnGetDistricSearchResultListener() {
+            @Override
+            public void onGetDistrictResult(DistrictResult districtResult) {
+                if (districtResult.error == DistrictResult.ERRORNO.NO_ERROR) {
+                    // 获取对应省份的边界点的经纬度的集合
+                    List<LatLng> boundaryPoints = districtResult.getPolylines().get(0);
+                    // 在这里可以处理获取到的边界点数据
+                    colorIn(boundaryPoints);//将该区域上色
+                }
+            }
+        });
 
+    }
 
+    /**
+     * @param boundaryPoints:
+     * @return void
+     * @author Lee
+     * @description 区域填色
+     * @date 2023/12/22 16:59
+     */
+    private void colorIn(List<LatLng> boundaryPoints) {
+        PolygonOptions mPolygonOptions = new PolygonOptions()
+                .points(boundaryPoints)
+                .fillColor(0xAA6495ED) //填充颜色
+                .stroke(new Stroke(5, 0xAA00FF00)); //边框宽度和颜色
+
+        //在地图上显示多边形
+        baiduMap.addOverlay(mPolygonOptions);
+    }
+
+    private void setListener() {
+        //切换为普通地图
+        btnNormalMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                baiduMap.clear();
+            }
+        });
+        //切换为卫星地图
+        btnSatelliteMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                baiduMap.setMapType(BaiduMap.MAP_TYPE_SATELLITE);
+                baiduMap.clear();
+            }
+        });
+        //切换为轨迹地图
+        btnTraceMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                DistrictSearchOption option = new DistrictSearchOption();
+                option.cityName("陕西省"); // 设置要查询的省份名称
+                mDistrictSearch.searchDistrict(option);
+            }
+        });
     }
 
 
