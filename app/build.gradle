@@ -114,7 +114,10 @@ dependencies {
     //图像预览
     implementation 'com.github.chrisbanes:PhotoView:2.3.0'
     //图片选择器
-    implementation 'com.github.donkingliang:ImageSelector:2.2.1'
+    implementation 'io.github.lucksiege:pictureselector:v3.11.2'
+    implementation 'io.github.lucksiege:compress:v3.11.2'
+    implementation 'io.github.lucksiege:ucrop:v3.11.2'
+    implementation 'io.github.lucksiege:camerax:v3.11.2'
 }
 
 

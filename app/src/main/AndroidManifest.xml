@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 过滤潜在的安装设备,如前置摄像头 -->
     <uses-feature android:name="android.hardware.camera.any" />
+    <uses-feature android:name="android.hardware.camera"/>
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- IM SDK required start -->
     <!-- 允许程序振动，用于本地通知设置振动 -->
@@ -23,6 +24,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取读存储权限，用于附件等的获取 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" /> <!-- 访问 GPS 定位，用于定位消息，如果不用定位相关可以移除 -->
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 允许程序在手机屏幕关闭后后台进程仍然运行 -->
     <uses-permission android:name="android.permission.WAKE_LOCK" /> <!-- 申请闹钟定时权限，SDK 心跳中使用，3.9.8及以后版本可以不添加 -->
@@ -40,6 +43,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name="com.example.UI.share.ShareEditActivity"
+            android:exported="true" />
         <activity
             android:name="com.example.UI.mine.PersonDataEditActivity"
             android:exported="false" />

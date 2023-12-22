@@ -9,11 +9,15 @@ import java.util.List;
  */
 
 public class FriendCircleItem {
+    // 发布者的用户名
     private String userName;
+    // 发布者的头像
     private String avatarUrl;
+    // 发布者的文字内容
     private String textContent;
     // 包含图片和视频的URL列表
     private List<String> mediaUrls;
+    // 发布时间
     private String publishTime;
 
     public FriendCircleItem(String userName, String avatarUrl, String textContent, List<String> mediaUrls,String publishTime) {
