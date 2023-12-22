@@ -70,7 +70,5 @@ public class ShareEditActivity extends AppCompatActivity {
                 selectedImagesAdapter.notifyDataSetChanged(); // 更新 RecyclerView
             }
         }
-
     }
-
 }
