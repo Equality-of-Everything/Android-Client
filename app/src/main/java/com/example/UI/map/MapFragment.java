@@ -307,6 +307,10 @@ public class MapFragment extends Fragment {
                 DistrictSearchOption option = new DistrictSearchOption();
                 option.cityName("陕西省"); // 设置要查询的省份名称
                 mDistrictSearch.searchDistrict(option);
+
+                DistrictSearchOption option2 = new DistrictSearchOption();
+                option2.cityName("安徽省");
+                mDistrictSearch.searchDistrict(option2);
             }
         });
     }
