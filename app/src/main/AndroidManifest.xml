@@ -4,16 +4,15 @@
     package="com.example.UI.msg"
     android:versionCode="100"
     android:versionName="1.0.0">
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 过滤潜在的安装设备,如前置摄像头 -->
     <uses-feature android:name="android.hardware.camera.any" />
-    <uses-feature android:name="android.hardware.camera"/>
+    <uses-feature android:name="android.hardware.camera" />
 
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- IM SDK required start -->
     <!-- 允许程序振动，用于本地通知设置振动 -->
@@ -44,6 +43,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name="com.example.UI.msg.FriendRequestActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.UI.msg.SearchActivity"
+            android:exported="false" />
+        <activity
             android:name="com.example.UI.share.ShareEditActivity"
             android:exported="true" />
         <activity
@@ -56,7 +61,7 @@
             android:name="com.example.UI.mine.FriendsActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.UI.msg.ChatActivity"
+            android:name=".ChatActivity"
             android:exported="true" />
         <activity
             android:name="com.example.UI.map.Map_VRActivity"
@@ -93,8 +98,7 @@
             android:exported="true" /> <!-- 配置ak信息 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="DoDtmLqaoLG2RTse8cKR92cQwGPkQWI9" />
-        <!-- 声明 SDK 所需的 service 的核心功能-->
+            android:value="DoDtmLqaoLG2RTse8cKR92cQwGPkQWI9" /> <!-- 声明 SDK 所需的 service 的核心功能 -->
         <service
             android:name="com.hyphenate.chat.EMChatService"
             android:exported="true" />
