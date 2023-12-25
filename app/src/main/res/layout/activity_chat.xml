@@ -25,6 +25,8 @@
                 android:layout_height="wrap_content"
                 android:minHeight="?attr/actionBarSize"
                 app:titleCentered="true"
+                app:subtitle="开心"
+                app:subtitleCentered="true"
                 app:menu="@menu/top_app_bar"
                 app:navigationIcon="@drawable/back" />
 
