@@ -236,7 +236,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int videoId = videoIds[currentPlayingPosition+1];
+                if(currentPlayingPosition == -1) currentPlayingPosition = 0;
+                int videoId = videoIds[currentPlayingPosition];
 
                 Log.e("videoId", videoId + "");
 
