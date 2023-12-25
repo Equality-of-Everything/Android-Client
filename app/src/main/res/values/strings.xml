@@ -17,6 +17,7 @@
     <string name="btn_reset">确认</string>
     <string name="edTxt_reset_password">请输入重置密码</string>
     <string name="edTxt_reset_confirm_password">请求再次输入重置密码</string>
+    <string name="edTxt_share_upload">发布</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
