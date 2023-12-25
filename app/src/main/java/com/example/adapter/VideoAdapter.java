@@ -84,6 +84,8 @@ import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 
@@ -111,15 +113,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private Context context;
     private String[] videoUrls;
     // 当前正在播放的视频位置
-    private int currentPlayingPosition = 0;
+    private int currentPlayingPosition = -1;
     private ExoPlayer player;
     private String[] imageUrls;
     private View imageVr;
     private Integer[] videoIds;
     private String username;
 
-    private Button likeButton;
-    private TextView favoriteCount;
     private static SparseBooleanArray favoriteStates;//记录点赞控件状态
     public int getCurrentPlayingPosition() {
         return currentPlayingPosition;
@@ -175,11 +175,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         //添加item布局，并转为一个view对象
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
-        likeButton = view.findViewById(R.id.favorite_icon);
-        favoriteCount = view.findViewById(R.id.favorite_count);
-
-        Log.e("videoUrls", Arrays.toString(videoUrls) + "");
-
 
         return new VideoViewHolder(view);
     }
@@ -241,7 +236,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         new Thread(new Runnable() {
             @Override
             public void run() {
-                int videoId = videoIds[currentPlayingPosition];
+                int videoId = videoIds[currentPlayingPosition+1];
 
                 Log.e("videoId", videoId + "");
 
@@ -272,7 +267,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                                 Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                                 String likes = result.getData().toString().substring(0,
                                         result.getData().toString().indexOf("."));
-                                holder.favoriteCount.setText(likes + "   ");
+                                holder.favoriteCount.setText(likes + "");
 
                                 boolean isChecked = false;
                                 if(result.getCode()== Code.VIDEO_HAS_LIKED) isChecked = true;
@@ -348,13 +343,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
 
                                             Log.e("-------", "--------------");
 
-                                            holder.favoriteCount.setText(likes+"   ");
+                                            holder.favoriteCount.setText(likes+"");
                                             Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                                             holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
                                             CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.RED));
                                             return;
                                         }
-                                        holder.favoriteCount.setText(likes+"   ");
+                                        holder.favoriteCount.setText(likes+"");
                                         Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                                         holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
                                         CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.WHITE));
@@ -364,6 +359,20 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                         });
                     }
                 }).start();
+            }
+        });
+
+        // 为评论绑定点击事件
+        holder.commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
+                bottomSheetDialog.setContentView(R.layout.dialog_bottom_comment);
+                bottomSheetDialog.show();
+
+                // 为评论中的发送按钮绑定点击事件
+                Button postReview = bottomSheetDialog.findViewById(R.id.btn_send);
+
             }
         });
 
@@ -417,6 +426,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         View playicon;
         Button likeButton;  // 添加这两行
         TextView favoriteCount;
+        FloatingActionButton commentButton;
+
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             playerView = itemView.findViewById(R.id.map_video);
@@ -424,6 +435,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             iconFavorite = itemView.findViewById(R.id.favorite_icon);
             likeButton = itemView.findViewById(R.id.favorite_icon);  // 初始化
             favoriteCount = itemView.findViewById(R.id.favorite_count);  // 初始化
+            commentButton = itemView.findViewById(R.id.msg_icon);
 
             iconFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
