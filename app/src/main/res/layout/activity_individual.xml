@@ -21,7 +21,7 @@
                 android:src="@drawable/bg_item"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/iv_avatar"
+                android:id="@+id/iv_individual_avatar"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_marginTop="100dp"
@@ -29,10 +29,10 @@
                 android:src="@drawable/friend_item"/>
 
             <TextView
-                android:id="@+id/tv_username"
+                android:id="@+id/tv_individual_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_avatar"
+                android:layout_below="@id/iv_individual_avatar"
                 android:layout_centerHorizontal="true"
                 android:text="干饭"
                 android:textColor="?attr/colorPrimary"
@@ -43,7 +43,7 @@
                 android:id="@+id/card1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/tv_username"
+                android:layout_below="@id/tv_individual_username"
                 android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
@@ -77,6 +77,7 @@
                                 android:layout_marginLeft="20dp"
                                 android:src="@drawable/mine" />
                             <TextView
+                                android:id="@+id/tv_individual_gender"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="20dp"
@@ -93,6 +94,7 @@
                                 android:layout_marginLeft="20dp"
                                 android:src="@drawable/birthday" />
                             <TextView
+                                android:id="@+id/tv_individual_brithday"
                                 android:layout_marginLeft="20dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -111,6 +113,7 @@
                                 android:layout_marginLeft="20dp"
                                 android:src="@drawable/email" />
                             <TextView
+                                android:id="@+id/tv_individual_email"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="20dp"
@@ -154,6 +157,7 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/tv_individual_signature"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="组长爱干饭"
@@ -191,6 +195,7 @@
                         android:gravity="center">
 
                         <TextView
+                            android:id="@+id/tv_individual_last_publish"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="这个人很懒什么也没"
