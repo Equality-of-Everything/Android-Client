@@ -32,6 +32,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.example.util.TokenManager;
 import com.example.video.VideoUploader;
@@ -79,6 +80,8 @@ public class PreviewVideoActivity extends AppCompatActivity {
                 // 保存视频到本地
                 saveVideoToMediaStore(videoPath);
                 Toast.makeText(PreviewVideoActivity.this, "视频保存成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PreviewVideoActivity.this, MainActivity.class);
+                startActivity(intent);
             }
         });
         videoPublish.setOnClickListener(new View.OnClickListener() {
@@ -193,8 +196,11 @@ public class PreviewVideoActivity extends AppCompatActivity {
                 // 在这里可以处理获取到的地理位置信息
                 System.out.println("Address: " + address);
                 System.out.println("City: " + city);
+                LatLng location = result.getLocation();
+                double longitude1 = location.longitude;
+                double latitude1 = location.latitude;
                 // 执行发布视频操作
-                publishVideo(videoPath,city);
+                publishVideo(videoPath,city,latitude1,longitude1);
             }
 
             public void onGetGeoCodeResult(GeoCodeResult result) {
@@ -225,10 +231,10 @@ public class PreviewVideoActivity extends AppCompatActivity {
     }
 
 
-    private void publishVideo(String videoPath,String city) {
+    private void publishVideo(String videoPath,String city,double latitude,double longitude) {
         File file = new File(videoPath);
         VideoUploader videoUploader = new VideoUploader();
-        videoUploader.uploadVideo(file,city,PreviewVideoActivity.this, TokenManager.getUserName(PreviewVideoActivity.this));
+        videoUploader.uploadVideo(file,city,PreviewVideoActivity.this, TokenManager.getUserName(PreviewVideoActivity.this),latitude,longitude);
     }
 
     private void saveVideoToMediaStore(String videoPath) {

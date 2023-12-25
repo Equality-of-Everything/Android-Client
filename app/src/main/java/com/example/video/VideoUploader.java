@@ -31,7 +31,7 @@ import okhttp3.RequestBody;
 
 public class VideoUploader {
     private static final MediaType MEDIA_TYPE_MP4 = MediaType.parse("video/mp4");
-    public void uploadVideo(File videoFile, String city, Context context,String username){
+    public void uploadVideo(File videoFile, String city, Context context,String username,double latitude,double longitude){
         OkHttpClient client = new OkHttpClient();
 
         RequestBody requestBody = new MultipartBody.Builder()
@@ -40,7 +40,9 @@ public class VideoUploader {
                         RequestBody.create(MEDIA_TYPE_MP4, videoFile))
                 .addFormDataPart("city",city)
                 .addFormDataPart("username",username)
-               .build();
+                .addFormDataPart("latitude",String.valueOf(latitude))
+                .addFormDataPart("longitude",String.valueOf(longitude))
+                .build();
 
         Request request = new Request.Builder()
                .url("http://"+ip+":8080/map/uploadVideo")

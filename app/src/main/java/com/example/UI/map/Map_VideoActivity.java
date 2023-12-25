@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -17,7 +18,10 @@ import com.example.adapter.VideoAdapter;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.MainActivity;
 import com.example.android_client.R;
+import com.example.util.TokenManager;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.zip.Inflater;
 
 public class Map_VideoActivity extends AppCompatActivity {
@@ -47,11 +51,11 @@ public class Map_VideoActivity extends AppCompatActivity {
 //        获取urls
         String[] serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
         String[] serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
+        ArrayList<Integer> videoIds = getIntent().getIntegerArrayListExtra("videoIds");
+
+
         imageUrls = serverImageUrls;
         videoUrls = serverVideoUrls;
-        System.out.println("videoUrls:"+videoUrls);
-        System.out.println("vrUrls:"+serverImageUrls);
-
 
         //初始化 RecyclerView 和 VideoAdapter
         recyclerView = findViewById(R.id.recyclerView);
@@ -65,7 +69,7 @@ public class Map_VideoActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr);
+        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr,videoIds.toArray(new Integer[videoIds.size()]), TokenManager.getUserName(this));
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

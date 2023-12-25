@@ -1,6 +1,9 @@
 package com.example.adapter;
 
+import static com.example.android_client.LoginActivity.ip;
+
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -22,6 +25,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +36,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.UI.map.Map_VRActivity;
 import com.example.android_client.R;
+import com.example.util.Code;
+import com.example.util.Result;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.DeviceInfo;
 import com.google.android.exoplayer2.ExoPlaybackException;
@@ -77,13 +84,21 @@ import com.google.android.exoplayer2.util.Util;
 import com.google.android.exoplayer2.video.VideoFrameMetadataListener;
 import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
-
-
+import com.google.gson.Gson;
 
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * @Author : xcc
@@ -96,23 +111,28 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private Context context;
     private String[] videoUrls;
     // 当前正在播放的视频位置
-    private int currentPlayingPosition = -1;
+    private int currentPlayingPosition = 0;
     private ExoPlayer player;
     private String[] imageUrls;
     private View imageVr;
+    private Integer[] videoIds;
+    private String username;
 
     private Button likeButton;
+    private TextView favoriteCount;
     private static SparseBooleanArray favoriteStates;//记录点赞控件状态
     public int getCurrentPlayingPosition() {
         return currentPlayingPosition;
     }
 
 
-    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr) {
+    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr,Integer[] videoIds,String username) {
         this.videoUrls = videoUrls;
         this.context = context;
         this.imageUrls = imageUrls;
         this.imageVr = imageVr;
+        this.videoIds = videoIds;
+        this.username = username;
         favoriteStates = new SparseBooleanArray();
 
         //设置缓冲区大小
@@ -156,6 +176,11 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         //添加item布局，并转为一个view对象
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video, parent, false);
         likeButton = view.findViewById(R.id.favorite_icon);
+        favoriteCount = view.findViewById(R.id.favorite_count);
+
+        Log.e("videoUrls", Arrays.toString(videoUrls) + "");
+
+
         return new VideoViewHolder(view);
     }
 
@@ -212,7 +237,139 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         } else {
             imageVr.setVisibility(View.GONE); // 隐藏图像组件
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int videoId = videoIds[currentPlayingPosition];
+
+                Log.e("videoId", videoId + "");
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("http://"+ip+":8080/map/videos/"+videoId+"/likecount?username="+username)
+                        .get()
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context,"获取点赞数失败，请稍后重试",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Gson json = new Gson();
+                        String responseData = response.body().string();
+                        Result result = json.fromJson(responseData, Result.class);
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                String likes = result.getData().toString().substring(0,
+                                        result.getData().toString().indexOf("."));
+                                holder.favoriteCount.setText(likes + "   ");
+
+                                boolean isChecked = false;
+                                if(result.getCode()== Code.VIDEO_HAS_LIKED) isChecked = true;
+                                else isChecked = false;
+
+                                Log.e("isChecked", isChecked + "");
+
+                                if(isChecked) {
+                                    holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                                    CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.RED));
+                                } else {
+                                    holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                                    CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.WHITE));
+                                }
+                            }
+
+                        });
+                    }
+                });
+            }
+        }).start();
+
+
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        int videoId = videoIds[currentPlayingPosition];
+
+                        OkHttpClient client = new OkHttpClient();
+
+                        FormBody body = new FormBody.Builder()
+                                .add("username",username)
+                                .build();
+                        Request request = new Request.Builder()
+                                .url("http://"+ip+":8080/map/videos/"+videoId+"/like")
+                                .post(body)
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                ((Activity)context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context,"服务器连接失败，请稍后重试",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                Gson json = new Gson();
+                                String responseData = response.body().string();
+                                Result result = json.fromJson(responseData, Result.class);
+
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        double data = (double) result.getData();
+                                        data += 0;
+                                        String data1 = data + "";
+                                        String likes = data1.substring(0,
+                                                result.getData().toString().indexOf("."));
+                                        if (result.getFlag()) {
+
+                                            Log.e("-------", "--------------");
+                                            Log.e("likecount", result.getData().toString());
+                                            Log.e("currentPosition", currentPlayingPosition + "");
+                                            Log.e("videoId", videoIds[currentPlayingPosition] + "");
+                                            Log.e("likes", likes);
+
+                                            Log.e("-------", "--------------");
+
+                                            holder.favoriteCount.setText(likes+"   ");
+                                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                                            CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.RED));
+                                            return;
+                                        }
+                                        holder.favoriteCount.setText(likes+"   ");
+                                        Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                        holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
+                                        CompoundButtonCompat.setButtonTintList(holder.iconFavorite, ColorStateList.valueOf(Color.WHITE));
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
+
     }
+
+
     @Override
     public void onViewRecycled(@NonNull VideoViewHolder holder) {
         super.onViewRecycled(holder);
@@ -254,15 +411,19 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         player.release();
     }
 
-    public static class VideoViewHolder extends RecyclerView.ViewHolder {
+    public class VideoViewHolder extends RecyclerView.ViewHolder {
         public PlayerView playerView;
         public CheckBox iconFavorite;
         View playicon;
+        Button likeButton;  // 添加这两行
+        TextView favoriteCount;
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
             playerView = itemView.findViewById(R.id.map_video);
             playicon = itemView.findViewById(R.id.video_play);
             iconFavorite = itemView.findViewById(R.id.favorite_icon);
+            likeButton = itemView.findViewById(R.id.favorite_icon);  // 初始化
+            favoriteCount = itemView.findViewById(R.id.favorite_count);  // 初始化
 
             iconFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -279,6 +440,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                     }
                 }
             });
+
         }
         public void setPlayIconVisibility(int visibility) {
             playicon.setVisibility(visibility);

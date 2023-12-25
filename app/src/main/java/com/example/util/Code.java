@@ -29,4 +29,11 @@ public class Code {
 
     // 用户异地登录
     public static final int TOKEN_OTHER_LOGIN = 403;
+
+
+    // 用户已经点赞
+    public static final int VIDEO_HAS_LIKED = 200;
+
+    // 用户未点赞
+    public static final int VIDEO_NOT_LIKED = 408;
 }

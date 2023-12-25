@@ -499,14 +499,18 @@ public class MapFragment extends Fragment {
                         //解析数据
                         List<String> videoUrls = new ArrayList<>();
                         List<String> vrUrls = new ArrayList<>();
+                        ArrayList<Integer> videoIds = new ArrayList<>();
                         for (ShareInfo shareInfo1 : shareInfos) {
                             videoUrls.add(shareInfo1.getVideoUrl());
                             vrUrls.add(shareInfo1.getVrImageUrl());
+                            videoIds.add(shareInfo1.getId());
                         }
                         Log.e("videoUrls", videoUrls.toString());
                         Log.e("vrUrls", vrUrls.toString());
+                        Log.e("videoIds", videoIds.toString());
 
-                        JumpToVedio(videoUrls.toArray(new String[videoUrls.size()]),vrUrls.toArray(new String[vrUrls.size()]));
+                        Integer[] integers = videoIds.toArray(new Integer[videoIds.size()]);
+                        JumpToVedio(videoUrls.toArray(new String[videoUrls.size()]),vrUrls.toArray(new String[vrUrls.size()]),videoIds);
                     }
                 });
             }
@@ -520,7 +524,7 @@ public class MapFragment extends Fragment {
      * @description 跳转至视频播放页面
      * @date 2023/12/7 9:43
      */
-    private void JumpToVedio(String[] videoUrls,String[] vrUrls) {
+    private void JumpToVedio(String[] videoUrls,String[] vrUrls,ArrayList<Integer> videoIds) {
         pauseSeconds();
         //跳转到Map_VideoActivity
         Activity activity = getActivity();
@@ -528,6 +532,7 @@ public class MapFragment extends Fragment {
         // 在 Intent 中携带需要传递的数据
         intent.putExtra("videoUrls", videoUrls);
         intent.putExtra("vrUrls", vrUrls);
+        intent.putIntegerArrayListExtra("videoIds", videoIds);
         activity.startActivity(intent);
     }
 
