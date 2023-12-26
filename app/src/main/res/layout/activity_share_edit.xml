@@ -6,120 +6,100 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.example.UI.share.ShareEditActivity">
-<!--    取消，写点什么，发表-->
-    <RelativeLayout
-        android:id="@+id/topAppBar"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorOnPrimary"
-        tools:ignore="MissingConstraints">
-        <com.google.android.material.appbar.AppBarLayout
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:clipChildren="false"
+        android:clipToPadding="false">
+        <!--    取消，写点什么，发表-->
+        <RelativeLayout
+            android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorOnPrimary">
+            android:background="?attr/colorOnPrimary"
+            tools:ignore="MissingConstraints">
 
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar_name"
+            <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="?attr/actionBarSize"
-                app:title="写点什么"
-                app:titleCentered="true"
-                app:navigationIcon="@drawable/back" />
+                android:background="?attr/colorOnPrimary">
 
-        </com.google.android.material.appbar.AppBarLayout>
-        <Button
-            android:layout_width="wrap_content"
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/topAppBar_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="?attr/actionBarSize"
+                    app:navigationIcon="@drawable/back"
+                    app:title="写点什么"
+                    app:titleCentered="true" />
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <Button
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:text="发布" />
+        </RelativeLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/materialDivider2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:text="发布"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            style="@style/Widget.Material3.Button.TonalButton"
-            />
+            tools:ignore="MissingConstraints" />
 
-    </RelativeLayout>
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:gravity="center">-->
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="取消"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textColor="@color/black"-->
-<!--            style="@style/Widget.Material3.Button.TextButton"/>-->
-<!--        <TextView-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="写点什么"-->
-<!--            android:layout_marginRight="50dp"-->
-<!--            android:layout_marginLeft="50dp"-->
-<!--            android:textSize="20sp"-->
-<!--            />-->
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="16sp"-->
-<!--            android:text="发布"/>-->
-<!--    </LinearLayout>-->
-<!--    分割线-->
-    <com.google.android.material.divider.MaterialDivider
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
-<!--    文字内容，固定高度，可以滚动-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="170dp"
-        android:layout_margin="20dp"
-        tools:ignore="MissingConstraints">
         <EditText
+            android:layout_marginTop="70dp"
             android:id="@+id/share_text"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="170dp"
+            android:background="@android:color/transparent"
             android:gravity="top|start"
             android:hint="从这开始记录..."
             android:maxLines="7"
-            android:scrollbars="vertical"
-            android:background="@android:color/transparent"
-            />
-    </LinearLayout>
-<!--    图片和视频，不能固定高度，后期图片要换位置-->
-
-
-    <!--    后续添加权限，定时功能等等-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout_editor_absoluteY="273dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/selectedImages"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical"
-            android:padding="4dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="3" />
+            android:scrollbars="vertical" />
 
         <ImageButton
             android:id="@+id/selectedButton"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/shareaddpicture" />
+            android:layout_marginTop="240dp"
+            android:background="@drawable/shareaddpicture"/>
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/selectedImages"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="340dp"
+            android:orientation="vertical"
+            android:padding="4dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="3"
+            android:clipToPadding="false"
+            android:clipChildren="false">
+        </androidx.recyclerview.widget.RecyclerView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/deleteArea"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_gravity="bottom"
+            android:background="#D32F2F"
+            android:gravity="center"
+            android:padding="10dp"
+            android:visibility="invisible"
+            android:text="拖动到此处删除"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
