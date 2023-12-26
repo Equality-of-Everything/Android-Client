@@ -7,30 +7,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
         <!--   点击头像底板-->
-        <FrameLayout
-            android:id="@+id/standard_bottom_sheet"
-            style="@style/Widget.Material3.BottomSheet"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"
-            app:behavior_peekHeight="450dp"
-            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+    <FrameLayout
+        android:id="@+id/standard_bottom_sheet"
+        style="@style/Widget.Material3.BottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        app:behavior_peekHeight="500dp"
+        app:behavior_hideable="false"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
                 <LinearLayout
+                    android:id="@+id/comment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center">
+                    android:gravity="center_horizontal"
+                    android:layout_alignParentTop="true">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
                         android:text="评论"/>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_below="@id/app_bar"/>
                 </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/comment"/>
                 <LinearLayout
                     android:id="@+id/input_layout"
                     android:layout_width="match_parent"
@@ -50,7 +55,6 @@
                         android:layout_marginTop="5dp"
                         app:boxStrokeColor="?attr/colorPrimary"
                         app:boxStrokeWidth="2dp"
-                        app:startIconContentDescription="账号"
                         tools:ignore="ExtraText,MissingConstraints"
                         >
 
@@ -77,7 +81,6 @@
                         android:layout_marginRight="10dp" app:rippleColor="@color/m3_text_button_ripple_color_selector"
                         tools:ignore="NotSibling" />
                 </LinearLayout>
-
             </RelativeLayout>
         </FrameLayout>
 
