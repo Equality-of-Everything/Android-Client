@@ -80,8 +80,10 @@ public class PreviewVideoActivity extends AppCompatActivity {
                 // 保存视频到本地
                 saveVideoToMediaStore(videoPath);
                 Toast.makeText(PreviewVideoActivity.this, "视频保存成功", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(PreviewVideoActivity.this, MainActivity.class);
-                startActivity(intent);
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("returnToFragment", "CameraFragmentTAG");
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
         videoPublish.setOnClickListener(new View.OnClickListener() {
