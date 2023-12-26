@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.media.AudioDeviceInfo;
 import android.net.Uri;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.util.SparseBooleanArray;
@@ -35,7 +36,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.UI.map.Map_VRActivity;
+import com.example.UI.map.Map_VideoActivity;
 import com.example.android_client.R;
+import com.example.entity.Comment;
 import com.example.util.Code;
 import com.example.util.Result;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -87,6 +90,7 @@ import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 import java.io.File;
@@ -119,6 +123,13 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private View imageVr;
     private Integer[] videoIds;
     private String username;
+
+    // 评论Adapter
+    private CommentAdapter commentAdapter;
+    // 评论数据源
+    private List<Comment> commentDatasource;
+
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     private static SparseBooleanArray favoriteStates;//记录点赞控件状态
     public int getCurrentPlayingPosition() {
@@ -371,6 +382,17 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 bottomSheetDialog.setContentView(R.layout.dialog_bottom_comment);
                 bottomSheetDialog.show();
 
+                commentDatasource = new ArrayList<>();
+                initCommentDatasource();
+                commentAdapter = new CommentAdapter(commentDatasource, context);
+
+                System.out.println("commentDatasource:........"+commentDatasource);
+
+                RecyclerView recyclerView = bottomSheetDialog.findViewById(R.id.dialog_recycler_view);
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                recyclerView.setAdapter(commentAdapter);
+                commentAdapter.notifyDataSetChanged();
+
                 // 为评论中的发送按钮绑定点击事件
                 Button postReview = bottomSheetDialog.findViewById(R.id.btn_send);
 
@@ -378,6 +400,74 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         });
 
     }
+
+    /**
+     * @param :
+     * @param
+     * @return void
+     * @author zhang
+     * @description 初始化评论数据源
+     * @date 2023/12/26 8:14
+     */
+    private void initCommentDatasource() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(currentPlayingPosition == -1) currentPlayingPosition = 0;
+                int videoId = videoIds[currentPlayingPosition];
+                Log.e("VideoAdapter_videoId", videoId+"");
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("http://" + ip + ":8080/map/videos/getComments?videoId=" + videoId)
+                        .get()
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context, "服务器连接失败，请稍后重试！", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Gson json = new Gson();
+                        String res = response.body().string();
+                        Result result = json.fromJson(res, Result.class);
+
+                        ((Activity) context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!result.getFlag()) {
+                                    Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                String data = json.toJson(result.getData());
+                                TypeToken<List<Comment>> commentTypeToken = new TypeToken<List<Comment>>() {
+                                };
+                                List<Comment> comments = json.fromJson(data, commentTypeToken.getType());
+                                handler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        System.out.println("handler_Comments:"+comments);
+                                        commentAdapter.updateData(comments);
+                                    }
+                                });
+                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
+                    }
+                });
+
+            }
+        }).start();
+    }
+
 
 
     @Override
