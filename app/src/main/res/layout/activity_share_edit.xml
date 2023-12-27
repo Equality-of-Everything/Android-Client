@@ -76,7 +76,7 @@
             android:layout_height="100dp"
             android:layout_marginTop="240dp"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/shareaddpicture"/>
+            android:src="@drawable/add"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/selectedImages"

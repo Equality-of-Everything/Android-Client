@@ -36,7 +36,8 @@
                     android:id="@+id/dialog_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/comment"/>
+                    android:layout_below="@+id/comment"
+                    android:layout_marginBottom="80dp"/>
                 <LinearLayout
                     android:id="@+id/input_layout"
                     android:layout_width="match_parent"

@@ -41,6 +41,8 @@ public class ShareEditActivity extends AppCompatActivity {
     private boolean isOverDeleteArea = false;
     private int lastDraggedPosition = RecyclerView.NO_POSITION;
 
+    private Button backShare;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,7 +122,6 @@ public class ShareEditActivity extends AppCompatActivity {
             // 允许在任何位置放下
             return true;
         }
-        @SuppressLint("ResourceType")
         @Override
         public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
