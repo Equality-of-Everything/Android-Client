@@ -99,7 +99,15 @@ public class NineGridLayout extends GridLayout {
         }
     }
 
-    private void openImagePreview(List<String> urls,int position) {
+/**
+ * @param urls:
+ * @param position:
+ * @return void
+ * @author xcc
+ * @description 打开图片预览
+ * @date 2023/12/27 8:41
+ */
+private void openImagePreview(List<String> urls,int position) {
         // 使用 PhotoView 库进行图片预览
         PhotoView photoView = new PhotoView(getContext());
 

@@ -89,6 +89,7 @@ import com.google.android.exoplayer2.video.VideoSize;
 import com.google.android.exoplayer2.video.spherical.CameraMotionListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -102,8 +103,10 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -386,7 +389,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 initCommentDatasource();
                 commentAdapter = new CommentAdapter(commentDatasource, context);
 
-                System.out.println("commentDatasource:........"+commentDatasource);
+                TextInputEditText commentInput = bottomSheetDialog.findViewById(R.id.input_msg);
+
 
                 RecyclerView recyclerView = bottomSheetDialog.findViewById(R.id.dialog_recycler_view);
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -396,9 +400,82 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 // 为评论中的发送按钮绑定点击事件
                 Button postReview = bottomSheetDialog.findViewById(R.id.btn_send);
 
+                // 发送视频评论
+                sendVideoReview(postReview,commentInput,videoIds[currentPlayingPosition],username);
+
             }
         });
 
+    }
+
+    /**
+     * @param postReview:
+     * @param commentInput:
+     * @param videoId:
+     * @param username:
+     * @return void
+     * @author zhang
+     * @description 用于发送评论
+     * @date 2023/12/27 8:45
+     */
+    private void sendVideoReview(Button postReview,TextInputEditText commentInput, Integer videoId, String username) {
+        postReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson gson = new Gson();
+                String content = "";
+                content = commentInput.getText().toString();
+                if (content.length() == 0) {
+                    Toast.makeText(context, "评论内容不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                String finalContent = content;
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        OkHttpClient client = new OkHttpClient();
+                        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+                        Comment comment = new Comment(finalContent, videoId, username);
+                        String jsonComment = gson.toJson(comment);
+                        RequestBody body = RequestBody.create(JSON, jsonComment);
+                        Request request = new Request.Builder()
+                                .url("http://" + ip + ":8080/map/videos/sendComment")
+                                .post(body)
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "服务器连接失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                String res = response.body().string();
+                                Result result = gson.fromJson(res, Result.class);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.getFlag()) {
+                                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        initCommentDatasource();
+                                        commentAdapter.notifyDataSetChanged();
+                                        Toast.makeText(context, "评论成功", Toast.LENGTH_SHORT).show();
+                                        commentInput.setText("");
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }).start();
+            }
+        });
     }
 
     /**

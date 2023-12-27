@@ -7,6 +7,7 @@ import static com.example.util.TokenManager.getUserName;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +36,7 @@ import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
 import com.example.util.Result;
 import com.example.util.TokenManager;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -50,6 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -72,14 +76,11 @@ public class MineFragment extends Fragment {
     private Button btnEdit;
     private Button btnLogout;
     private String userName ;
-    private ImageView btnBackground;
+    private String latestAvatarUrl;
 //    private String avatarPath;
     public static final int REQUEST_IMAGE_OPEN = 2;
     public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
-
     private View contextView;
-
-
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
@@ -88,8 +89,6 @@ public class MineFragment extends Fragment {
 
         userName = TokenManager.getUserName(getActivity());
 //        avatarPath = TokenManager.getAvatar(getActivity());
-
-
         btnCamera = view.findViewById(R.id.image_avatar);
         tvMineName = view.findViewById(R.id.tv_mine_name);
         btnFriends = view.findViewById(R.id.btn_friends);
@@ -97,344 +96,332 @@ public class MineFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_logout);
         tvUid = view.findViewById(R.id.tv_mine_uid);
         contextView = view.findViewById(R.id.context_view);
-        btnBackground = view.findViewById(R.id.image_background);
-
         String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         tvUid.setText("uid: "+uid);
-
         setListenerForLogout();
-
         setListeners();
-
         tvMineName.setText(userName);
         setMineAvatar(userName);//设置头像
-
-        setBackground(userName);//设置背景
-
         return view;
     }
 
-    private void setBackground(String userName) {
-//        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
-//            @Override
-//            public void onSuccess(Map<String, EMUserInfo> value) {
-//            EMUserInfo userInfo = value.get(userName);
-//            if (userInfo != null) {
-//                String avatarUrl = userInfo.getAvatarUrl();
-////                Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
-//                // 更新头像加载逻辑
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
-//                            // 加载头像图片
-//                            Glide.with(getContext())
-//                                    .load(avatarUrl)
-//                                    .error(R.drawable.friend_item)
-//                                    .into(btnBackground);
-//                        } else {
-//                            // 处理无头像URL的情况，显示默认头像
-//                            btnCamera.setImageResource(R.drawable.head);
-//                        }
-//                    }
-//                });
-//            }
-//        }
-//
-//        @Override
-//        public void onError(int error, String errorMsg) {
-//
-//        }
-//
-//    });
+    private void setMineAvatar(String userName) {
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                EMUserInfo userInfo = value.get(userName);
+                if (userInfo != null) {
+                    String avatarUrl = userInfo.getAvatarUrl();
+                    latestAvatarUrl = avatarUrl;
+                    Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
+                    // 更新头像加载逻辑
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
+                                Glide.with(getContext())
+                                        .load(avatarUrl)
+                                        .error(R.drawable.friend_item)
+                                        .into(btnCamera);
+                            } else {
+                                // 处理无头像URL的情况，显示默认头像
+                                btnCamera.setImageResource(R.drawable.head);
+                            }
+                        }
+                    });
+                }
             }
 
+            @Override
+            public void onError(int error, String errorMsg) {
 
-            private void setMineAvatar(String userName) {
-                EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            }
+
+        });
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 跳转发信息页面
+     * @date 2023/12/14 10:42
+     */
+    private void setListeners() {
+        btnFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击跳转所有好友页面
+                Intent intent = new Intent(getActivity(), FriendsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转到个人信息编辑页面
+                Intent intent = new Intent(getActivity(), PersonDataEditActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
+                bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+                bottomSheetDialog.show();
+
+                // 查看头像
+                Button btnViewAvatar = bottomSheetDialog.findViewById(R.id.btn_view_avatar);
+                btnViewAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onSuccess(Map<String, EMUserInfo> value) {
-                        EMUserInfo userInfo = value.get(userName);
-                        if (userInfo != null) {
-                            String avatarUrl = userInfo.getAvatarUrl();
-                            Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
-                            // 更新头像加载逻辑
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    public void onClick(View v) {
+                        openImagePreview(latestAvatarUrl);
+                    }
+                });
+
+                // 从相册选择一张头像上传作为个人头像
+                Button btnSelectAvatar = bottomSheetDialog.findViewById(R.id.btn_select_avatar);
+                btnSelectAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //打开相册
+                        Intent intent = new  Intent(Intent.ACTION_PICK);
+                        //指定获取的是图片
+                        intent.setType("image/*");
+                        startActivityForResult(intent, REQUEST_IMAGE_OPEN);
+
+                        // 关闭底部面板
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+
+                //拍照以上传个人头像
+                Button btnTakePhoto = bottomSheetDialog.findViewById(R.id.btn_take_photo);
+                btnTakePhoto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    // Add your code to handle the "拍照" button click
+                    }
+                });
+            }
+        });
+    }
+
+
+    /**
+     * @return void
+     * @author xcc
+     * @description 预览头像
+     * @date 2023/12/27 8:42
+     */
+    private void openImagePreview(String latestAvatarUrl) {
+            // 使用 PhotoView 库进行图片预览
+            PhotoView photoView = new PhotoView(getContext());
+            // 使用 Glide 加载图片
+                Glide.with(getContext())
+                        .load(latestAvatarUrl)
+                        .error(R.drawable.friend_item)
+                        .into(photoView);
+            //获取到了url
+            // 显示图片
+            Dialog dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            dialog.setContentView(R.layout.dialog_full_screen_image);
+            // 在 Dialog 中找到 PhotoView，并设置图片
+            photoView = dialog.findViewById(R.id.fullScreenImageView);
+            Glide.with(getContext())
+                    .load(latestAvatarUrl)
+                    .into(photoView);
+            // 设置点击监听器以关闭 Dialog
+            photoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            // 显示 Dialog
+            dialog.show();
+    }
+    /**
+     * @param requestCode:
+     * @param resultCode:
+     * @param data:
+     * @return void
+     * @author Lee
+     * @description 选择完头像图片后的操作
+     * @date 2023/12/19 8:14
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
+            // 获取所选图片的URI
+            Uri selectedImageUri = data.getData();
+            //将选择的图片保存在本地
+            SaveToLocalStorage(String.valueOf(selectedImageUri));
+        }
+    }
+
+    /**
+     * @param selectedImageUri:
+     * @return void
+     * @author Lee
+     * @description 把选择的图片保存在本地
+     * @date 2023/12/19 19:28
+     */
+    private void SaveToLocalStorage(String selectedImageUri) {
+        try {
+            // 将选择的图片复制到应用的内部存储中
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedImageUri));
+            File internalStorageDir = getActivity().getFilesDir();
+            File avatarFile = new File(internalStorageDir, "avatar.jpg");
+            OutputStream outputStream = new FileOutputStream(avatarFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+
+            // 将所选图片设置为头像
+            btnCamera.setImageURI(Uri.parse(selectedImageUri));
+            latestAvatarUrl = selectedImageUri.toString();
+            uploadToServer(userName, avatarFile);//上传到后端
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param userName:
+     * @param imageFile:
+     * @return void
+     * @author Lee
+     * @description
+     * @date 2023/12/19 8:35
+     */
+    private void uploadToServer(String userName, File imageFile) {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("username", userName)
+                .addFormDataPart("file", "avatar.jpg",
+                        RequestBody.create(MEDIA_TYPE_JPG, imageFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 处理上传失败情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson json = new Gson();
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                Log.e("minefragment : ", result.toString());
+                // 处理上传成功情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result.getData() != null) {
+                            //将头像对应的url传到环信
+                            String imageUrl = result.getData().toString();
+                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
                                 @Override
-                                public void run() {
-                                    if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
-                                        // 加载头像图片
-                                        Glide.with(getContext())
-                                                .load(avatarUrl)
-                                                .error(R.drawable.friend_item)
-                                                .into(btnCamera);
-                                    } else {
-                                        // 处理无头像URL的情况，显示默认头像
-                                        btnCamera.setImageResource(R.drawable.head);
-                                    }
+                                public void onSuccess(String value) {
+                                    Log.i("mine", "头像上传环信成功");
+                                }
+
+                                @Override
+                                public void onError(int error, String errorMsg) {
+                                    Log.e("mine", "头像上传环信失败");
                                 }
                             });
+                            Log.e("minefragment : " , imageUrl);
                         }
-                    }
+                        showSnackBar(getView(), "头像更新成功", "我知道了");
 
-                    @Override
-                    public void onError(int error, String errorMsg) {
-
-                    }
-
-                });
-            }
-
-            /**
-             * @param :
-             * @return void
-             * @author Lee
-             * @description 跳转发信息页面
-             * @date 2023/12/14 10:42
-             */
-            private void setListeners() {
-                btnFriends.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //点击跳转所有好友页面
-                        Intent intent = new Intent(getActivity(), FriendsActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                btnEdit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //跳转到个人信息编辑页面
-                        Intent intent = new Intent(getActivity(), PersonDataEditActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                btnCamera.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
-                        bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
-                        bottomSheetDialog.show();
-
-                        // 查看头像
-                        Button btnViewAvatar = bottomSheetDialog.findViewById(R.id.btn_view_avatar);
-                        btnViewAvatar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                            }
-                        });
-
-                        // 从相册选择一张头像上传作为个人头像
-                        Button btnSelectAvatar = bottomSheetDialog.findViewById(R.id.btn_select_avatar);
-                        btnSelectAvatar.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                //打开相册
-                                Intent intent = new  Intent(Intent.ACTION_PICK);
-                                //指定获取的是图片
-                                intent.setType("image/*");
-                                startActivityForResult(intent, REQUEST_IMAGE_OPEN);
-
-                                // 关闭底部面板
-                                bottomSheetDialog.dismiss();
-                            }
-                        });
-
-                        //拍照以上传个人头像
-                        Button btnTakePhoto = bottomSheetDialog.findViewById(R.id.btn_take_photo);
-                        btnTakePhoto.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                // Add your code to handle the "拍照" button click
-                            }
-                        });
                     }
                 });
             }
+        });
+    }
 
-            /**
-             * @param requestCode:
-             * @param resultCode:
-             * @param data:
-             * @return void
-             * @author Lee
-             * @description 选择完头像图片后的操作
-             * @date 2023/12/19 8:14
-             */
+    /*
+     * @param view:
+    	 * @param txt:
+    	 * @param btnTxt:
+      * @return void
+     * @author zhang
+     * @description 用于展示SnackBar
+     * @date 2023/12/19 9:11
+     */
+    public void showSnackBar(View view,String txt,String btnTxt){
+        Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
+        snackbar.setAction(btnTxt, new View.OnClickListener() {
             @Override
-            public void onActivityResult(int requestCode, int resultCode, Intent data) {
-                super.onActivityResult(requestCode, resultCode, data);
-
-                if (requestCode == REQUEST_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
-                    // 获取所选图片的URI
-                    Uri selectedImageUri = data.getData();
-                    //将选择的图片保存在本地
-                    SaveToLocalStorage(String.valueOf(selectedImageUri));
-                }
+            public void onClick(View v) {
+                // 处理撤销逻辑
             }
+        });
+        snackbar.show();
+    }
 
-            /**
-             * @param selectedImageUri:
-             * @return void
-             * @author Lee
-             * @description 把选择的图片保存在本地
-             * @date 2023/12/19 19:28
-             */
-            private void SaveToLocalStorage(String selectedImageUri) {
-                try {
-                    // 将选择的图片复制到应用的内部存储中
-                    InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedImageUri));
-                    File internalStorageDir = getActivity().getFilesDir();
-                    File avatarFile = new File(internalStorageDir, "avatar.jpg");
-                    OutputStream outputStream = new FileOutputStream(avatarFile);
-                    byte[] buffer = new byte[1024];
-                    int length;
-                    while ((length = inputStream.read(buffer)) > 0) {
-                        outputStream.write(buffer, 0, length);
-                    }
-                    outputStream.close();
-                    inputStream.close();
-
-
-
-                    // 将所选图片设置为头像
-                    btnCamera.setImageURI(Uri.parse(selectedImageUri));
-
-                    uploadToServer(userName, avatarFile);//上传到后端
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            /**
-             * @param userName:
-             * @param imageFile:
-             * @return void
-             * @author Lee
-             * @description
-             * @date 2023/12/19 8:35
-             */
-            private void uploadToServer(String userName, File imageFile) {
-                OkHttpClient client = new OkHttpClient();
-
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("username", userName)
-                        .addFormDataPart("file", "avatar.jpg",
-                                RequestBody.create(MEDIA_TYPE_JPG, imageFile))
-                        .build();
-
-                Request request = new Request.Builder()
-                        .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
-                        .post(requestBody)
-                        .build();
-
-                client.newCall(request).enqueue(new Callback() {
+    /**
+     * @param :
+     * @return void
+     * @author zhang
+     * @description 为登出按钮绑定点击事件
+     * @date 2023/12/13 15:41
+     */
+    private void setListenerForLogout() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TokenManager.deleteExpiredTokenFromSharedPreferences(getActivity());
+                new Thread(){
                     @Override
-                    public void onFailure(Call call, IOException e) {
-                        // 处理上传失败情况
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
-                            }
-                        });
+                    public void run() {
+                        super.run();
+                        EMClient.getInstance().logout(true);
+                        Log.e("mineFragment : ", "登出成功");
                     }
+                }.start();
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        Gson json = new Gson();
-                        String responseData = response.body().string();
-                        Result result = json.fromJson(responseData, Result.class);
-                        Log.e("minefragment : ", result.toString());
-                        // 处理上传成功情况
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(result.getData() != null) {
-                                    //将头像对应的url传到环信
-                                    String imageUrl = result.getData().toString();
-                                    EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
-                                        @Override
-                                        public void onSuccess(String value) {
-                                            Log.i("mine", "头像上传环信成功");
-                                        }
-
-                                        @Override
-                                        public void onError(int error, String errorMsg) {
-                                            Log.e("mine", "头像上传环信失败");
-                                        }
-                                    });
-                                    Log.e("minefragment : " , imageUrl);
-                                }
-                                showSnackBar(getView(), "头像更新成功", "我知道了");
-
-                            }
-                        });
-                    }
-                });
+                //点击跳转登出页面
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
             }
-
-            /*
-             * @param view:
-             * @param txt:
-             * @param btnTxt:
-             * @return void
-             * @author zhang
-             * @description 用于展示SnackBar
-             * @date 2023/12/19 9:11
-             */
-            public void showSnackBar(View view,String txt,String btnTxt){
-                Snackbar snackbar = Snackbar.make(view, txt, Snackbar.LENGTH_LONG);
-                snackbar.setAction(btnTxt, new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 处理撤销逻辑
-                    }
-                });
-                snackbar.show();
-            }
-
-            /**
-             * @param :
-             * @return void
-             * @author zhang
-             * @description 为登出按钮绑定点击事件
-             * @date 2023/12/13 15:41
-             */
-            private void setListenerForLogout() {
-                btnLogout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TokenManager.deleteExpiredTokenFromSharedPreferences(getActivity());
-                        new Thread(){
-                            @Override
-                            public void run() {
-                                super.run();
-                                EMClient.getInstance().logout(true);
-                                Log.e("mineFragment : ", "登出成功");
-                            }
-                        }.start();
-
-                        //点击跳转登出页面
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                    }
-                });
-            }
+        });
+    }
 
 
-            /**
-             * @param :
-             * @return void
-             * @author Lee
-             * @description 查看头像
-             * @date 2023/12/18 16:24
-             */
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 查看头像
+     * @date 2023/12/18 16:24
+     */
 //    private void viewProfileImage() {
 //        // 跳转到新界面，显示当前头像的大图或详情
 //        Intent intent = new Intent(getActivity(), ViewAvatarActivity.class);

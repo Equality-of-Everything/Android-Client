@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.UI.msg.ChatActivity;
 import com.example.android_client.R;
 import com.example.entity.UserInfo;
@@ -33,6 +34,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class IndividualActivity extends AppCompatActivity {
+    //好友个人详细页面
     private ImageView ivAvatar;//头像
     private TextView tvUserName;//用户名
     private TextView tvGender;//性别
@@ -97,6 +99,7 @@ public class IndividualActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                Glide.with(IndividualActivity.this).load(userInfo.getAvatar()).into(ivAvatar);
                                 tvGender.setText(userInfo.getGender());
                                 tvBrithday.setText(userInfo.getBirthday());
                                 tvEmail.setText(userInfo.getEmail());

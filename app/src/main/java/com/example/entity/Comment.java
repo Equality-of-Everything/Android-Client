@@ -33,6 +33,12 @@ public class Comment {
 
     private String avatar;//头像
 
+    public Comment(String commentText, Integer videoId, String username) {
+        this.commentText = commentText;
+        this.videoId = videoId;
+        this.username = username;
+    }
+
     @Override
     public String toString() {
         return "Comment{" +
