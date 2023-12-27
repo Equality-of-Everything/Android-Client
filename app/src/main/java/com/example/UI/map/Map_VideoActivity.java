@@ -1,4 +1,6 @@
 package com.example.UI.map;
+import static com.example.android_client.LoginActivity.ip;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,21 +15,46 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.example.adapter.CommentAdapter;
 import com.example.adapter.VideoAdapter;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.MainActivity;
 import com.example.android_client.R;
+import com.example.entity.Comment;
+import com.example.entity.ShareInfo;
+import com.example.util.Result;
 import com.example.util.TokenManager;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.zip.Inflater;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class Map_VideoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VideoAdapter adapter;
     private View imageVr;
+
+
+
+    private CommentAdapter commentAdapter;
+
+    private String[] serverVideoUrls;
+    private String[] serverImageUrls;
+    private ArrayList<Integer> videoIds;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,9 +76,12 @@ public class Map_VideoActivity extends AppCompatActivity {
                 null
         };
 //        获取urls
-        String[] serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
-        String[] serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
-        ArrayList<Integer> videoIds = getIntent().getIntegerArrayListExtra("videoIds");
+        serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
+        serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
+        videoIds = getIntent().getIntegerArrayListExtra("videoIds");
+
+
+
 
 
         imageUrls = serverImageUrls;
@@ -87,7 +117,12 @@ public class Map_VideoActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
     }
+
+
     @Override
     protected void onStart() {
         super.onStart();

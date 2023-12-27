@@ -21,15 +21,36 @@ public class Comment {
 
     private int userId; // 评论用户ID
 
-    private LocalDateTime commentTime; // 评论时间
+    private String commentTime; // 评论时间
 
     private int videoId; // 视频ID
 
     private String commentText; // 评论内容
 
-    private LocalDateTime commentDate; // 评论时间
+    private String commentDate; // 评论时间
 
-    public Comment(int id, int shareInfoId, String type, int friendShareId, int userId, LocalDateTime commentTime, int videoId, String commentText, LocalDateTime commentDate) {
+    private String username; // 用户名
+
+    private String avatar;//头像
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id=" + id +
+                ", shareInfoId=" + shareInfoId +
+                ", type='" + type + '\'' +
+                ", friendShareId=" + friendShareId +
+                ", userId=" + userId +
+                ", commentTime=" + commentTime +
+                ", videoId=" + videoId +
+                ", commentText='" + commentText + '\'' +
+                ", commentDate='" + commentDate + '\'' +
+                ", username='" + username + '\'' +
+                ", avatar='" + avatar + '\'' +
+                '}';
+    }
+
+    public Comment(int id, int shareInfoId, String type, int friendShareId, int userId, String commentTime, int videoId, String commentText, String commentDate, String username, String avatar) {
         this.id = id;
         this.shareInfoId = shareInfoId;
         this.type = type;
@@ -39,9 +60,8 @@ public class Comment {
         this.videoId = videoId;
         this.commentText = commentText;
         this.commentDate = commentDate;
-    }
-
-    public Comment() {
+        this.username = username;
+        this.avatar = avatar;
     }
 
     public int getId() {
@@ -84,11 +104,11 @@ public class Comment {
         this.userId = userId;
     }
 
-    public LocalDateTime getCommentTime() {
+    public String getCommentTime() {
         return commentTime;
     }
 
-    public void setCommentTime(LocalDateTime commentTime) {
+    public void setCommentTime(String commentTime) {
         this.commentTime = commentTime;
     }
 
@@ -108,12 +128,28 @@ public class Comment {
         this.commentText = commentText;
     }
 
-    public LocalDateTime getCommentDate() {
+    public String getCommentDate() {
         return commentDate;
     }
 
-    public void setCommentDate(LocalDateTime commentDate) {
+    public void setCommentDate(String commentDate) {
         this.commentDate = commentDate;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }
 
