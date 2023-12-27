@@ -49,7 +49,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         Glide.with(context).load(comment.getAvatar()).into(holder.profileImage);
         holder.username.setText(comment.getUsername());
         holder.content.setText(comment.getCommentText());
-        holder.commentTime.setText(comment.getCommentTime().toString());
+        holder.commentTime.setText(comment.getCommentDate());
     }
 
     @Override
