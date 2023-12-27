@@ -7,6 +7,7 @@ import static com.example.util.TokenManager.getUserName;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -23,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +36,7 @@ import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
 import com.example.util.Result;
 import com.example.util.TokenManager;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -50,6 +53,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -72,13 +76,11 @@ public class MineFragment extends Fragment {
     private Button btnEdit;
     private Button btnLogout;
     private String userName ;
+    private String latestAvatarUrl;
 //    private String avatarPath;
     public static final int REQUEST_IMAGE_OPEN = 2;
     public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
-
     private View contextView;
-
-
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
@@ -87,8 +89,6 @@ public class MineFragment extends Fragment {
 
         userName = TokenManager.getUserName(getActivity());
 //        avatarPath = TokenManager.getAvatar(getActivity());
-
-
         btnCamera = view.findViewById(R.id.image_avatar);
         tvMineName = view.findViewById(R.id.tv_mine_name);
         btnFriends = view.findViewById(R.id.btn_friends);
@@ -96,17 +96,12 @@ public class MineFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_logout);
         tvUid = view.findViewById(R.id.tv_mine_uid);
         contextView = view.findViewById(R.id.context_view);
-
         String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         tvUid.setText("uid: "+uid);
-
         setListenerForLogout();
-
         setListeners();
-
         tvMineName.setText(userName);
         setMineAvatar(userName);//设置头像
-
         return view;
     }
 
@@ -117,13 +112,13 @@ public class MineFragment extends Fragment {
                 EMUserInfo userInfo = value.get(userName);
                 if (userInfo != null) {
                     String avatarUrl = userInfo.getAvatarUrl();
+                    latestAvatarUrl = avatarUrl;
                     Log.e("FriendAdapter", "获取用户头像成功：" + avatarUrl);
                     // 更新头像加载逻辑
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             if (avatarUrl != null && !((Activity) getContext()).isFinishing()) {
-                                // 加载头像图片
                                 Glide.with(getContext())
                                         .load(avatarUrl)
                                         .error(R.drawable.friend_item)
@@ -183,7 +178,7 @@ public class MineFragment extends Fragment {
                 btnViewAvatar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
+                        openImagePreview(latestAvatarUrl);
                     }
                 });
 
@@ -215,6 +210,40 @@ public class MineFragment extends Fragment {
         });
     }
 
+
+    /**
+     * @return void
+     * @author xcc
+     * @description 预览头像
+     * @date 2023/12/27 8:42
+     */
+    private void openImagePreview(String latestAvatarUrl) {
+            // 使用 PhotoView 库进行图片预览
+            PhotoView photoView = new PhotoView(getContext());
+            // 使用 Glide 加载图片
+                Glide.with(getContext())
+                        .load(latestAvatarUrl)
+                        .error(R.drawable.friend_item)
+                        .into(photoView);
+            //获取到了url
+            // 显示图片
+            Dialog dialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+            dialog.setContentView(R.layout.dialog_full_screen_image);
+            // 在 Dialog 中找到 PhotoView，并设置图片
+            photoView = dialog.findViewById(R.id.fullScreenImageView);
+            Glide.with(getContext())
+                    .load(latestAvatarUrl)
+                    .into(photoView);
+            // 设置点击监听器以关闭 Dialog
+            photoView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            // 显示 Dialog
+            dialog.show();
+    }
     /**
      * @param requestCode:
      * @param resultCode:
@@ -258,11 +287,9 @@ public class MineFragment extends Fragment {
             outputStream.close();
             inputStream.close();
 
-
-
             // 将所选图片设置为头像
             btnCamera.setImageURI(Uri.parse(selectedImageUri));
-
+            latestAvatarUrl = selectedImageUri.toString();
             uploadToServer(userName, avatarFile);//上传到后端
 
         } catch (IOException e) {
