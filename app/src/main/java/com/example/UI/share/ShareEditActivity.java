@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.example.adapter.selectedImagesAdapter;
 import com.example.android_client.R;
 import com.example.util.GlideEngine;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
@@ -37,6 +39,7 @@ public class ShareEditActivity extends AppCompatActivity {
     private int lastitemViewBottom = 0; // 用于存储上一次的 itemView 的顶部位置
     private boolean isOverDeleteArea = false;
     private int lastDraggedPosition = RecyclerView.NO_POSITION;
+    private MaterialToolbar backShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +51,8 @@ public class ShareEditActivity extends AppCompatActivity {
         selectedButton = findViewById(R.id.selectedButton);
         // 绑定删除区域
         deleteArea = findViewById(R.id.deleteArea);
+        //绑定返回按钮
+        backShare = findViewById(R.id.back_to_Share);
         // 绑定触摸事件
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -60,6 +65,16 @@ public class ShareEditActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 selectImages(selectedMedia);
+            }
+        });
+        // 点击返回按钮触发返回事件
+        backShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("returnToFragment", "ShareEditTAG");
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
             }
         });
     }
