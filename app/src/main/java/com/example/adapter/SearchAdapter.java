@@ -34,14 +34,18 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
     private List<EMContact> searchList;
     private Context context;
+    private RecyclerView recyclerView;
 
-    public SearchAdapter(List<EMContact> friendList, Context context) {
-        this.searchList = friendList;
+    public SearchAdapter(List<EMContact> searchList, Context context, RecyclerView recyclerView) {
+        this.searchList = searchList;
         this.context = context;
+        this.recyclerView = recyclerView;  // 初始化RecyclerView的引用
     }
 
     public void setContactList(List<EMContact> contactList) {
         this.searchList = contactList;
+        notifyDataSetChanged();
+        recyclerView.getAdapter().notifyDataSetChanged();  // 调用RecyclerView.Adapter的notifyDataSetChanged
     }
 
     @NonNull
@@ -56,35 +60,53 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         EMContact contact = searchList.get(position);
         holder.tvName.setText(contact.getUsername());
 
-        String[] userId = new String[1];
-        userId[0] = contact.getUsername();
-        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(userId, new EMValueCallBack<Map<String, EMUserInfo>>() {
+        Log.e("SearchAdapter", "onBindViewHolder: Data bound for position " + position); // 添加Log来查看数据绑定情况
+
+        getUserInfoFromServer(contact.getUsername(), new UserInfoFetchCallback() {
             @Override
-            public void onSuccess(Map<String, EMUserInfo> value) {
-                // 获取用户头像属性成功后，在主线程中加载用户头像
-                EMUserInfo userInfo = value.get(userId[0]);
+            public void onUserInfoFetched(EMUserInfo userInfo) {
                 if (userInfo != null) {
                     String avatarUrl = userInfo.getAvatarUrl();
                     if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                        // 加载头像图片
-                        Glide.with(context)
-                                .load(avatarUrl)
-                                .error(R.drawable.error) // 加载失败显示的图片
-                                .into(new ImageLoaderTarget(holder.ivAvatar)); // 这里改为使用.into()的回调函数
+                        // 在主线程中加载头像图片
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Glide.with(context)
+                                        .load(avatarUrl)
+                                        .error(R.drawable.error)
+                                        .into(holder.ivAvatar);
+                            }
+                        });
                     }
                 }
-            }
-
-            @Override
-            public void onError(int error, String errorMsg) {
-                // 处理加载头像失败的情况
-                Log.e("SearchAdapter", "获取用户头像失败：" + error + ", " + errorMsg);
             }
         });
     }
 
+    private void getUserInfoFromServer(String userId, UserInfoFetchCallback callback) {
+        EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userId}, new EMValueCallBack<Map<String, EMUserInfo>>() {
+            @Override
+            public void onSuccess(Map<String, EMUserInfo> value) {
+                EMUserInfo userInfo = value.get(userId);
+                callback.onUserInfoFetched(userInfo);
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                Log.e("SearchAdapter", "获取用户信息失败：" + error + ", " + errorMsg);
+                callback.onUserInfoFetched(null);
+            }
+        });
+    }
+
+    public interface UserInfoFetchCallback {
+        void onUserInfoFetched(EMUserInfo userInfo);
+    }
+
     @Override
     public int getItemCount() {
+        Log.e("SearchAdapter", "getItemCount: " + searchList.size());
         return searchList.size();
     }
 
@@ -99,6 +121,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             tvName = itemView.findViewById(R.id.tv_search_name);
             tvAddFriend = itemView.findViewById(R.id.tv_add_friend);
         }
+
+
     }
 
 }
