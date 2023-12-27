@@ -41,7 +41,7 @@ public class ShareEditActivity extends AppCompatActivity {
     private boolean isOverDeleteArea = false;
     private int lastDraggedPosition = RecyclerView.NO_POSITION;
 
-    private Button backShare;
+    private MaterialToolbar backShare;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

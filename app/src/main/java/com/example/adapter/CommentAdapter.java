@@ -17,9 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.android_client.EnrollActivity;
 import com.example.android_client.R;
 import com.example.entity.Comment;
 import com.example.util.Result;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.example.util.TokenManager;
 import com.google.gson.Gson;
 
@@ -90,7 +92,8 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
 
     // 用于删除对应评论
     private void showDeleteCommentDialog(Comment comment,int currentVideoPosition) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle("删除评论");
         builder.setMessage("确认删除以下评论吗？\n\n" + comment.getCommentText());
         builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
