@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.android_client.R;
 import com.example.entity.Comment;
 import com.example.util.Result;
+import com.example.util.TokenManager;
 import com.google.gson.Gson;
 
 import org.w3c.dom.Text;
@@ -75,14 +76,16 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.CommentV
         String date = formatTimestamp(timestamp.getTime());
         holder.commentTime.setText(date);
 
-        // 删除评论
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                showDeleteCommentDialog(comment,position);
-                return true;
-            }
-        });
+        if (TokenManager.getUserName(context).equals(comment.getUsername())) {
+            // 删除评论
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showDeleteCommentDialog(comment,position);
+                    return true;
+                }
+            });
+        }
     }
 
     // 用于删除对应评论
