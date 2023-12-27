@@ -15,4 +15,7 @@
     <item name="bmb" type="id" />
     <item name="save_to_local" type="id" />
     <item name="video_publish" type="id" />
+    <item name="image_background" type="id" />
+    <item name="deleteArea" type="id"/>
+    <item name="materialDivider2" type="id" />
 </resources>

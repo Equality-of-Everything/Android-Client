@@ -65,6 +65,8 @@
             android:background="@android:color/transparent"
             android:gravity="top|start"
             android:hint="从这开始记录..."
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:maxLines="7"
             android:scrollbars="vertical" />
 
@@ -73,6 +75,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="240dp"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/shareaddpicture"/>
 
         <androidx.recyclerview.widget.RecyclerView

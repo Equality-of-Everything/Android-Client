@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -105,6 +106,7 @@ public class ShareEditActivity extends AppCompatActivity {
             // 允许在任何位置放下
             return true;
         }
+        @SuppressLint("ResourceType")
         @Override
         public void onChildDrawOver(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
             super.onChildDrawOver(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -118,9 +120,9 @@ public class ShareEditActivity extends AppCompatActivity {
             // 检测是否进入删除区域
             isOverDeleteArea = isInViewBounds(deleteArea, lastitemViewBottom);
             if (isOverDeleteArea) {
-                deleteArea.setBackgroundColor(getResources().getColor(R.color.grey));
+                deleteArea.setBackgroundColor(getResources().getColor(R.color.red));
             }else {
-                deleteArea.setBackgroundColor(getResources().getColor(R.color.black));
+                deleteArea.setBackgroundColor(getResources().getColor(R.color.red1));
             }
 
         }
