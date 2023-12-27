@@ -4,7 +4,9 @@ import static com.example.android_client.LoginActivity.ip;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -350,14 +352,6 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                                                 result.getData().toString().indexOf("."));
                                         if (result.getFlag()) {
 
-                                            Log.e("-------", "--------------");
-                                            Log.e("likecount", result.getData().toString());
-                                            Log.e("currentPosition", currentPlayingPosition + "");
-                                            Log.e("videoId", videoIds[currentPlayingPosition] + "");
-                                            Log.e("likes", likes);
-
-                                            Log.e("-------", "--------------");
-
                                             holder.favoriteCount.setText(likes+"");
                                             Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
                                             holder.iconFavorite.setButtonDrawable(R.drawable.btn_favorite_icon);
@@ -403,10 +397,16 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                 // 发送视频评论
                 sendVideoReview(postReview,commentInput,videoIds[currentPlayingPosition],username);
 
+                // 长按删除评论
+
             }
         });
 
+
+
     }
+
+
 
     /**
      * @param postReview:
