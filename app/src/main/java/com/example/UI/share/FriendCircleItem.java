@@ -15,17 +15,28 @@ public class FriendCircleItem {
     private String avatarUrl;
     // 发布者的文字内容
     private String textContent;
-    // 包含图片和视频的URL列表
+    // 包含图片URL列表
     private List<String> mediaUrls;
     // 发布时间
     private String publishTime;
+    //视频url
+    private String videoUrl;
 
-    public FriendCircleItem(String userName, String avatarUrl, String textContent, List<String> mediaUrls,String publishTime) {
+    public FriendCircleItem(String userName, String avatarUrl, String textContent, List<String> mediaUrls,String videoUrl,String publishTime) {
         this.userName = userName;
         this.avatarUrl = avatarUrl;
         this.textContent = textContent;
         this.mediaUrls = mediaUrls;
         this.publishTime = publishTime;
+        this.videoUrl = videoUrl;
+    }
+
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
     }
 
     public String getPublishTime() {

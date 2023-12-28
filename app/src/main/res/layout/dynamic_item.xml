@@ -58,6 +58,14 @@
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
                 android:visibility="gone"/>
+<!--            视频展示-->
+            <VideoView
+                android:id="@+id/share_video"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="10dp"
+                android:visibility="gone"
+                />
 <!--            发布时间-->
             <TextView
                 android:id="@+id/share_time"

@@ -192,7 +192,6 @@ public class ShareEditActivity extends AppCompatActivity {
      */
 
     public void selectImages(List<LocalMedia> preSelectedMedia) {
-
         PictureSelector.create(this)
                 // 打开相册并设置媒体类型（这里设置为图片）
                 .openGallery(SelectMimeType.ofAll())
