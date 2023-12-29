@@ -323,6 +323,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="40dp"
                         android:text="退出登录"
+                        app:strokeColor="?attr/colorPrimary"
                         android:textSize="20sp"
                         app:rippleColor="@color/m3_button_ripple_color_selector"
                         app:icon="@drawable/logout"

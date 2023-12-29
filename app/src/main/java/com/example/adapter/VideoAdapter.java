@@ -37,6 +37,7 @@ import androidx.core.widget.CompoundButtonCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.UI.map.Map_VRActivity;
 import com.example.UI.map.Map_VideoActivity;
 import com.example.android_client.R;
@@ -128,6 +129,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     private View imageVr;
     private Integer[] videoIds;
     private String username;
+    private ArrayList<Integer> userInfoIds;
 
     // 评论Adapter
     private CommentAdapter commentAdapter;
@@ -142,13 +144,14 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
 
-    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr,Integer[] videoIds,String username) {
+    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr,Integer[] videoIds,String username,ArrayList<Integer> userInfoIds) {
         this.videoUrls = videoUrls;
         this.context = context;
         this.imageUrls = imageUrls;
         this.imageVr = imageVr;
         this.videoIds = videoIds;
         this.username = username;
+        this.userInfoIds = userInfoIds;
         favoriteStates = new SparseBooleanArray();
 
         //设置缓冲区大小
@@ -248,6 +251,54 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         } else {
             imageVr.setVisibility(View.GONE); // 隐藏图像组件
         }
+
+        // 获取视频头像
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(currentPlayingPosition == -1) currentPlayingPosition = 0;
+                int userInfoId = userInfoIds.get(currentPlayingPosition);
+
+                Log.e("userInfoId", userInfoId+"");
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                       .url("http://"+ip+":8080/userInfo/getAvatar/"+userInfoId)
+                       .get()
+                       .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(context,"获取点赞数失败，请稍后重试",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Gson gson = new Gson();
+                        String res = response.body().string();
+                        Result result = gson.fromJson(res, Result.class);
+                        ((Activity)context).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (!result.getFlag()) {
+                                    Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                String avatarUrl = result.getData().toString();
+                                Glide.with(context).load(avatarUrl).into(holder.avatar);
+                            }
+                        });
+
+                    }
+                });
+
+            }
+        }).start();
 
         new Thread(new Runnable() {
             @Override
@@ -595,6 +646,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
         Button likeButton;  // 添加这两行
         TextView favoriteCount;
         FloatingActionButton commentButton;
+        ImageView avatar;
 
         public VideoViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -604,7 +656,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             likeButton = itemView.findViewById(R.id.favorite_icon);  // 初始化
             favoriteCount = itemView.findViewById(R.id.favorite_count);  // 初始化
             commentButton = itemView.findViewById(R.id.msg_icon);
-
+            avatar = itemView.findViewById(R.id.image_avatar);
             iconFavorite.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
