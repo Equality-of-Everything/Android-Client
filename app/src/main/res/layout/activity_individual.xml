@@ -171,16 +171,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/card2"
-                android:layout_margin="20dp"
-                android:orientation="vertical"
-                >
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:text="最近发布"
-                    android:textColor="?attr/colorPrimary"/>
+                    android:textColor="?attr/colorPrimary" />
 
                 <com.google.android.material.card.MaterialCardView
                     style="?attr/materialCardViewElevatedStyle"
@@ -189,6 +191,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp">
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -199,7 +202,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="这个人很懒什么也没"
-                            android:textColor="?attr/colorPrimary"/>
+                            android:textColor="?attr/colorPrimary" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -220,12 +223,21 @@
             android:layout_alignParentEnd="true"
             android:gravity="center_horizontal"
             android:background="@color/white">
+<!--            <Button-->
+<!--                style="?attr/materialButtonOutlinedStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_margin="16dp"-->
+<!--                android:layout_weight="1"-->
+<!--                app:strokeColor="?attr/colorPrimary"-->
+<!--                android:text="加好友"/>-->
             <Button
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:layout_weight="1"
+                app:strokeColor="?attr/colorPrimary"
                 android:text="分享圈"/>
             <Button
                 style="@style/Widget.Material3.Button.TonalButton"
