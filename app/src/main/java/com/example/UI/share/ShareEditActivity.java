@@ -11,6 +11,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -40,9 +41,9 @@ public class ShareEditActivity extends AppCompatActivity {
     private int lastitemViewBottom = 0; // 用于存储上一次的 itemView 的顶部位置
     private boolean isOverDeleteArea = false;
     private int lastDraggedPosition = RecyclerView.NO_POSITION;
-
+    private List<LocalMedia> newSelectedMedia;
     private MaterialToolbar backShare;
-
+    private LocalMedia removeMedia;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,10 +107,13 @@ public class ShareEditActivity extends AppCompatActivity {
             // 交换数据集中的图片位置
             Uri temp = selectedImages.remove(fromPos);
             selectedImages.add(toPos, temp);
-            // 记录最后拖拽的位置
-            lastDraggedPosition = toPos;
+            // 交换selectedMedia列表中对应元素的位置
+            LocalMedia tempMedia = selectedMedia.remove(fromPos);
+            selectedMedia.add(toPos, tempMedia);
             // 通知适配器更新数据
             selectedImagesAdapter.notifyItemMoved(fromPos, toPos);
+            // 记录最后拖拽的位置
+            lastDraggedPosition = toPos;
             return true;
         }
 
@@ -139,7 +143,6 @@ public class ShareEditActivity extends AppCompatActivity {
             }else {
                 deleteArea.setBackgroundColor(getResources().getColor(R.color.red1));
             }
-
         }
         // 新的 isInViewBounds 方法，接受实时的 itemView 位置信息
         private boolean isInViewBounds(View deleteView, int itemViewBottom) {
@@ -171,10 +174,12 @@ public class ShareEditActivity extends AppCompatActivity {
                     // 在拖拽结束时，使用记录的位置信息进行相应的操作
                     selectedImages.remove(lastDraggedPosition);
                     selectedImagesAdapter.notifyItemRemoved(lastDraggedPosition);
-                    // 例如，可以根据位置信息更新数据或执行其他操作
-                    // 注意：在执行完操作后，需要将 lastDraggedPosition 重置为 RecyclerView.NO_POSITION
                     // 以便下次拖拽时能正确记录最后拖拽的位置
                     selectedImagesAdapter.notifyDataSetChanged();
+                    removeMedia = selectedMedia.remove(lastDraggedPosition);
+                    System.out.println("removeMedia" + removeMedia);
+                    System.out.println("selectedMedia" + selectedMedia);
+                    System.out.println("lastDraggedPosition"+lastDraggedPosition);
                     lastDraggedPosition = RecyclerView.NO_POSITION;
 
                 }
@@ -221,10 +226,8 @@ public class ShareEditActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        newSelectedMedia = PictureSelector.obtainSelectorList(data);
         if (requestCode == PictureConfig.CHOOSE_REQUEST && resultCode == RESULT_OK && data != null) {
-            List<LocalMedia> newSelectedMedia = PictureSelector.obtainSelectorList(data);
-
             // 空引用检查
             if (selectedImages != null && newSelectedMedia != null) {
                 // 处理取消选择的逻辑
@@ -243,6 +246,10 @@ public class ShareEditActivity extends AppCompatActivity {
                         iterator.remove(); // 从 selectedImages 中移除取消选择的图片
                     }
                 }
+
+                // 更新 selectedMedia
+                selectedMedia=newSelectedMedia;
+
                 // 处理新选择的逻辑
                 for (LocalMedia media : newSelectedMedia) {
                     Uri selectedImageUri = Uri.parse(media.getPath());
@@ -255,8 +262,7 @@ public class ShareEditActivity extends AppCompatActivity {
                         }
                     }
                 }
-                // 更新 selectedMedia
-                selectedMedia = newSelectedMedia;
+
                 // 通知适配器更新 RecyclerView
                 selectedImagesAdapter.notifyDataSetChanged();
             } else {
