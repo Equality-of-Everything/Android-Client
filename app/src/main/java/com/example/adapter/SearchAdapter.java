@@ -1,5 +1,7 @@
 package com.example.adapter;
 
+import static java.security.AccessController.getContext;
+
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -120,8 +122,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             ivAvatar = itemView.findViewById(R.id.iv_search_avatar);
             tvName = itemView.findViewById(R.id.tv_search_name);
             tvAddFriend = itemView.findViewById(R.id.tv_add_friend);
-        }
 
+            tvAddFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
 
     }
 

@@ -42,6 +42,7 @@
             </com.google.android.material.appbar.AppBarLayout>
 
             <Button
+                android:id="@+id/btn_share_launch"
                 style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

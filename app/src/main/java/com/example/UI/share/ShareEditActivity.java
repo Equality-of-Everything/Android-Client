@@ -1,4 +1,7 @@
 package com.example.UI.share;
+import static com.example.android_client.LoginActivity.ip;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -15,25 +18,42 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.adapter.selectedImagesAdapter;
 import com.example.android_client.R;
 import com.example.util.GlideEngine;
+import com.example.util.Result;
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.SelectMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class ShareEditActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private selectedImagesAdapter selectedImagesAdapter;
-    private List<Uri> selectedImages = new ArrayList<>();
+    private List<Uri> selectedImages = new ArrayList<>();//选中的图片
     private ImageButton selectedButton;
     private static final String PREFS_NAME = "MyPrefsFile";
     private TextView deleteArea;
@@ -44,6 +64,9 @@ public class ShareEditActivity extends AppCompatActivity {
     private List<LocalMedia> newSelectedMedia;
     private MaterialToolbar backShare;
     private LocalMedia removeMedia;
+    private EditText shareContent;//分享的文本
+    private Button btnShareLaunch;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +79,11 @@ public class ShareEditActivity extends AppCompatActivity {
         deleteArea = findViewById(R.id.deleteArea);
         //绑定返回按钮
         backShare = findViewById(R.id.back_to_Share);
+        btnShareLaunch = findViewById(R.id.btn_share_launch);
+        shareContent = findViewById(R.id.share_text);
+
+        setListener();
+
         // 绑定触摸事件
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelperCallback());
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -81,6 +109,55 @@ public class ShareEditActivity extends AppCompatActivity {
             }
         });
     }
+
+    //发布按钮，将数据传到后端数据库
+    private void setListener() {
+        btnShareLaunch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Gson json = new Gson();
+
+                String content = shareContent.getText().toString();
+                OkHttpClient client = new OkHttpClient();
+
+                FormBody.Builder builder = new FormBody.Builder()
+                        .add("shareContent", content);
+
+
+                for(Uri imageUri : selectedImages) {
+                    File file = new File(imageUri.getPath());
+                    builder.add("image", file.getName());
+                }
+
+                FormBody formBody = builder.build();
+                Request request = new Request.Builder()
+                        .url("http://"+ip+":8080/friendshare/upload")
+                        .post(formBody)
+                        .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        Log.e("ShareEditActivity", "请求后端数据失败");
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        Log.e("ShareEditActivity", "请求后端数据成功");
+
+                        String responseData = response.body().string();
+                        Result result = json.fromJson(responseData, Result.class);
+                        if(result.getFlag()) {
+                            Log.e("ShareEditActivity", "后端修改数据成功");
+                        } else {
+                            Log.e("ShareEditActivity", "后端修改数据失败");
+                        }
+                    }
+                });
+            }
+        });
+    }
+
     // ItemTouchHelper.Callback 实现
     private class ItemTouchHelperCallback extends ItemTouchHelper.Callback {
         @Override
