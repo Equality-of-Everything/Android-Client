@@ -53,6 +53,7 @@ public class Map_VideoActivity extends AppCompatActivity {
     private String[] serverVideoUrls;
     private String[] serverImageUrls;
     private ArrayList<Integer> videoIds;
+    private ArrayList<Integer> userInfoIds;
 
 
     @Override
@@ -79,10 +80,7 @@ public class Map_VideoActivity extends AppCompatActivity {
         serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
         serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
         videoIds = getIntent().getIntegerArrayListExtra("videoIds");
-
-
-
-
+        userInfoIds = getIntent().getIntegerArrayListExtra("userInfoIds");
 
         imageUrls = serverImageUrls;
         videoUrls = serverVideoUrls;
@@ -99,7 +97,7 @@ public class Map_VideoActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr,videoIds.toArray(new Integer[videoIds.size()]), TokenManager.getUserName(this));
+        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr,videoIds.toArray(new Integer[videoIds.size()]), TokenManager.getUserName(this),userInfoIds);
         recyclerView.setAdapter(adapter);
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
