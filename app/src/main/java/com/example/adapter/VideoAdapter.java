@@ -40,6 +40,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.UI.map.Map_VRActivity;
 import com.example.UI.map.Map_VideoActivity;
+import com.example.UI.mine.IndividualActivity;
 import com.example.android_client.R;
 import com.example.entity.Comment;
 import com.example.util.Code;
@@ -453,6 +454,61 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
             }
         });
 
+        holder.avatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.e("asdasdasdasd", "sadadasdad");
+
+                        if(currentPlayingPosition == -1) currentPlayingPosition = 0;
+                        int userInfoId = userInfoIds.get(currentPlayingPosition);
+
+                        Log.e("userInfoId", userInfoId + "");
+
+                        OkHttpClient client = new OkHttpClient();
+                        Request request = new Request.Builder()
+                                .url("http://" + ip + ":8080/userInfo/getUsername?shareInfoId=" + userInfoId)
+                                .get()
+                                .build();
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(context, "服务器连接失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                                Gson gson = new Gson();
+                                String res = response.body().string();
+                                Result result = gson.fromJson(res, Result.class);
+                                ((Activity) context).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!result.getFlag()) {
+                                            Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                            return;
+                                        }
+                                        String username = result.getData().toString();
+                                        Intent intent = new Intent(context, IndividualActivity.class);
+                                        intent.putExtra("friendId",username);
+                                        context.startActivity(intent);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }).start();
+
+
+            }
+        });
 
 
     }

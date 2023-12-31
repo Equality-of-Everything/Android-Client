@@ -86,6 +86,7 @@ import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -258,7 +259,7 @@ public class MapFragment extends Fragment {
                     // 获取对应省份的边界点的经纬度的集合
                     List<LatLng> boundaryPoints = districtResult.getPolylines().get(0);
                     // 在这里可以处理获取到的边界点数据
-                    colorIn(boundaryPoints);//将该区域上色
+                    colorIn(boundaryPoints,generateRandomColor());//将该区域上色
                 }
             }
         });
@@ -272,11 +273,11 @@ public class MapFragment extends Fragment {
      * @description 区域填色
      * @date 2023/12/22 16:59
      */
-    private void colorIn(List<LatLng> boundaryPoints) {
+    private void colorIn(List<LatLng> boundaryPoints,int fillColor) {
         PolygonOptions mPolygonOptions = new PolygonOptions()
                 .points(boundaryPoints)
-                .fillColor(0xAA6495ED) //填充颜色
-                .stroke(new Stroke(5, 0xAA00FF00)); //边框宽度和颜色
+                .fillColor(fillColor) //填充颜色
+                .stroke(new Stroke(5, generateRandomColor())); //边框宽度和颜色
 
         //在地图上显示多边形
         baiduMap.addOverlay(mPolygonOptions);
@@ -304,16 +305,131 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
-                DistrictSearchOption option = new DistrictSearchOption();
-                option.cityName("陕西省"); // 设置要查询的省份名称
-                mDistrictSearch.searchDistrict(option);
+//                DistrictSearchOption option = new DistrictSearchOption();
+//                option.cityName("北京市"); // 设置要查询的省份名称
+//                mDistrictSearch.searchDistrict(option);
+//
+//                DistrictSearchOption option2 = new DistrictSearchOption();
+//                option2.cityName("石家庄市");
+//                mDistrictSearch.searchDistrict(option2);
 
-                DistrictSearchOption option2 = new DistrictSearchOption();
-                option2.cityName("安徽省");
-                mDistrictSearch.searchDistrict(option2);
+                getPlaceName(TokenManager.getUserName(getContext()));
             }
         });
     }
+
+    /**
+     * @param userName:
+     * @return void
+     * @author zhang
+     * @description 发送请求获取打卡地点名
+     * @date 2023/12/31 14:38
+     */
+    private void getPlaceName(String userName) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("http://"+ip+":8080/map/getPlaceName?username=" + userName)
+                        .get()
+                        .build();
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                        ((Activity)getContext()).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "服务器连接错误，请稍后重试", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                        baiduMap.setMapType(BaiduMap.MAP_TYPE_NORMAL);
+                        Gson gson = new Gson();
+                        String res = response.body().string();
+                        Result result = gson.fromJson(res, Result.class);
+                        if (!result.getFlag()) {
+                            Toast.makeText(getContext(), result.getMsg(), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        String data = result.getData().toString();
+                        TypeToken<List<String>> typeToken = new TypeToken<List<String>>() {
+                        };
+                        List<String> placeNameList = gson.fromJson(data, typeToken.getType());
+
+                        // 清除之前的覆盖物
+                        baiduMap.clear();
+
+//                        for (String placeName : placeNameList) {
+//                            Log.e("placeName", placeName);
+//                            DistrictSearchOption option = new DistrictSearchOption();
+//                            option.cityName(placeName.substring(placeName.indexOf('省') + 1, placeName.indexOf('市'))); // 设置要查询的省份名称
+//                            mDistrictSearch.searchDistrict(option);
+//                        }
+                        System.out.println(placeNameList);
+
+//                        // 开始逐个处理地点
+                        processPlaceNames(placeNameList);
+                    }
+                });
+
+            }
+        }).start();
+    }
+
+    private void processPlaceNames(List<String> placeNameList) {
+        // 如果 placeNameList 为空，直接返回
+        if (placeNameList == null || placeNameList.isEmpty()) {
+            return;
+        }
+
+        // 在处理第一个地点名称之前清除地图
+        baiduMap.clear();
+
+        // 开始逐个处理地点
+        processPlaceName(placeNameList, 0);
+    }
+
+    private void processPlaceName(List<String> placeNameList, int index) {
+        if (index >= placeNameList.size()) {
+            // 已处理完所有地点
+            return;
+        }
+
+        String placeName = placeNameList.get(index);
+        Log.e("placeName", placeName);
+
+        DistrictSearchOption option = new DistrictSearchOption();
+        option.cityName(placeName.substring(placeName.indexOf('省') + 1, placeName.indexOf('市')));
+
+        // 在 DistrictSearch 异步执行完毕后再处理下一个地点
+        mDistrictSearch.setOnDistrictSearchListener(new OnGetDistricSearchResultListener() {
+            @Override
+            public void onGetDistrictResult(DistrictResult districtResult) {
+                if (districtResult.error == DistrictResult.ERRORNO.NO_ERROR) {
+                    // 获取对应省份的边界点的经纬度的集合
+                    List<LatLng> boundaryPoints = districtResult.getPolylines().get(0);
+                    // 在这里可以处理获取到的边界点数据
+                    colorIn(boundaryPoints,generateRandomColor());//将该区域上色
+                }
+
+                // 处理下一个地点
+                processPlaceName(placeNameList, index + 1);
+            }
+        });
+
+        mDistrictSearch.searchDistrict(option);
+    }
+
+    // 动态生成颜色
+    private int generateRandomColor() {
+        Random random = new Random();
+        return Color.argb(188,random.nextInt(256), random.nextInt(256), random.nextInt(256));
+    }
+
 
 
 
