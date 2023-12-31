@@ -31,6 +31,7 @@ import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMContact;
 import com.hyphenate.chat.EMUserInfo;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -108,6 +109,22 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                 Intent intent = new Intent(context, IndividualActivity.class);
                 intent.putExtra("friendId", friend.getUsername());
                 context.startActivity(intent);
+            }
+        });
+
+        //为item设置长按事件
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                // 长按删除好友
+                try {
+                    EMClient.getInstance().contactManager().deleteContact(friend.getUsername());
+                } catch (HyphenateException e) {
+                    throw new RuntimeException(e);
+                }
+                friendList.remove(friend);
+                notifyDataSetChanged();
+                return true;
             }
         });
     }
