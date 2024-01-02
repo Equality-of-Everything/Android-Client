@@ -69,6 +69,7 @@ import okhttp3.ResponseBody;
 
 
 public class MineFragment extends Fragment {
+    private ImageView imageBackground;
     private ImageView btnCamera;
     private TextView tvMineName;
     private TextView tvUid;
@@ -77,16 +78,19 @@ public class MineFragment extends Fragment {
     private Button btnLogout;
     private String userName ;
     private String latestAvatarUrl;
+    private String latestBackgroundUrl;
 //    private String avatarPath;
     public static final int REQUEST_IMAGE_OPEN = 2;
+    public static final int REQUEST_BACKGROUND_IMAGE_OPEN = 3;
     public static final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpeg");
     private View contextView;
-    @SuppressLint("MissingInflatedId")
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_mine, container, false);
 
+        imageBackground = view.findViewById(R.id.mine_background);
         userName = TokenManager.getUserName(getActivity());
 //        avatarPath = TokenManager.getAvatar(getActivity());
         btnCamera = view.findViewById(R.id.image_avatar);
@@ -98,8 +102,10 @@ public class MineFragment extends Fragment {
         contextView = view.findViewById(R.id.context_view);
         String uid = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
         tvUid.setText("uid: "+uid);
+
         setListenerForLogout();
         setListeners();
+
         tvMineName.setText(userName);
         setMineAvatar(userName);//设置头像
         return view;
@@ -148,6 +154,39 @@ public class MineFragment extends Fragment {
      * @date 2023/12/14 10:42
      */
     private void setListeners() {
+        imageBackground.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getActivity());
+                bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+                bottomSheetDialog.show();
+
+                // 查看背景图
+                Button btnViewAvatar = bottomSheetDialog.findViewById(R.id.btn_view_avatar);
+                btnViewAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        openImagePreview(latestBackgroundUrl);
+                    }
+                });
+
+                // 从相册选择一张头像上传作为个人头像
+                Button btnSelectAvatar = bottomSheetDialog.findViewById(R.id.btn_select_avatar);
+                btnSelectAvatar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //打开相册
+                        Intent intent = new  Intent(Intent.ACTION_PICK);
+                        //指定获取的是图片
+                        intent.setType("image/*");
+                        startActivityForResult(intent, REQUEST_BACKGROUND_IMAGE_OPEN);
+
+                        // 关闭底部面板
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+            }
+        });
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,15 +236,6 @@ public class MineFragment extends Fragment {
                         bottomSheetDialog.dismiss();
                     }
                 });
-
-                //拍照以上传个人头像
-                Button btnTakePhoto = bottomSheetDialog.findViewById(R.id.btn_take_photo);
-                btnTakePhoto.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    // Add your code to handle the "拍照" button click
-                    }
-                });
             }
         });
     }
@@ -244,6 +274,7 @@ public class MineFragment extends Fragment {
             // 显示 Dialog
             dialog.show();
     }
+
     /**
      * @param requestCode:
      * @param resultCode:
@@ -263,7 +294,117 @@ public class MineFragment extends Fragment {
             //将选择的图片保存在本地
             SaveToLocalStorage(String.valueOf(selectedImageUri));
         }
+
+        // 处理选择背景图的逻辑
+        if (requestCode == REQUEST_BACKGROUND_IMAGE_OPEN && resultCode == Activity.RESULT_OK && data != null) {
+            // 获取所选背景图的URI
+            Uri selectedBackgroundImageUri = data.getData();
+            //将选择的背景图保存在本地
+            SaveBackgroundImageToLocalStorage(String.valueOf(selectedBackgroundImageUri));
+        }
     }
+
+    /**
+     * @param selectedBackgroundImageUri:
+     * @return void
+     * @author Lee
+     * @description 把选择的背景图保存在本地
+     * @date 2024/1/2 9:08
+     */
+    private void SaveBackgroundImageToLocalStorage(String selectedBackgroundImageUri) {
+        try {
+            // 将选择的图片复制到应用的内部存储中
+            InputStream inputStream = getActivity().getContentResolver().openInputStream(Uri.parse(selectedBackgroundImageUri));
+            File internalStorageDir = getActivity().getFilesDir();
+            File backgroundFile = new File(internalStorageDir, "background.jpg");
+            OutputStream outputStream = new FileOutputStream(backgroundFile);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.close();
+            inputStream.close();
+
+            // 将所选图片设置为背景图
+            imageBackground.setImageURI(Uri.parse(selectedBackgroundImageUri));
+            latestBackgroundUrl = selectedBackgroundImageUri.toString();
+//            uploadBackgoundImageToServer(userName, backgroundFile);//上传到后端
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * @param userName:
+     * @param backgroundFile:
+     * @return void
+     * @author Lee
+     * @description 将背景图上传到服务器
+     * @param
+     * @date 2024/1/2 9:16
+     */
+//    private void uploadBackgoundImageToServer(String userName, File backgroundFile) {
+//        OkHttpClient client = new OkHttpClient();
+//
+//        RequestBody requestBody = new MultipartBody.Builder()
+//                .setType(MultipartBody.FORM)
+//                .addFormDataPart("username", userName)
+//                .addFormDataPart("file", "background.jpg",
+//                        RequestBody.create(MEDIA_TYPE_JPG, backgroundFile))
+//                .build();
+//
+//        Request request = new Request.Builder()
+//                .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
+//                .post(requestBody)
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(Call call, IOException e) {
+//                // 处理上传失败情况
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onResponse(Call call, Response response) throws IOException {
+//                Gson json = new Gson();
+//                String responseData = response.body().string();
+//                Result result = json.fromJson(responseData, Result.class);
+//                Log.e("minefragment : ", result.toString());
+//                // 处理上传成功情况
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if(result.getData() != null) {
+//                            //将头像对应的url传到环信
+//                            String imageUrl = result.getData().toString();
+//                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
+//                                @Override
+//                                public void onSuccess(String value) {
+//                                    Log.i("mine", "背景图上传环信成功");
+//                                }
+//
+//                                @Override
+//                                public void onError(int error, String errorMsg) {
+//                                    Log.e("mine", "背景图上传环信失败");
+//                                }
+//                            });
+//                            Log.e("minefragment : " , imageUrl);
+//                        }
+//                        showSnackBar(getView(), "背景图更新成功", "我知道了");
+//
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     /**
      * @param selectedImageUri:
@@ -302,7 +443,9 @@ public class MineFragment extends Fragment {
      * @param imageFile:
      * @return void
      * @author Lee
-     * @description
+     * @description 将头像图片上传到服务器
+     * @param
+     * @param
      * @date 2023/12/19 8:35
      */
     private void uploadToServer(String userName, File imageFile) {

@@ -46,8 +46,6 @@ public class Map_VideoActivity extends AppCompatActivity {
     private VideoAdapter adapter;
     private View imageVr;
 
-
-
     private CommentAdapter commentAdapter;
 
     private String[] serverVideoUrls;
