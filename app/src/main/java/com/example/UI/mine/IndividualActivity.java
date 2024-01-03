@@ -1,6 +1,7 @@
 package com.example.UI.mine;
 
 import static com.example.android_client.LoginActivity.ip;
+import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,6 +36,7 @@ import okhttp3.Response;
 
 public class IndividualActivity extends AppCompatActivity {
     //好友个人详细页面
+    private ImageView ivBackground;//背景图
     private ImageView ivAvatar;//头像
     private TextView tvUserName;//用户名
     private TextView tvGender;//性别
@@ -46,6 +48,7 @@ public class IndividualActivity extends AppCompatActivity {
     private Button btnSendMsg;//发信息按钮
     private Button btnBack;//返回按钮
     private String conversationId;//用户名
+    private boolean isActivityDestroyed = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,53 @@ public class IndividualActivity extends AppCompatActivity {
             tvUserName.setText(conversationId);
         }
 
+        requestForBackground();
         httpRequest();//向后端数据库请求数据，显示在页面上
+    }
+
+    private void requestForBackground() {
+        Gson json = new Gson();
+
+        FormBody body = new FormBody.Builder()
+                .add("username", conversationId)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/getBackgroundImage")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("MineFragment", "请求后端数据失败");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.e("MineFragment", "请求后端数据成功");
+
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                if(result.getFlag()) {
+                    Log.e("shareFragment", "后端响应请求成功");
+                    if (result.getData() != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!isActivityDestroyed) {
+                                    Glide.with(IndividualActivity.this).load(result.getData()).into(ivBackground);
+                                    Log.e("shareFragment", "获取背景图成功");
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Log.e("shareFragment", "后端响应请求失败");
+                }
+            }
+        });
     }
 
     // 使用OkHttp发送HTTP请求并获取数据
@@ -134,6 +183,7 @@ public class IndividualActivity extends AppCompatActivity {
     }
 
     public void init() {
+        ivBackground = findViewById(R.id.individual_background);
         btnBack = findViewById(R.id.btn_back);
         ivAvatar = findViewById(R.id.iv_individual_avatar);
         tvUserName = findViewById(R.id.tv_individual_username);
@@ -143,5 +193,11 @@ public class IndividualActivity extends AppCompatActivity {
         tvSignature = findViewById(R.id.tv_individual_signature);
         tvLastPublish = findViewById(R.id.tv_individual_last_publish);
         btnSendMsg = findViewById(R.id.btn_send_message);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        isActivityDestroyed = true;
     }
 }
