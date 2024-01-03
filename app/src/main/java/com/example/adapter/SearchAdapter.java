@@ -20,14 +20,17 @@ import com.bumptech.glide.Glide;
 import com.example.android_client.R;
 import com.example.entity.Comment;
 import com.example.entity.ImageLoaderTarget;
+import com.example.util.TokenManager;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMContact;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.exceptions.HyphenateException;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,6 +44,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     private List<EMContact> searchList;
     private Context context;
     private RecyclerView recyclerView;
+    private Set<String> friendList = new HashSet<>();
 
     public SearchAdapter(List<EMContact> searchList, Context context, RecyclerView recyclerView) {
         this.searchList = searchList;
@@ -66,6 +70,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         EMContact contact = searchList.get(position);
         holder.tvName.setText(contact.getUsername());
 
+        friendList = TokenManager.getAllFriendUsernames(context);
+
         Log.e("SearchAdapter", "onBindViewHolder: Data bound for position " + position); // 添加Log来查看数据绑定情况
 
         getUserInfoFromServer(contact.getUsername(), new UserInfoFetchCallback() {
@@ -89,25 +95,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
         });
 
-//        List<String> friendList = null;
-//        try {
-//            friendList = EMClient.getInstance().contactManager().getAllContactsFromServer();
-//        } catch (HyphenateException e) {
-//            throw new RuntimeException(e);
-//        }
-//        String targetUser = contact.getUsername();
-//        if(friendList.contains(targetUser)) {
-//            holder.tvAddFriend.setText("已添加");
-//        } else {
-//            holder.tvAddFriend.setText("加好友");
-//        }
-//
-//        holder.tvAddFriend.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+        if(friendList.contains(contact.getUsername())) {
+            holder.tvAddFriend.setText("已添加");
+        } else {
+            holder.tvAddFriend.setText("加好友");
+            holder.tvAddFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+        }
+
     }
 
     private void getUserInfoFromServer(String userId, UserInfoFetchCallback callback) {

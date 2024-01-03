@@ -329,7 +329,7 @@ public class MineFragment extends Fragment {
             // 将所选图片设置为背景图
             imageBackground.setImageURI(Uri.parse(selectedBackgroundImageUri));
             latestBackgroundUrl = selectedBackgroundImageUri.toString();
-//            uploadBackgoundImageToServer(userName, backgroundFile);//上传到后端
+            uploadBackgoundImageToServer(userName, backgroundFile);//上传到后端
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -345,66 +345,66 @@ public class MineFragment extends Fragment {
      * @param
      * @date 2024/1/2 9:16
      */
-//    private void uploadBackgoundImageToServer(String userName, File backgroundFile) {
-//        OkHttpClient client = new OkHttpClient();
-//
-//        RequestBody requestBody = new MultipartBody.Builder()
-//                .setType(MultipartBody.FORM)
-//                .addFormDataPart("username", userName)
-//                .addFormDataPart("file", "background.jpg",
-//                        RequestBody.create(MEDIA_TYPE_JPG, backgroundFile))
-//                .build();
-//
-//        Request request = new Request.Builder()
-//                .url("http://"+ip+":8080/userInfo/setUserAvatar") // 替换成后端服务器的URL
-//                .post(requestBody)
-//                .build();
-//
-//        client.newCall(request).enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                // 处理上传失败情况
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onResponse(Call call, Response response) throws IOException {
-//                Gson json = new Gson();
-//                String responseData = response.body().string();
-//                Result result = json.fromJson(responseData, Result.class);
-//                Log.e("minefragment : ", result.toString());
-//                // 处理上传成功情况
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        if(result.getData() != null) {
-//                            //将头像对应的url传到环信
-//                            String imageUrl = result.getData().toString();
-//                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
-//                                @Override
-//                                public void onSuccess(String value) {
-//                                    Log.i("mine", "背景图上传环信成功");
-//                                }
-//
-//                                @Override
-//                                public void onError(int error, String errorMsg) {
-//                                    Log.e("mine", "背景图上传环信失败");
-//                                }
-//                            });
-//                            Log.e("minefragment : " , imageUrl);
-//                        }
-//                        showSnackBar(getView(), "背景图更新成功", "我知道了");
-//
-//                    }
-//                });
-//            }
-//        });
-//    }
+    private void uploadBackgoundImageToServer(String userName, File backgroundFile) {
+        OkHttpClient client = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("username", userName)
+                .addFormDataPart("file", "background.jpg",
+                        RequestBody.create(MEDIA_TYPE_JPG, backgroundFile))
+                .build();
+
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/setBackgroundImage") // 替换成后端服务器的URL
+                .post(requestBody)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                // 处理上传失败情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showSnackBar(getView(), "服务器故障，请稍后重试", "我知道了");
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Gson json = new Gson();
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                Log.e("minefragment : ", result.toString());
+                // 处理上传成功情况
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(result.getData() != null) {
+                            //将头像对应的url传到环信
+                            String imageUrl = result.getData().toString();
+                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
+                                @Override
+                                public void onSuccess(String value) {
+                                    Log.i("mine", "背景图上传环信成功");
+                                }
+
+                                @Override
+                                public void onError(int error, String errorMsg) {
+                                    Log.e("mine", "背景图上传环信失败");
+                                }
+                            });
+                            Log.e("minefragment : " , imageUrl);
+                        }
+                        showSnackBar(getView(), "背景图更新成功", "我知道了");
+
+                    }
+                });
+            }
+        });
+    }
 
     /**
      * @param selectedImageUri:
@@ -558,18 +558,5 @@ public class MineFragment extends Fragment {
     }
 
 
-    /**
-     * @param :
-     * @return void
-     * @author Lee
-     * @description 查看头像
-     * @date 2023/12/18 16:24
-     */
-//    private void viewProfileImage() {
-//        // 跳转到新界面，显示当前头像的大图或详情
-//        Intent intent = new Intent(getActivity(), ViewAvatarActivity.class);
-//        intent.putExtra("imageUri", getImageUri()); // 传递当前头像的Uri
-//        startActivity(intent);
-//    }
 
 }

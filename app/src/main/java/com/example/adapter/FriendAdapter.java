@@ -1,7 +1,10 @@
 package com.example.adapter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -31,6 +34,7 @@ import com.example.android_client.R;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMContact;
+import com.hyphenate.chat.EMContactManager;
 import com.hyphenate.chat.EMUserInfo;
 import com.hyphenate.exceptions.HyphenateException;
 
@@ -51,6 +55,7 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
     private List<EMContact> friendList;
     private Context context;
     private RecyclerView recyclerView;
+
 
     public FriendAdapter(List<EMContact> friendList, Context context, RecyclerView recyclerView) {
         this.friendList = friendList;
@@ -103,11 +108,14 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
                         @Override
                         public void run() {
                             // 加载头像图片
-                            Glide.with(holder.itemView.getContext())
-                                    .load(avatarUrl)
-                                    .placeholder(R.drawable.loading)
-                                    .error(R.drawable.friend_item)
-                                    .into(holder.ivFriendAvatar);
+                            if (!((Activity) holder.itemView.getContext()).isFinishing()) {
+                                // 加载头像图片
+                                Glide.with(holder.itemView.getContext())
+                                        .load(avatarUrl)
+                                        .placeholder(R.drawable.loading)
+                                        .error(R.drawable.friend_item)
+                                        .into(holder.ivFriendAvatar);
+                            }
                         }
                     });
                 }
@@ -134,14 +142,16 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                // 长按删除好友
-                try {
-                    EMClient.getInstance().contactManager().deleteContact(friend.getUsername());
-                } catch (HyphenateException e) {
-                    throw new RuntimeException(e);
-                }
-                friendList.remove(friend);
-                notifyDataSetChanged();
+                new AlertDialog.Builder(context)
+                        .setTitle("删除好友")
+                        .setMessage("确定要删除该好友吗？")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .show();
                 return true;
             }
         });
