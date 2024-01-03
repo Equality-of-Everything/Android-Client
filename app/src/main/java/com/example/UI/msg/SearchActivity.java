@@ -16,6 +16,7 @@ import android.widget.EditText;
 import com.bumptech.glide.Glide;
 import com.example.adapter.SearchAdapter;
 import com.example.android_client.R;
+import com.example.util.TokenManager;
 import com.google.android.material.search.SearchBar;
 import com.google.android.material.search.SearchView;
 import com.hyphenate.EMValueCallBack;
@@ -24,8 +25,10 @@ import com.hyphenate.chat.EMContact;
 import com.hyphenate.chat.EMUserInfo;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class SearchActivity extends AppCompatActivity {
     private SearchBar searchBar;
@@ -34,6 +37,7 @@ public class SearchActivity extends AppCompatActivity {
     private SearchAdapter adapter;
     private List<String> userNameList = new ArrayList<>();
     private List<EMContact> contactsList;
+    private Set<String> usernameSet = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +45,14 @@ public class SearchActivity extends AppCompatActivity {
         setContentView(R.layout.activity_search);
 
         initView();
-        initUserNameList();
         contactsList = new ArrayList<>();
+//        userNameList = TokenManager.getEMUserName(this);
+        usernameSet = TokenManager.getEMUserName(this);
+        for (String userName : usernameSet) {
+            userNameList.add(userName);
+        }
+        Log.e("SearchActivity", "userNameList.size : " + userNameList.size());
+
         // 初始化contactsList
         initializeContactsList();
 
@@ -51,9 +61,11 @@ public class SearchActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         setListener();
-        Log.e("SearchActivity", "onCreate executed");
+        Log.e("SearchActivity", "userNameList.size : " + userNameList.size());
 
     }
+
+
 
     /**
      * @param :
@@ -132,23 +144,4 @@ public class SearchActivity extends AppCompatActivity {
         searchView = findViewById(R.id.search_view);
         recyclerView = findViewById(R.id.rv_search);
     }
-
-    private void initUserNameList() {
-        userNameList.add("Lee");
-        userNameList.add("admin");
-        userNameList.add("tcy");
-        userNameList.add("qwq");
-
-        userNameList.add("gibran");
-        userNameList.add("hsl");
-        userNameList.add("root");
-        userNameList.add("wensi");
-
-        userNameList.add("123");
-        userNameList.add("sdss");
-        userNameList.add("djska");
-        userNameList.add("lite");
-
-    }
-
 }

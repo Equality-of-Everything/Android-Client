@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,10 +50,27 @@ public class FriendAdapter extends RecyclerView.Adapter<FriendAdapter.FriendView
 
     private List<EMContact> friendList;
     private Context context;
+    private RecyclerView recyclerView;
 
-    public FriendAdapter(List<EMContact> friendList, Context context) {
+    public FriendAdapter(List<EMContact> friendList, Context context, RecyclerView recyclerView) {
         this.friendList = friendList;
         this.context = context;
+        this.recyclerView = recyclerView;
+
+        // 添加滚动监听器
+        this.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
+                    // 当滚动时，快速滑动，停止加载头像
+                    Glide.with(context).pauseRequests();
+                } else {
+                    // 停止滚动时，恢复加载头像
+                    Glide.with(context).resumeRequests();
+                }
+            }
+        });
     }
 
     @NonNull

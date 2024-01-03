@@ -5,7 +5,11 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @Author : Lee
@@ -104,4 +108,130 @@ public class TokenManager {
         return sharedPreferences.getString(USER_NAME, null);
     }
 
+    /**
+     * @param context:
+     * @param username:
+     * @return void
+     * @author Lee
+     * @description 存好友用户名
+     * @date 2024/1/2 10:53
+     */
+    public static void saveFriendUsername(Context context, String username) {
+        Set<String> friendUsernames = new HashSet<>(getAllFriendUsernames(context));
+        friendUsernames.add(username);
+        SharedPreferences prefs = context.getSharedPreferences("friends", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putStringSet("FriendUsernames", friendUsernames);
+        editor.apply();
+    }
+
+    /**
+     * @param context:
+     * @return List<String>
+     * @author Lee
+     * @description 取好友用户名
+     * @date 2024/1/2 10:54
+     */
+    public static Set<String> getAllFriendUsernames(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("friends", Context.MODE_PRIVATE);
+        return prefs.getStringSet("FriendUsernames", new HashSet<>());
+    }
+
+    /**
+     * @param context:
+     * @param friendNumber:
+     * @return void
+     * @author Lee
+     * @description 删除单个好友用户名
+     * @date 2024/1/2 10:54
+     */
+    public static void deleteFriendUsername(Context context, int friendNumber) {
+        SharedPreferences prefs = context.getSharedPreferences("friends", Context.MODE_PRIVATE);
+        int numberOfFriends = prefs.getInt("friendNumber", 0); // 获取好友的数量
+        if (friendNumber < numberOfFriends) {
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.remove("friend" + friendNumber); // 删除指定好友的用户名
+            // 更新好友编号
+            for (int i = friendNumber; i < numberOfFriends - 1; i++) {
+                String username = prefs.getString("friend" + (i + 1), "");
+                editor.putString("friend" + i, username);
+            }
+            editor.putInt("friendNumber", numberOfFriends - 1); // 更新好友编号
+            editor.apply();
+        }
+    }
+
+    /**
+     * @param context:
+     * @param username:
+     * @return void
+     * @author Lee
+     * @description 存所有注册用户名
+     * @date 2024/1/2 11:02
+     */
+    public static void saveEMUserName(Context context, String username) {
+        Set<String> emUsernames = new HashSet<>(getEMUserName(context));
+        emUsernames.add(username);
+        SharedPreferences preferences = context.getSharedPreferences("EMUsers", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putStringSet("EMUsernames", emUsernames);
+        editor.apply();
+    }
+
+    /**
+     * @param context:
+     * @return List<String>
+     * @author Lee
+     * @description 获取所有注册用户名
+     * @date 2024/1/2 11:05
+     */
+    public static Set<String> getEMUserName(Context context) {
+        SharedPreferences preferences = context.getSharedPreferences("EMUsers", Context.MODE_PRIVATE);
+        return preferences.getStringSet("EMUsernames", new HashSet<>());
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

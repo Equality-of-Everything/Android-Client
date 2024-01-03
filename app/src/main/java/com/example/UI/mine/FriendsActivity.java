@@ -7,9 +7,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.example.adapter.FriendAdapter;
 import com.example.android_client.R;
+import com.example.util.TokenManager;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMContact;
@@ -19,12 +22,15 @@ import com.hyphenate.chat.EMOptions;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class FriendsActivity extends AppCompatActivity {
     private List<EMContact> contacts = new ArrayList<>();
     private RecyclerView recyclerView;
     private FriendAdapter friendAdapter;
+    private Set<String> friends = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +39,7 @@ public class FriendsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.rv_friends);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        friendAdapter = new FriendAdapter(contacts, this);
+        friendAdapter = new FriendAdapter(contacts, this, recyclerView);
         recyclerView.setAdapter(friendAdapter);
 
         // 手动触发数据加载和显示
@@ -51,6 +57,24 @@ public class FriendsActivity extends AppCompatActivity {
             }
 
         });
+
+        initEMUsers();
+//        initFriendNames();
+    }
+
+    private void initEMUsers() {
+        TokenManager.saveEMUserName(this, "lee");
+        TokenManager.saveEMUserName(this, "admin");
+        TokenManager.saveEMUserName(this, "tcy");
+        TokenManager.saveEMUserName(this, "qwq");
+        TokenManager.saveEMUserName(this, "gibran");
+        TokenManager.saveEMUserName(this, "hsl");
+        TokenManager.saveEMUserName(this, "root");
+        TokenManager.saveEMUserName(this, "wensi");
+        TokenManager.saveEMUserName(this, "123");
+        TokenManager.saveEMUserName(this, "sdss");
+        TokenManager.saveEMUserName(this, "djska");
+        TokenManager.saveEMUserName(this, "lite");
     }
 
     /**
@@ -86,6 +110,15 @@ public class FriendsActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             friendAdapter.notifyDataSetChanged(); // 刷新RecyclerView显示
+                            for (EMContact contact : data) {
+                                String username = contact.getUsername();
+                                Log.e("username", username);
+                                TokenManager.saveFriendUsername(FriendsActivity.this, username);
+                            }
+//                            friends = TokenManager.getAllFriendUsernames(FriendsActivity.this);
+//                            for(String i : friends) {
+//                                Log.e("friends", i+"");
+//                            }
                         }
                     });
                 }

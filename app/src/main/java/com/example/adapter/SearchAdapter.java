@@ -89,59 +89,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
             }
         });
 
-        List<String> friendList = null;
-        try {
-            friendList = EMClient.getInstance().contactManager().getAllContactsFromServer();
-        } catch (HyphenateException e) {
-            throw new RuntimeException(e);
-        }
-        String targetUser = contact.getUsername();
-        if(friendList.contains(targetUser)) {
-            holder.tvAddFriend.setText("已添加");
-        } else {
-            holder.tvAddFriend.setText("加好友");
-        }
-
-        holder.tvAddFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> friendList = null;
-                try {
-                    friendList = EMClient.getInstance().contactManager().getAllContactsFromServer();
-                } catch (HyphenateException e) {
-                    throw new RuntimeException(e);
-                }
-
-//                if (friendList.contains(targetUser)) {
-//                    // 用户已经是好友，执行相关操作
-//                    // 创建对话提示框
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                    builder.setMessage("你们已经是好友哦")
-//                            .setTitle("提示")
-//                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    // 用户点击确定按钮后的操作
-//                                }
-//                            })
-//                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    // 用户点击取消按钮后的操作
-//                                }
-//                            });
-//// 显示对话提示框
-//                    AlertDialog dialog = builder.create();
-//                    dialog.show();
-//                } else {
-//                    // 用户不是好友，执行添加好友操作
-//                    // 例如，调用添加好友的方法
-//                    try {
-//                        EMClient.getInstance().contactManager().addContact(targetUser, null);
-//                    } catch (HyphenateException e) {
-//                        throw new RuntimeException(e);
-//                    }
-//                }
-            }
-        });
+//        List<String> friendList = null;
+//        try {
+//            friendList = EMClient.getInstance().contactManager().getAllContactsFromServer();
+//        } catch (HyphenateException e) {
+//            throw new RuntimeException(e);
+//        }
+//        String targetUser = contact.getUsername();
+//        if(friendList.contains(targetUser)) {
+//            holder.tvAddFriend.setText("已添加");
+//        } else {
+//            holder.tvAddFriend.setText("加好友");
+//        }
+//
+//        holder.tvAddFriend.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//            }
+//        });
     }
 
     private void getUserInfoFromServer(String userId, UserInfoFetchCallback callback) {
