@@ -4,6 +4,7 @@ import static com.example.android_client.LoginActivity.ip;
 import static com.example.util.Code.LOGIN_ERROR_NOUSER;
 import static com.example.util.Code.LOGIN_ERROR_PASSWORD;
 import static com.example.util.TokenManager.getUserName;
+import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -34,6 +35,7 @@ import com.bumptech.glide.Glide;
 import com.example.android_client.EmailActivity;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.R;
+import com.example.entity.UserInfo;
 import com.example.util.Result;
 import com.example.util.TokenManager;
 import com.github.chrisbanes.photoview.PhotoView;
@@ -59,6 +61,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -108,7 +111,59 @@ public class MineFragment extends Fragment {
 
         tvMineName.setText(userName);
         setMineAvatar(userName);//设置头像
+
+        httpRequest();
         return view;
+    }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 向服务器端请求背景图
+     * @date 2024/1/3 14:29
+     */
+    private void httpRequest() {
+        Gson json = new Gson();
+
+        FormBody body = new FormBody.Builder()
+                .add("username", userName)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/getBackgroundImage")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("MineFragment", "请求后端数据失败");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.e("MineFragment", "请求后端数据成功");
+
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                if(result.getFlag()) {
+                    Log.e("MineFragment", "后端响应请求成功");
+                    if (result.getData() != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Glide.with(getActivity()).load(result.getData()).into(imageBackground);
+                                Log.e("MineFragment", "获取背景图成功");
+                            }
+                        });
+                    }
+                } else {
+                    Log.e("MineFragment", "后端响应请求失败");
+                }
+            }
+        });
     }
 
     private void setMineAvatar(String userName) {
@@ -348,15 +403,16 @@ public class MineFragment extends Fragment {
     private void uploadBackgoundImageToServer(String userName, File backgroundFile) {
         OkHttpClient client = new OkHttpClient();
 
+        MediaType mediaType = MediaType.parse("image/*");
         RequestBody requestBody = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
                 .addFormDataPart("username", userName)
-                .addFormDataPart("file", "background.jpg",
+                .addFormDataPart("file", backgroundFile.getName(),
                         RequestBody.create(MEDIA_TYPE_JPG, backgroundFile))
                 .build();
 
         Request request = new Request.Builder()
-                .url("http://"+ip+":8080/userInfo/setBackgroundImage") // 替换成后端服务器的URL
+                .url("http://"+ip+":8080/userInfo/setUserBackgroundImage") // 替换成后端服务器的URL
                 .post(requestBody)
                 .build();
 
@@ -377,29 +433,17 @@ public class MineFragment extends Fragment {
                 Gson json = new Gson();
                 String responseData = response.body().string();
                 Result result = json.fromJson(responseData, Result.class);
-                Log.e("minefragment : ", result.toString());
+                Log.e("mineFragment : ", result.toString());
                 // 处理上传成功情况
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(result.getData() != null) {
-                            //将头像对应的url传到环信
-                            String imageUrl = result.getData().toString();
-                            EMClient.getInstance().userInfoManager().updateOwnInfoByAttribute(EMUserInfo.EMUserInfoType.AVATAR_URL, imageUrl, new EMValueCallBack<String>() {
-                                @Override
-                                public void onSuccess(String value) {
-                                    Log.i("mine", "背景图上传环信成功");
-                                }
-
-                                @Override
-                                public void onError(int error, String errorMsg) {
-                                    Log.e("mine", "背景图上传环信失败");
-                                }
-                            });
-                            Log.e("minefragment : " , imageUrl);
+                        if(result.getFlag()) {
+                            Log.e("mineFragment : ", "上传背景图成功");
+                        } else {
+                            Log.e("mineFragment : ", "上传背景图失败");
                         }
                         showSnackBar(getView(), "背景图更新成功", "我知道了");
-
                     }
                 });
             }
@@ -480,7 +524,7 @@ public class MineFragment extends Fragment {
                 Gson json = new Gson();
                 String responseData = response.body().string();
                 Result result = json.fromJson(responseData, Result.class);
-                Log.e("minefragment : ", result.toString());
+                Log.e("mineFragment : ", result.toString());
                 // 处理上传成功情况
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -499,7 +543,7 @@ public class MineFragment extends Fragment {
                                     Log.e("mine", "头像上传环信失败");
                                 }
                             });
-                            Log.e("minefragment : " , imageUrl);
+                            Log.e("mineFragment : " , imageUrl);
                         }
                         showSnackBar(getView(), "头像更新成功", "我知道了");
 

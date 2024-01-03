@@ -1,10 +1,15 @@
 package com.example.UI.share;
 
+import static com.example.android_client.LoginActivity.ip;
+import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,24 +17,41 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.adapter.DynamicAdapter;
 import com.example.android_client.R;
+import com.example.util.Result;
+import com.example.util.TokenManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class ShareFragment extends Fragment {
+    private String userName;
+    private ImageView shareBackground;
     private RecyclerView recyclerView;
     private FloatingActionButton shareEditButton;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View ShareView = inflater.inflate(R.layout.fragment_share, container, false);
+        shareBackground = ShareView.findViewById(R.id.share_background);
         recyclerView = ShareView.findViewById(R.id.share_recyclerView);
         shareEditButton = ShareView.findViewById(R.id.share_edit_button);
+
+        userName = TokenManager.getUserName(getContext());
         shareEditButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,8 +65,61 @@ public class ShareFragment extends Fragment {
         DynamicAdapter adapter = new DynamicAdapter(friendCircleItemList,getContext());
         //设置适配器
         recyclerView.setAdapter(adapter);
+
+        httpRequest();
         return ShareView;
     }
+
+    /**
+     * @param :
+     * @return void
+     * @author Lee
+     * @description 向服务器端请求背景图
+     * @date 2024/1/3 14:29
+     */
+    private void httpRequest() {
+        Gson json = new Gson();
+
+        FormBody body = new FormBody.Builder()
+                .add("username", userName)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url("http://"+ip+":8080/userInfo/getBackgroundImage")
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                Log.e("MineFragment", "请求后端数据失败");
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                Log.e("MineFragment", "请求后端数据成功");
+
+                String responseData = response.body().string();
+                Result result = json.fromJson(responseData, Result.class);
+                if(result.getFlag()) {
+                    Log.e("shareFragment", "后端响应请求成功");
+                    if (result.getData() != null) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Glide.with(getActivity()).load(result.getData()).into(shareBackground);
+                                Log.e("shareFragment", "获取背景图成功");
+                            }
+                        });
+                    }
+                } else {
+                    Log.e("shareFragment", "后端响应请求失败");
+                }
+            }
+        });
+    }
+
     //获取朋友圈数据,
     //TODO: 这里需要从服务器获取数据,还需要评论内容，发布评论的人，点赞的人，点赞数，评论数
     private List<FriendCircleItem> getFriendCircleItemList() {
