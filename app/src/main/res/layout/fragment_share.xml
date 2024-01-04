@@ -7,10 +7,11 @@
     <ImageView
         android:id="@+id/share_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:src="@drawable/mine_background"
-        android:scaleType="centerCrop"/>
-
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        />
     <FrameLayout
         android:id="@+id/standard_bottom_sheet"
         style="@style/Widget.Material3.BottomSheet"
