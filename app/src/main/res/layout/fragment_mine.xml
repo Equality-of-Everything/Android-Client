@@ -10,9 +10,11 @@
     <ImageView
         android:id="@+id/mine_background"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="300dp"
         android:src="@drawable/mine_background"
-        android:scaleType="centerCrop"/>
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        />
         <FrameLayout
             android:id="@+id/standard_bottom_sheet"
             style="@style/Widget.Material3.BottomSheet"
@@ -20,7 +22,7 @@
             android:layout_height="match_parent"
             android:clickable="true"
             app:behavior_hideable="false"
-            app:behavior_peekHeight="480dp"
+            app:behavior_peekHeight="500dp"
             app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
             <LinearLayout
