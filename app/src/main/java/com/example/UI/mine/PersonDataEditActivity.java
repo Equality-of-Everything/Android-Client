@@ -200,6 +200,8 @@ public class PersonDataEditActivity extends AppCompatActivity {
                             public void run() {
                                 if (result.getFlag()) {
                                     Log.e("PersonDataEditActivity", "服务器响应修改成功 " + result.getMsg());
+
+                                    onBackPressed();//返回上一个页面
                                 } else {
                                     Log.e("PersonDataEditActivity", "服务器响应修改失败 " + result.getMsg());
                                 }
