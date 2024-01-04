@@ -381,7 +381,6 @@ public class ShareFragment extends Fragment {
             mCall.cancel();
         }
         httpRequest();
-        Log.e("ShareFragment", "onResume: ");
     }
 
     @Override

@@ -33,6 +33,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -149,14 +152,18 @@ public class PersonDataEditActivity extends AppCompatActivity {
         String formattedBirthDate = birthDate.replace("出生日期: ", "");
 
         // 定义日期格式
-        DateTimeFormatter formatterBirthday = DateTimeFormatter.ofPattern("yyyy年MM月dd日");
+        DateTimeFormatter formatterBirthday = new DateTimeFormatterBuilder()
+                .appendPattern("yyyy年M月d日")
+                .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
+                .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
+                .toFormatter(Locale.CHINA);
         LocalDate date = LocalDate.parse(formattedBirthDate, formatterBirthday);
 
         // 获取当前时刻
         LocalDateTime now = LocalDateTime.now();
 
-        userInfo.setBirthday(date+"");
-        userInfo.setLastModifiedTime(now+"");
+        userInfo.setBirthday(date.format(formatterBirthday));
+        userInfo.setLastModifiedTime(now.format(DateTimeFormatter.ofPattern("yyyy年MM月dd日")));
         Log.e("now", now.toString());
         Log.e("date", date.toString());
 
