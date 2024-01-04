@@ -52,6 +52,7 @@ import okhttp3.Response;
 
 
 public class ShareFragment extends Fragment {
+    private Call mCall;
     private String userName;
     private ImageView shareBackground;
     private RecyclerView recyclerView;
@@ -91,9 +92,7 @@ public class ShareFragment extends Fragment {
         //设置适配器
         recyclerView.setAdapter(adapter);
 
-        httpRequest();
-
-
+//        httpRequest();
 
         // 设置滚动监听器
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -116,7 +115,6 @@ public class ShareFragment extends Fragment {
             }
         });
 
-
         return ShareView;
     }
 
@@ -128,6 +126,7 @@ public class ShareFragment extends Fragment {
      * @date 2024/1/3 14:29
      */
     private void httpRequest() {
+        Log.e("ShareFragment", "请求后端数据");
         Gson json = new Gson();
 
         FormBody body = new FormBody.Builder()
@@ -140,7 +139,9 @@ public class ShareFragment extends Fragment {
                 .post(body)
                 .build();
 
-        client.newCall(request).enqueue(new Callback() {
+        mCall = client.newCall(request);
+
+        mCall.enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("MineFragment", "请求后端数据失败");
@@ -371,5 +372,23 @@ public class ShareFragment extends Fragment {
             }
         }).start();
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mCall != null) {
+            mCall.cancel();
+        }
+        httpRequest();
+        Log.e("ShareFragment", "onResume: ");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mCall != null) {
+            mCall.cancel();
+        }
     }
 }
