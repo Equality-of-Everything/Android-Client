@@ -25,7 +25,11 @@ import com.example.UI.share.FriendCircleItem;
 import com.example.UI.share.NineGridLayout;
 import com.example.android_client.R;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -75,7 +79,33 @@ public class DynamicAdapter extends RecyclerView.Adapter<DynamicAdapter.DynamicV
             holder.shareVideo.setVisibility(View.GONE);
         }
         //设置发布时间
-        holder.shareTime.setText(friendCircleItem.getPublishTime());
+        Timestamp.valueOf(friendCircleItem.getPublishTime());
+        holder.shareTime.setText(formatTimestamp(Timestamp.valueOf(friendCircleItem.getPublishTime()).getTime()));
+    }
+
+    /**
+     * @param timestamp:
+     * @return String
+     * @author Lee
+     * @description 时间数据的简单处理
+     * @date 2023/12/11 20:47
+     */
+    private String formatTimestamp(long timestamp) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timestamp);
+        Calendar currentCalendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat;
+
+        if (calendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR) &&
+                calendar.get(Calendar.DAY_OF_YEAR) == currentCalendar.get(Calendar.DAY_OF_YEAR)) {
+            // 当天的消息
+            dateFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        } else {
+            // 非当天的消息
+            dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
+        }
+
+        return dateFormat.format(calendar.getTime());
     }
 
 

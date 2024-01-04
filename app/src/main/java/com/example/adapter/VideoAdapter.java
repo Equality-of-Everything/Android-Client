@@ -329,6 +329,7 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                     public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                         Gson json = new Gson();
                         String responseData = response.body().string();
+                        Log.e("VideoAdapter,likeCount", responseData);
                         Result result = json.fromJson(responseData, Result.class);
                         ((Activity)context).runOnUiThread(new Runnable() {
                             @Override

@@ -373,6 +373,13 @@ public class MapFragment extends Fragment {
 
 //                        // 开始逐个处理地点
                         processPlaceNames(placeNameList);
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(), "渲染打卡地点成功", Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     }
                 });
 

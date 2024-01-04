@@ -1,4 +1,5 @@
 package com.example.UI.share;
+import static com.example.UI.mine.MineFragment.MEDIA_TYPE_JPG;
 import static com.example.android_client.LoginActivity.ip;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.net.Uri;
@@ -23,9 +25,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.adapter.selectedImagesAdapter;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.example.util.GlideEngine;
 import com.example.util.Result;
+import com.example.util.TokenManager;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.gson.Gson;
 import com.luck.picture.lib.basic.PictureSelector;
@@ -35,10 +39,13 @@ import com.luck.picture.lib.entity.LocalMedia;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -115,48 +122,96 @@ public class ShareEditActivity extends AppCompatActivity {
         btnShareLaunch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Gson json = new Gson();
+               new Thread(new Runnable() {
+                   @Override
+                   public void run() {
+                       Gson json = new Gson();
 
-                String content = shareContent.getText().toString();
-                OkHttpClient client = new OkHttpClient();
+                       String content = shareContent.getText().toString();
+                       OkHttpClient client = new OkHttpClient.Builder()
+                               .connectTimeout(15, TimeUnit.SECONDS)
+                               .readTimeout(15, TimeUnit.SECONDS)
+                               .writeTimeout(15, TimeUnit.SECONDS)
+                               .build();;
 
-                FormBody.Builder builder = new FormBody.Builder()
-                        .add("shareContent", content);
+                       MultipartBody.Builder builder = new MultipartBody.Builder()
+                               .setType(MultipartBody.FORM);
 
+                       for(Uri imageUri : selectedImages) {
+                           System.out.println(imageUri);
+                           String filePath = getRealPathFromURI(imageUri);
+                           File file = new File(filePath);
+                           builder.addFormDataPart("files",file.getName(),
+                                   RequestBody.create(MEDIA_TYPE_JPG, file));
 
-                for(Uri imageUri : selectedImages) {
-                    File file = new File(imageUri.getPath());
-                    builder.add("image", file.getName());
-                }
+                       }
 
-                FormBody formBody = builder.build();
-                Request request = new Request.Builder()
-                        .url("http://"+ip+":8080/friendshare/upload")
-                        .post(formBody)
-                        .build();
+                       builder.addFormDataPart("username",TokenManager.getUserName(ShareEditActivity.this))
+                               .addFormDataPart("textContent",content);
 
-                client.newCall(request).enqueue(new Callback() {
-                    @Override
-                    public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                        Log.e("ShareEditActivity", "请求后端数据失败");
-                    }
+                       MultipartBody body = builder.build();
+                       Request request = new Request.Builder()
+                               .url("http://"+ip+":8080/friendShare/upload")
+                               .post(body)
+                               .build();
 
-                    @Override
-                    public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                        Log.e("ShareEditActivity", "请求后端数据成功");
+                       client.newCall(request).enqueue(new Callback() {
+                           @Override
+                           public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                               e.printStackTrace();
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       Toast.makeText(ShareEditActivity.this,"服务器连接失败，请稍后重试",Toast.LENGTH_SHORT).show();
+                                   }
+                               });
+                           }
 
-                        String responseData = response.body().string();
-                        Result result = json.fromJson(responseData, Result.class);
-                        if(result.getFlag()) {
-                            Log.e("ShareEditActivity", "后端修改数据成功");
-                        } else {
-                            Log.e("ShareEditActivity", "后端修改数据失败");
-                        }
-                    }
-                });
+                           @Override
+                           public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                               Log.e("ShareEditActivity", "请求后端数据成功");
+                               String responseData = response.body().string();
+                               Result result = json.fromJson(responseData, Result.class);
+                               runOnUiThread(new Runnable() {
+                                   @Override
+                                   public void run() {
+                                       if(!result.getFlag()) {
+                                           Toast.makeText(ShareEditActivity.this, "发布失败，请稍后重试", Toast.LENGTH_SHORT).show();
+                                           return;
+                                       }
+                                       Toast.makeText(ShareEditActivity.this, "发布成功", Toast.LENGTH_SHORT).show();
+                                       Intent intent = new Intent(ShareEditActivity.this, MainActivity.class); // 替换为您的MainActivity
+                                       intent.putExtra("FRAGMENT_TO_LOAD", "ShareFragment"); // 传递标识符
+                                       startActivity(intent);
+                                       finish(); // 结束当前 Activity
+                                   }
+                               });
+
+                           }
+                       });
+                   }
+               }).start();
             }
         });
     }
+
+
+    // 获取图片真实路径
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+
+        if (cursor != null) {
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            String filePath = cursor.getString(columnIndex);
+            cursor.close();
+            return filePath;
+        }
+
+        return contentUri.getPath(); // Fallback to the original URI if cursor is null
+    }
+
 
     // ItemTouchHelper.Callback 实现
     private class ItemTouchHelperCallback extends ItemTouchHelper.Callback {

@@ -5,9 +5,13 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.UI.camera.CameraFragment;
+import com.example.UI.map.MapFragment;
+import com.example.UI.share.ShareFragment;
 import com.example.adapter.CustomViewPager;
 import com.example.adapter.FragmentAdapter;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -23,8 +27,21 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initView();
         mViewPager.setOffscreenPageLimit(1);
+    }
+
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String fragmentToLoad = getIntent().getStringExtra("FRAGMENT_TO_LOAD");
+        if ("ShareFragment".equals(fragmentToLoad)) {
+            mViewPager.setCurrentItem(3);
+        }
     }
 
     public void initView() {

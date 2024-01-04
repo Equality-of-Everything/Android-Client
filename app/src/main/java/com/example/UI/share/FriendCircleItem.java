@@ -31,6 +31,10 @@ public class FriendCircleItem {
         this.videoUrl = videoUrl;
     }
 
+    public FriendCircleItem() {
+
+    }
+
     public String getVideoUrl() {
         return videoUrl;
     }
@@ -75,5 +79,17 @@ public class FriendCircleItem {
 
     public void setMediaUrls(List<String> mediaUrls) {
         this.mediaUrls = mediaUrls;
+    }
+
+    @Override
+    public String toString() {
+        return "FriendCircleItem{" +
+                "userName='" + userName + '\'' +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", textContent='" + textContent + '\'' +
+                ", mediaUrls=" + mediaUrls +
+                ", publishTime='" + publishTime + '\'' +
+                ", videoUrl='" + videoUrl + '\'' +
+                '}';
     }
 }
