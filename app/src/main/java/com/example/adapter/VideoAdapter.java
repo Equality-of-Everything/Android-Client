@@ -334,10 +334,12 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
                         ((Activity)context).runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
-                                String likes = result.getData().toString().substring(0,
-                                        result.getData().toString().indexOf("."));
-                                holder.favoriteCount.setText(likes + "");
+//                                Toast.makeText(context, result.getMsg(), Toast.LENGTH_SHORT).show();
+                                if(result.getData() != null) {
+                                    String likes = result.getData().toString().substring(0,
+                                            result.getData().toString().indexOf("."));
+                                    holder.favoriteCount.setText(likes + "");
+                                }
 
                                 boolean isChecked = false;
                                 if(result.getCode()== Code.VIDEO_HAS_LIKED) isChecked = true;
