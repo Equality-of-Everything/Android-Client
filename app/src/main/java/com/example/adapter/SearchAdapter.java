@@ -5,6 +5,7 @@ import static java.security.AccessController.getContext;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
@@ -17,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.UI.msg.ChatActivity;
 import com.example.android_client.R;
 import com.example.entity.Comment;
 import com.example.entity.ImageLoaderTarget;
@@ -96,9 +98,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         });
 
         if(friendList.contains(contact.getUsername())) {
-            holder.tvAddFriend.setText("已添加");
+//            holder.tvAddFriend.setText("已添加");
         } else {
-            holder.tvAddFriend.setText("加好友");
+//            holder.tvAddFriend.setText("加好友");
             holder.tvAddFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -106,6 +108,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
                 }
             });
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String conversationId = contact.getUsername();
+
+                // 启动 ChatActivity，并传递会话信息
+                Intent intent = new Intent(recyclerView.getContext(), ChatActivity.class);
+                intent.putExtra("conversationId", conversationId);
+                recyclerView.getContext().startActivity(intent);
+            }
+        });
 
     }
 

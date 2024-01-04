@@ -43,6 +43,5 @@
         android:layout_alignParentTop="true"
         android:padding="8dp"
         android:textSize="12sp"
-        android:text="加好友"
         android:textColor="@color/black" />
 </RelativeLayout>
