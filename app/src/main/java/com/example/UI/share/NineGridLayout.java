@@ -70,6 +70,7 @@ public class NineGridLayout extends GridLayout {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = 0;
             params.height = LayoutParams.WRAP_CONTENT;
+            params.setMargins(dpToPx(2), dpToPx(2), dpToPx(2), dpToPx(2));
             params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
             params.rowSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
             imageView.setLayoutParams(params);
@@ -91,6 +92,10 @@ public class NineGridLayout extends GridLayout {
 //                setVisibility(View.VISIBLE);
 //            }
         }
+    }
+    private int dpToPx(int dp) {
+        float density = getResources().getDisplayMetrics().density;
+        return Math.round(dp * density);
     }
 
     /**
