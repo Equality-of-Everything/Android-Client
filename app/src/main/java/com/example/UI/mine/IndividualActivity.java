@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.UI.msg.ChatActivity;
+import com.example.android_client.MainActivity;
 import com.example.android_client.R;
 import com.example.entity.UserInfo;
 import com.example.util.Result;
@@ -27,6 +28,7 @@ import org.w3c.dom.Text;
 
 import java.io.IOException;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -50,6 +52,8 @@ public class IndividualActivity extends AppCompatActivity {
     private String conversationId;//用户名
     private boolean isActivityDestroyed = false;
 
+    private Button btnShare;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +70,16 @@ public class IndividualActivity extends AppCompatActivity {
 
         requestForBackground();
         httpRequest();//向后端数据库请求数据，显示在页面上
+
+        btnShare = findViewById(R.id.btn_share);
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(IndividualActivity.this, MainActivity.class);
+                intent.putExtra("shareFragment", "shareFragment");
+                startActivity(intent);
+            }
+        });
     }
 
     private void requestForBackground() {

@@ -313,6 +313,10 @@ public class MapFragment extends Fragment {
 //                option2.cityName("石家庄市");
 //                mDistrictSearch.searchDistrict(option2);
 
+//                DistrictSearchOption option3 = new DistrictSearchOption();
+//                option3.cityName("四川省");
+//                mDistrictSearch.searchDistrict(option3);
+
                 getPlaceName(TokenManager.getUserName(getContext()));
             }
         });
@@ -410,7 +414,8 @@ public class MapFragment extends Fragment {
         Log.e("placeName", placeName);
 
         DistrictSearchOption option = new DistrictSearchOption();
-        option.cityName(placeName.substring(placeName.indexOf('省') + 1, placeName.indexOf('市')));
+        option.cityName(placeName.substring(placeName.indexOf('省') + 1, placeName.indexOf('市')+1));
+        System.out.println(placeName.substring(placeName.indexOf('省') + 1, placeName.indexOf('市')+1));
 
         // 在 DistrictSearch 异步执行完毕后再处理下一个地点
         mDistrictSearch.setOnDistrictSearchListener(new OnGetDistricSearchResultListener() {
@@ -513,6 +518,8 @@ public class MapFragment extends Fragment {
                 // 在这里可以处理获取到的地理位置信息
                 System.out.println("Address: " + address);
                 System.out.println("City: " + city);
+                System.out.println("latitude:" + latitude);
+                System.out.println("longitude:"+longitude);
 
                 interactiveServer(address.substring(0, address.indexOf("市")+1), latitude, longitude);//传递
                 showSnackBar(contextView,"address" + address + ";" + "city" + city,"我知道了");

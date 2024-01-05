@@ -233,6 +233,7 @@
 <!--                app:strokeColor="?attr/colorPrimary"-->
 <!--                android:text="加好友"/>-->
             <Button
+                android:id="@+id/btn_share"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

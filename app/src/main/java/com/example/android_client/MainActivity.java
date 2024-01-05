@@ -39,7 +39,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         String fragmentToLoad = getIntent().getStringExtra("FRAGMENT_TO_LOAD");
+        String shareFragment = getIntent().getStringExtra("shareFragment");
         if ("ShareFragment".equals(fragmentToLoad)) {
+            mViewPager.setCurrentItem(3);
+        }
+        if ("shareFragment".equals(shareFragment)) {
             mViewPager.setCurrentItem(3);
         }
     }
