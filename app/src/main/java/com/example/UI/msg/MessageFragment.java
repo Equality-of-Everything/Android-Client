@@ -51,10 +51,10 @@ public class MessageFragment extends Fragment {
         btnFriendRequest = view.findViewById(R.id.btn_friend_request);
 
 //         获取所有会话
-        List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
+//        List<EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversationsBySort();
 
 //         初始化Adapter并设置给RecyclerView
-        adapter = new MsgAdapter(conversations);
+//        adapter = new MsgAdapter(conversations);
         recyclerView.setAdapter(adapter);
 
         setListener();

@@ -20,31 +20,31 @@
         android:id="@+id/context_view"
         android:orientation="horizontal"
         ></LinearLayout>
-    <com.nightonke.boommenu.BoomMenuButton
-        android:id="@+id/bmb"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        app:bmb_normalColor="?attr/colorPrimary"
-        app:bmb_dotRadius="0dp"
-        >
+<!--    <com.nightonke.boommenu.BoomMenuButton-->
+<!--        android:id="@+id/bmb"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_alignParentTop="true"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        app:bmb_normalColor="?attr/colorPrimary"-->
+<!--        app:bmb_dotRadius="0dp"-->
+<!--        >-->
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center|top"
-            android:src="@mipmap/elephant"/>
+<!--        <ImageView-->
+<!--            android:layout_width="30dp"-->
+<!--            android:layout_height="30dp"-->
+<!--            android:layout_gravity="center|top"-->
+<!--            android:src="@mipmap/elephant"/>-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="Style"
-            android:textColor="@color/white"
-            android:textSize="20dp"
-            />
-    </com.nightonke.boommenu.BoomMenuButton>
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:text="Style"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textSize="20dp"-->
+<!--            />-->
+<!--    </com.nightonke.boommenu.BoomMenuButton>-->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

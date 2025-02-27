@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         Log.e("isTokenExpired", TokenManager.isTokenExpired(this)+"");
 
         if (isLogin()&&!TokenManager.isTokenExpired(this)) {
-            jumpToMainPage();
+//            jumpToMainPage();
         }
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -88,6 +88,11 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 login(loginUser, loginPwd);
+                //登录环信账号
+                loginUser(loginUser, loginPwd);
+                if(EMClient.getInstance().isLoggedIn()){
+                    jumpToMainPage();
+                }
             }
         });
 
@@ -179,7 +184,7 @@ public class LoginActivity extends AppCompatActivity {
                                 showToast(LoginActivity.this,result.getMsg()+"");
 
                                 //登录环信账号
-                                loginUser(loginUser, loginPwd);
+//                                loginUser(loginUser, loginPwd);
 
                                 //跳转主界面
                                 jumpToMainPage();
@@ -212,10 +217,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // 在登录成功后，可以在界面上显示登录成功的提示信息
 //                        Toast.makeText(LoginActivity.this, "成功", Toast.LENGTH_SHORT).show();
-                        showSnackBar(contextView,"环信登录成功！","我知道了");
+//                        showSnackBar(contextView,"环信登录成功！","我知道了");
                         // 初始化环信 SDK
                         EMClient.getInstance().groupManager().loadAllGroups();
                         EMClient.getInstance().chatManager().loadAllConversations();
+                        jumpToMainPage();
                     }
                 });
             }
@@ -229,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void run() {
                         // 在界面上显示登录失败的提示信息
 //                        Toast.makeText(LoginActivity.this, "失败", Toast.LENGTH_SHORT).show();
-                        showSnackBar(contextView,"环信登录失败！","我知道了");
+//                        showSnackBar(contextView,"环信登录失败！","我知道了");
                     }
                 });
             }

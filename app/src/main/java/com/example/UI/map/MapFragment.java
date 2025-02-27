@@ -65,17 +65,17 @@ import com.example.util.TokenManager;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
-import com.nightonke.boommenu.BoomButtons.HamButton;
-import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
-import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
-import com.nightonke.boommenu.BoomMenuButton;
-import com.nightonke.boommenu.ButtonEnum;
-import com.nightonke.boommenu.Piece.PiecePlaceEnum;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+//import com.nightonke.boommenu.BoomButtons.ButtonPlaceEnum;
+//import com.nightonke.boommenu.BoomButtons.HamButton;
+//import com.nightonke.boommenu.BoomButtons.OnBMClickListener;
+//import com.nightonke.boommenu.BoomButtons.TextInsideCircleButton;
+//import com.nightonke.boommenu.BoomMenuButton;
+//import com.nightonke.boommenu.ButtonEnum;
+//import com.nightonke.boommenu.Piece.PiecePlaceEnum;
+//
+//import org.json.JSONArray;
+//import org.json.JSONException;
+//import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -104,7 +104,7 @@ public class MapFragment extends Fragment {
     private static final String CUSTOM_FILE_NAME_CX_NIGHT = "map_style_blue.sty";
     private static final String CUSTOM_FILE_NAME_CX_GREEN = "map_style_green.sty";
 
-    private BoomMenuButton button;
+//    private BoomMenuButton button;
 
     private View contextView;
 
@@ -124,11 +124,11 @@ public class MapFragment extends Fragment {
 
         // 对爆炸菜单进行初始化
 
-        button = mapView.findViewById(R.id.bmb);
-        button.setButtonEnum(ButtonEnum.TextInsideCircle);
-        button.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
-        button.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
-        button.setHighlightedColor(R.color.m3_button_ripple_color_selector);
+//        button = mapView.findViewById(R.id.bmb);
+//        button.setButtonEnum(ButtonEnum.TextInsideCircle);
+//        button.setPiecePlaceEnum(PiecePlaceEnum.DOT_3_1);
+//        button.setButtonPlaceEnum(ButtonPlaceEnum.SC_3_1);
+//        button.setHighlightedColor(R.color.m3_button_ripple_color_selector);
 //        button.setDraggable(true);
 
         mv = new MapView(getContext(), new BaiduMapOptions());
@@ -147,7 +147,7 @@ public class MapFragment extends Fragment {
         baiduMap = mv.getMap();
 
         // 初始化爆炸菜单构建器
-        setBuilderForBomMenu(mv);
+//        setBuilderForBomMenu(mv);
 
         /**
          * @param savedInstanceState:
@@ -193,78 +193,78 @@ public class MapFragment extends Fragment {
      * @description 初始化爆炸菜单的菜单项
      * @date 2023/12/9 17:55
      */
-    private void setBuilderForBomMenu(MapView mv) {
-        TextInsideCircleButton.Builder builder0 = new TextInsideCircleButton.Builder()
-                .normalImageRes(R.mipmap.cat)
-                .normalTextRes(R.string.map_style_night)
-                .pieceColor(R.color.black)
-                .listener(new OnBMClickListener() {
-                    @Override
-                    public void onBoomButtonClick(int index) {
-                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NIGHT);
-                        // 设置个性化地图样式文件的路径和加载方式
-                        mv.setMapCustomStylePath(customStyleFilePath);
-                        // 动态设置个性化地图样式是否生效
-                        mv.setMapCustomStyleEnable(true);
-
-                        baiduMap = mv.getMap();
-                    }
-                });
-        button.addBuilder(builder0);
-
-        TextInsideCircleButton.Builder builder1 = new TextInsideCircleButton.Builder()
-                .normalImageRes(R.mipmap.dolphin)
-                .normalTextRes(R.string.map_style_green)
-                .pieceColor(R.color.black)
-                .listener(new OnBMClickListener() {
-                    @Override
-                    public void onBoomButtonClick(int index) {
-                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_GREEN);
-                        // 设置个性化地图样式文件的路径和加载方式
-                        mv.setMapCustomStylePath(customStyleFilePath);
-                        // 动态设置个性化地图样式是否生效
-                        mv.setMapCustomStyleEnable(true);
-
-                        baiduMap = mv.getMap();
-                    }
-                });
-        button.addBuilder(builder1);
-
-        TextInsideCircleButton.Builder builder2 = new TextInsideCircleButton.Builder()
-                .normalImageRes(R.mipmap.bat)
-                .normalTextRes(R.string.map_style_normal)
-                .pieceColor(R.color.black)
-                .listener(new OnBMClickListener() {
-                    @Override
-                    public void onBoomButtonClick(int index) {
-                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NORMAL);
-                        // 设置个性化地图样式文件的路径和加载方式
-                        mv.setMapCustomStylePath(customStyleFilePath);
-                        // 动态设置个性化地图样式是否生效
-                        mv.setMapCustomStyleEnable(true);
-
-                        baiduMap = mv.getMap();
-                    }
-                });
-        button.addBuilder(builder2);
-
-        //地图上三个按钮的点击事件
-        setListener();
-        // 初始化DistrictSearch
-        mDistrictSearch = DistrictSearch.newInstance();
-        mDistrictSearch.setOnDistrictSearchListener(new OnGetDistricSearchResultListener() {
-            @Override
-            public void onGetDistrictResult(DistrictResult districtResult) {
-                if (districtResult.error == DistrictResult.ERRORNO.NO_ERROR) {
-                    // 获取对应省份的边界点的经纬度的集合
-                    List<LatLng> boundaryPoints = districtResult.getPolylines().get(0);
-                    // 在这里可以处理获取到的边界点数据
-                    colorIn(boundaryPoints,generateRandomColor());//将该区域上色
-                }
-            }
-        });
-
-    }
+//    private void setBuilderForBomMenu(MapView mv) {
+//        TextInsideCircleButton.Builder builder0 = new TextInsideCircleButton.Builder()
+//                .normalImageRes(R.mipmap.cat)
+//                .normalTextRes(R.string.map_style_night)
+//                .pieceColor(R.color.black)
+//                .listener(new OnBMClickListener() {
+//                    @Override
+//                    public void onBoomButtonClick(int index) {
+//                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NIGHT);
+//                        // 设置个性化地图样式文件的路径和加载方式
+//                        mv.setMapCustomStylePath(customStyleFilePath);
+//                        // 动态设置个性化地图样式是否生效
+//                        mv.setMapCustomStyleEnable(true);
+//
+//                        baiduMap = mv.getMap();
+//                    }
+//                });
+//        button.addBuilder(builder0);
+//
+//        TextInsideCircleButton.Builder builder1 = new TextInsideCircleButton.Builder()
+//                .normalImageRes(R.mipmap.dolphin)
+//                .normalTextRes(R.string.map_style_green)
+//                .pieceColor(R.color.black)
+//                .listener(new OnBMClickListener() {
+//                    @Override
+//                    public void onBoomButtonClick(int index) {
+//                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_GREEN);
+//                        // 设置个性化地图样式文件的路径和加载方式
+//                        mv.setMapCustomStylePath(customStyleFilePath);
+//                        // 动态设置个性化地图样式是否生效
+//                        mv.setMapCustomStyleEnable(true);
+//
+//                        baiduMap = mv.getMap();
+//                    }
+//                });
+//        button.addBuilder(builder1);
+//
+//        TextInsideCircleButton.Builder builder2 = new TextInsideCircleButton.Builder()
+//                .normalImageRes(R.mipmap.bat)
+//                .normalTextRes(R.string.map_style_normal)
+//                .pieceColor(R.color.black)
+//                .listener(new OnBMClickListener() {
+//                    @Override
+//                    public void onBoomButtonClick(int index) {
+//                        String customStyleFilePath = getCustomStyleFilePath(getContext(), CUSTOM_FILE_NAME_CX_NORMAL);
+//                        // 设置个性化地图样式文件的路径和加载方式
+//                        mv.setMapCustomStylePath(customStyleFilePath);
+//                        // 动态设置个性化地图样式是否生效
+//                        mv.setMapCustomStyleEnable(true);
+//
+//                        baiduMap = mv.getMap();
+//                    }
+//                });
+//        button.addBuilder(builder2);
+//
+//        //地图上三个按钮的点击事件
+//        setListener();
+//        // 初始化DistrictSearch
+//        mDistrictSearch = DistrictSearch.newInstance();
+//        mDistrictSearch.setOnDistrictSearchListener(new OnGetDistricSearchResultListener() {
+//            @Override
+//            public void onGetDistrictResult(DistrictResult districtResult) {
+//                if (districtResult.error == DistrictResult.ERRORNO.NO_ERROR) {
+//                    // 获取对应省份的边界点的经纬度的集合
+//                    List<LatLng> boundaryPoints = districtResult.getPolylines().get(0);
+//                    // 在这里可以处理获取到的边界点数据
+//                    colorIn(boundaryPoints,generateRandomColor());//将该区域上色
+//                }
+//            }
+//        });
+//
+//    }
 
     /**
      * @param boundaryPoints:

@@ -2,7 +2,8 @@ package com.example.video;
 
 
 import static com.example.android_client.LoginActivity.ip;
-import static com.google.vr.cardboard.ThreadUtils.runOnUiThread;
+import static com.luck.picture.lib.thread.PictureThreadUtils.runOnUiThread;
+//import static com.google.vr.cardboard.ThreadUtils.runOnUiThread;
 
 import android.content.Context;
 import android.content.Intent;

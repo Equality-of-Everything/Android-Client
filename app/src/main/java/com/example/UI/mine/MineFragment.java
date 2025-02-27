@@ -112,7 +112,7 @@ public class MineFragment extends Fragment {
         tvMineName.setText(userName);
         setMineAvatar(userName);//设置头像
 
-        httpRequest();
+//        httpRequest();
         return view;
     }
 
@@ -123,48 +123,48 @@ public class MineFragment extends Fragment {
      * @description 向服务器端请求背景图
      * @date 2024/1/3 14:29
      */
-    private void httpRequest() {
-        Gson json = new Gson();
-
-        FormBody body = new FormBody.Builder()
-                .add("username", userName)
-                .build();
-
-        OkHttpClient client = new OkHttpClient();
-        Request request = new Request.Builder()
-                .url("http://"+ip+":8080/userInfo/getBackgroundImage")
-                .post(body)
-                .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                Log.e("MineFragment", "请求后端数据失败");
-            }
-
-            @Override
-            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
-                Log.e("MineFragment", "请求后端数据成功");
-
-                String responseData = response.body().string();
-                Result result = json.fromJson(responseData, Result.class);
-                if(result.getFlag()) {
-                    Log.e("MineFragment", "后端响应请求成功");
-                    if (result.getData() != null) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Glide.with(getActivity()).load(result.getData()).into(imageBackground);
-                                Log.e("MineFragment", "获取背景图成功");
-                            }
-                        });
-                    }
-                } else {
-                    Log.e("MineFragment", "后端响应请求失败");
-                }
-            }
-        });
-    }
+//    private void httpRequest() {
+//        Gson json = new Gson();
+//
+//        FormBody body = new FormBody.Builder()
+//                .add("username", userName)
+//                .build();
+//
+//        OkHttpClient client = new OkHttpClient();
+//        Request request = new Request.Builder()
+//                .url("http://"+ip+":8080/userInfo/getBackgroundImage")
+//                .post(body)
+//                .build();
+//
+//        client.newCall(request).enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+//                Log.e("MineFragment", "请求后端数据失败");
+//            }
+//
+//            @Override
+//            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+//                Log.e("MineFragment", "请求后端数据成功");
+//
+//                String responseData = response.body().string();
+//                Result result = json.fromJson(responseData, Result.class);
+//                if(result.getFlag()) {
+//                    Log.e("MineFragment", "后端响应请求成功");
+//                    if (result.getData() != null) {
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                Glide.with(getActivity()).load(result.getData()).into(imageBackground);
+//                                Log.e("MineFragment", "获取背景图成功");
+//                            }
+//                        });
+//                    }
+//                } else {
+//                    Log.e("MineFragment", "后端响应请求失败");
+//                }
+//            }
+//        });
+//    }
 
     private void setMineAvatar(String userName) {
         EMClient.getInstance().userInfoManager().fetchUserInfoByUserId(new String[]{userName}, new EMValueCallBack<Map<String, EMUserInfo>>() {
