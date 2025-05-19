@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -104,8 +105,18 @@ public class TokenManager {
      * @date 2023/12/14 8:49
      */
     public static String getUserName(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(TOKEN_PREFS, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(USER_NAME, null);
+        if (context == null) {
+            Log.e("TokenManager", "Context is null");
+            return null;
+        }
+        
+        try {
+            SharedPreferences sharedPreferences = context.getSharedPreferences("authStatus", Context.MODE_PRIVATE);
+            return sharedPreferences.getString("username", null);
+        } catch (Exception e) {
+            Log.e("TokenManager", "Error accessing SharedPreferences: " + e.getMessage());
+            return null;
+        }
     }
 
     /**

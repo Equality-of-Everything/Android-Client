@@ -35,7 +35,7 @@ public class Map_VRActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_vractivity);
+        setContentView(R.layout.activity_map_vr);
 //        vrpview =(VrPanoramaView) findViewById(R.id.my_vr_view);
 //        VrPanoramaView.Options options = new VrPanoramaView.Options();
 //        options.inputType = VrPanoramaView.Options.TYPE_MONO;
@@ -44,7 +44,11 @@ public class Map_VRActivity extends AppCompatActivity {
 //        //隐藏信息按钮
 //        vrpview.setInfoButtonEnabled(false);
         //
-        String imageUrl =  getIntent().getStringExtra("imageUrl");
+        String imageUrl = getIntent().getStringExtra("imageUrl");
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            // 使用默认VR图片
+            imageUrl = "https://img.zcool.cn/community/014d9e5ae19da2a801214a61308a99.JPG@2o.jpg";
+        }
 
         Glide.with(this)
                 .asBitmap()

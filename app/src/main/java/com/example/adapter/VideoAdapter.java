@@ -145,11 +145,10 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.VideoViewHol
     }
 
 
-    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls,View imageVr,Integer[] videoIds,String username,ArrayList<Integer> userInfoIds) {
+    public VideoAdapter(String[] videoUrls, Context context,String[] imageUrls, Integer[] videoIds,String username,ArrayList<Integer> userInfoIds) {
         this.videoUrls = videoUrls;
         this.context = context;
         this.imageUrls = imageUrls;
-        this.imageVr = imageVr;
         this.videoIds = videoIds;
         this.username = username;
         this.userInfoIds = userInfoIds;

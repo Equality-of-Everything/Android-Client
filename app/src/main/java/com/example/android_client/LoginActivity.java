@@ -148,7 +148,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                showToast(LoginActivity.this,"登录失败");
+//                                showToast(LoginActivity.this,"登录失败");
 //                                showSnackBar(contextView,"登录失败！","我知道了");
 //                                Toast.makeText(LoginActivity.this, "登录失败！", Toast.LENGTH_SHORT).show();
                             }
@@ -229,7 +229,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onError(int code, String error) {
                 // 登录失败
-                Log.e("LoginActivity", "登录失败，错误码：" + code + "，错误信息：" + error);
+//                Log.e("LoginActivity", "登录失败，错误码：" + code + "，错误信息：" + error);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

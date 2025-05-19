@@ -52,6 +52,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.example.UI.camera.CameraFragment;
+import com.example.UI.camera.PreviewVideoActivity;
 import com.example.android_client.EnrollActivity;
 import com.example.android_client.LoginActivity;
 import com.example.android_client.MainActivity;
@@ -167,6 +168,7 @@ public class MapFragment extends Fragment {
                 double longitude = point.longitude;  // 经度
 
 //                Toast.makeText(MapActivity.this, "纬度" + latitude + ";" + "经度" + longitude, Toast.LENGTH_SHORT).show();
+
 
                 getLocationFromLatLng(latitude, longitude);
 
@@ -498,6 +500,8 @@ public class MapFragment extends Fragment {
      * @date 2023/12/1 16:18
      */
     public void getLocationFromLatLng(double latitude, double longitude) {
+        Intent intent = new Intent(getContext(), PreviewVideoActivity.class);
+        startActivity(intent);
         // 创建一个GeoCoder实例
         GeoCoder geoCoder = GeoCoder.newInstance();
 

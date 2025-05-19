@@ -45,58 +45,64 @@ public class Map_VideoActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private VideoAdapter adapter;
     private View imageVr;
-
     private CommentAdapter commentAdapter;
 
-    private String[] serverVideoUrls;
-    private String[] serverImageUrls;
-    private ArrayList<Integer> videoIds;
-    private ArrayList<Integer> userInfoIds;
+    // 默认测试数据
+    private final String[] DEFAULT_VIDEO_URLS = {
+        "https://sns-video-hw.xhscdn.net/stream/110/259/01e5096bc81243b6010377038aaccf5cf2_259.mp4",
+        "https://sns-video-hw.xhscdn.net/stream/110/259/01e52e7fdf10a938010370038b3da44153_259.mp4",
+        "https://sns-video-hw.xhscdn.net/stream/110/259/01e5002c950b5279010370038a88aeabe0_259.mp4",
+        "https://sns-video-hw.xhscdn.net/stream/110/259/01e46f7034bb07080103710388534f75c5_259.mp4",
+        "https://sns-video-hw.xhscdn.net/stream/110/259/01e52d1dd707d8d3010377038b383db786_259.mp4"
+    };
 
+    private final String[] DEFAULT_VR_URLS = {
+        "https://img.zcool.cn/community/014d9e5ae19da2a801214a61308a99.JPG@2o.jpg",
+        "https://img.zcool.cn/community/01429859a3e6c2a801211d25e8611e.jpg@2o.jpg",
+        "https://img.zcool.cn/community/01241455683b7e0000012b206b751a.jpg@3000w_1l_2o_100sh.jpg",
+        "https://img.zcool.cn/community/014d9e5ae19da2a801214a61308a99.JPG@2o.jpg",
+        "https://img.zcool.cn/community/01429859a3e6c2a801211d25e8611e.jpg@2o.jpg"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_video);
 
-        String[] videoUrls = {
-                "https://sns-video-hw.xhscdn.net/stream/110/259/01e5096bc81243b6010377038aaccf5cf2_259.mp4",
-                "https://sns-video-hw.xhscdn.net/stream/110/259/01e52e7fdf10a938010370038b3da44153_259.mp4",
-                "https://sns-video-hw.xhscdn.net/stream/110/259/01e5002c950b5279010370038a88aeabe0_259.mp4",
-                "https://sns-video-hw.xhscdn.net/stream/110/259/01e46f7034bb07080103710388534f75c5_259.mp4",
-                "https://sns-video-hw.xhscdn.net/stream/110/259/01e52d1dd707d8d3010377038b383db786_259.mp4"
-        };
-        String[] imageUrls={
-                "https://img.zcool.cn/community/014d9e5ae19da2a801214a61308a99.JPG@2o.jpg",
-                null,
-                "https://img.zcool.cn/community/01429859a3e6c2a801211d25e8611e.jpg@2o.jpg",
-                "https://img.zcool.cn/community/01241455683b7e0000012b206b751a.jpg@3000w_1l_2o_100sh.jpg",
-                null,
-                null
-        };
-//        获取urls
-        serverVideoUrls = getIntent().getStringArrayExtra("videoUrls");
-        serverImageUrls = getIntent().getStringArrayExtra("vrUrls");
-        videoIds = getIntent().getIntegerArrayListExtra("videoIds");
-        userInfoIds = getIntent().getIntegerArrayListExtra("userInfoIds");
+        // 使用默认数据
+        String[] videoUrls = DEFAULT_VIDEO_URLS;
+        String[] imageUrls = DEFAULT_VR_URLS;
+        
+        // 创建默认的videoIds和userInfoIds
+        ArrayList<Integer> videoIds = new ArrayList<>();
+        ArrayList<Integer> userInfoIds = new ArrayList<>();
+        for (int i = 0; i < DEFAULT_VIDEO_URLS.length; i++) {
+            videoIds.add(i + 1);
+            userInfoIds.add(i + 1);
+        }
 
-        imageUrls = serverImageUrls;
-        videoUrls = serverVideoUrls;
-
-        //初始化 RecyclerView 和 VideoAdapter
+        // 初始化视图
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
         imageVr = findViewById(R.id.btn_jump_vr);
 
-
-
+        // 设置SnapHelper
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+        
+        // 设置LayoutManager
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new VideoAdapter(videoUrls,this,imageUrls,imageVr,videoIds.toArray(new Integer[videoIds.size()]), TokenManager.getUserName(this),userInfoIds);
+        
+        // 初始化适配器
+        adapter = new VideoAdapter(videoUrls, this, imageUrls, 
+                                 videoIds.toArray(new Integer[0]), 
+                                 TokenManager.getUserName(this),
+                                 userInfoIds);
         recyclerView.setAdapter(adapter);
+
+        // 设置滚动监听
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -105,19 +111,28 @@ public class Map_VideoActivity extends AppCompatActivity {
                     int position = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
                     if (adapter != null) {
                         adapter.setCurrentPlayingPosition(position);
-                        adapter.setPlayWhenReady(true); // 开始播放
+                        adapter.setPlayWhenReady(true);
                     }
-                }else {
-                    // 滚动中暂停播放
+                } else {
                     adapter.setPlayWhenReady(false);
                 }
             }
         });
 
-
-
+        // 设置VR按钮点击事件
+        imageVr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Map_VideoActivity.this, Map_VRActivity.class);
+                // 传递当前播放位置的VR图片URL
+                int currentPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+                if (currentPosition >= 0 && currentPosition < imageUrls.length) {
+                    intent.putExtra("imageUrl", imageUrls[currentPosition]);
+                }
+                startActivity(intent);
+            }
+        });
     }
-
 
     @Override
     protected void onStart() {
@@ -156,9 +171,5 @@ public class Map_VideoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         adapter.releasePlayer();
-    }
-    public void VROnclick(View view) {
-        Intent intent = new Intent(Map_VideoActivity.this, Map_VRActivity.class);
-        startActivity(intent);
     }
 }
